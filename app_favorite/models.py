@@ -12,5 +12,5 @@ class Favorite(models.Model):
     #     return self.product
 
     class Meta:
-        verbose_nname = "Favorites"
+        verbose_name = "Favorites"
         verbose_name_plural = "Favorite"

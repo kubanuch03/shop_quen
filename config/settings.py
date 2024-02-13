@@ -105,10 +105,7 @@ DATABASES = {
 #     }
 # }
 
-REST_FRAMEWORK = {
-    
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -130,8 +127,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 SPECTACULAR_SETTINGS = {
-    'TITILE': "BLOG APIS",
-    'DESCRIPTION': "Simple blog app in rest framework",
+    'TITILE': "Shop Quen APIS",
+    'DESCRIPTION': "Simple shop app in rest framework",
     'VERSION' : "1.0",
     
 }
