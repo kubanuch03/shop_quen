@@ -1,8 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
 from django.core.validators import RegexValidator
 
-from .mangers import UserManager
+from .managers import UserManager
 
 
 class CustomUser(AbstractBaseUser):
@@ -29,3 +29,9 @@ class CustomUser(AbstractBaseUser):
 
     def __str__(self) -> str:
         return self.email
+    
+    def has_perm(self, perm, obj=None):
+        return self.is_staff
+
+    def has_module_perms(self, app_label):
+        return self.is_staff

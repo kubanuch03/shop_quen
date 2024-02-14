@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = 'c%t4ca%jkr8)q3dk69g9#tu7kqa-#czt3i&wn2+&ik43x_4t=d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG')
+DEBUG = True
 
 ALLOWED_HOSTS = ['db','*']
 
@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     #lib
-    'rest_framework_simplejwt',
     'rest_framework',
+    'rest_framework_simplejwt',
     'drf_spectacular',
     # 'corsheaders',
 
@@ -88,27 +88,24 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('POSTGRES_DB'),
-#         'USER': config('POSTGRES_USER'),
-#         'PASSWORD': config('POSTGRES_PASSWORD'),
-#         'HOST': config('POSTGRES_HOST'),
-#         'PORT': config('POSTGRES_PORT'),
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
 #     }
 # }
-
-REST_FRAMEWORK = {
-    
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('POSTGRES_DB'),
+        'USER': config('POSTGRES_USER'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'HOST': config('POSTGRES_HOST'),
+        'PORT': config('POSTGRES_PORT'),
+    }
 }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -130,8 +127,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 SPECTACULAR_SETTINGS = {
-    'TITILE': "BLOG APIS",
-    'DESCRIPTION': "Simple blog app in rest framework",
+    'TITILE': "Shop Quen APIS",
+    'DESCRIPTION': "Simple shop app in rest framework",
     'VERSION' : "1.0",
     
 }
@@ -159,6 +156,10 @@ CORS_ALLOW_ORIGINS = [
 
 AUTH_USER_MODEL = 'app_user.CustomUser'
 
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
 
 
 # Internationalization
