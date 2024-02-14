@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from app_product.serializer import ProductListSerializer, ProductcreateSerializer
 from app_product.models import Product
+from app_product.filters import PriceRangeFilter, SearchFilter
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView
 
@@ -8,6 +9,7 @@ from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDe
 class ListAllProductApiView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
+    filter_backends = [PriceRangeFilter, SearchFilter]
 
 
 
