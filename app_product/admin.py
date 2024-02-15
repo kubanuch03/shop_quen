@@ -3,6 +3,10 @@ from app_product.models import Product, Size, Color
 
 
 
-admin.site.register(Product)
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ("id", "title", "subcategory", "price", "brand", "description", "characteristics")
+
+
 admin.site.register(Size)
 admin.site.register(Color)
