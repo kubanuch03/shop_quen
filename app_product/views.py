@@ -5,6 +5,7 @@ from app_product.filters import PriceRangeFilter, SearchFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+from app_product.permissions import IsCreatorOrAdmin
 
 
 class ListAllProductApiView(ListAPIView):
@@ -23,12 +24,15 @@ class ProductDeleteApiView(DestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductcreateSerializer
     lookup_field = "id"
+    permission_classes = [IsCreatorOrAdmin, ]
+
 
 
 class ProductUpdateApiView(UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductcreateSerializer
     lookup_field = "id"
+    permission_classes = [IsCreatorOrAdmin, ]
 
 
 class ListOneProducApiView(APIView):
