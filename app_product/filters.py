@@ -22,5 +22,4 @@ class SearchFilter(filters.BaseFilterBackend):
             queryset = queryset.filter(title__icontains=title)
 
         return queryset
-    
-    
+        

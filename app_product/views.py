@@ -3,7 +3,8 @@ from app_product.serializer import ProductListSerializer, ProductcreateSerialize
 from app_product.models import Product
 from app_product.filters import PriceRangeFilter, SearchFilter
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.response import Response
+from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 
 
 class ListAllProductApiView(ListAPIView):
@@ -18,7 +19,27 @@ class CreateProductApiView(CreateAPIView):
     serializer_class = ProductcreateSerializer
 
 
-class ProductRUBApiView(RetrieveUpdateDestroyAPIView):
+class ProductDeleteApiView(DestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductcreateSerializer
     lookup_field = "id"
+
+
+class ProductUpdateApiView(UpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductcreateSerializer
+    lookup_field = "id"
+
+
+class ListOneProducApiView(APIView):
+    def get(self, request, id):
+        products = Product.objects.filter(id=id)
+        serializer = ProductListSerializer(products, many=True)
+        return Response(serializer.data)
+    
+
+class ProductBySubCategory(APIView):
+    def get(self, request, subcategory_id):
+        products = Product.objects.filter(subcategory_id=subcategory_id)
+        serializer = ProductListSerializer(products, many=True)
+        return Response(serializer.data)

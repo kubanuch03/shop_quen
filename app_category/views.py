@@ -6,12 +6,14 @@ CreateAPIView, RetrieveUpdateDestroyAPIView)
 from app_category.models import Category, SubCategory
 from app_category.serializer import (CategoryListRUDSerializer, 
 CategoryCreateSerializer, SubCategoryListSerializer, SubCategoryCreateSerializer)
+from app_product.filters import SearchFilter
 
 
 
 class CategoryAllListApiView(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryListRUDSerializer
+    filter_backends = [SearchFilter]
 
 
 
@@ -40,6 +42,7 @@ class CategoryRUDApiView(RetrieveUpdateDestroyAPIView):
 class SubCategoryAllListApiView(ListAPIView):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategoryListSerializer
+    filter_backends = [SearchFilter]
 
 
 class ListOneSubCategoryApiView(APIView):
