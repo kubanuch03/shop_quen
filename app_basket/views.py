@@ -22,17 +22,26 @@ class AddProductsBasketItem(APIView):
             quantity = product_data.get('quantity', 1)
 
             product = Product.objects.get(pk=product_id)
-            product_data = {
+            product_price = product.price * quantity
+
+            product_info = {
                 'product_id': product_id,
                 'title': product.title,
                 'price': product.price,
-                'quantity': quantity
+                'quantity': quantity,
+                'total': product_price
             }
-            basket_data['items'].append(product_data)
 
-            cache.set(basket_cache_key, basket_data, timeout=20)
+            basket_data['items'].append(product_info)
 
-        return Response("Продукты успешно добавлены в карзину", status=status.HTTP_201_CREATED)
+        total_price = sum(item['total'] for item in basket_data['items'])
+        basket_data['total'] = total_price
+
+        cache.set(basket_cache_key, basket_data, timeout=12345677)
+
+        return Response("Продукты успешно добавлены в корзину", status=status.HTTP_201_CREATED)
+
+
 
 
 
