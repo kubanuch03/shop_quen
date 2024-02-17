@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'c%t4ca%jkr8)q3dk69g9#tu7kqa-#czt3i&wn2+&ik43x_4t=d'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = ['db','*']
 
@@ -69,7 +69,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR.joinpath('templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -94,6 +94,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 #         "NAME": BASE_DIR / "db.sqlite3",
 #     }
 # }
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -143,13 +145,11 @@ CORS_ALLOW_METHODS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://161.35.113.88:8000",
     "http://localhost:3000",
 ]
 
 CORS_ALLOW_ORIGINS = [
     "http://localhost:3000",
-    "http://161.35.113.88:8000",
 ]
 
 
@@ -158,6 +158,9 @@ AUTH_USER_MODEL = 'app_user.CustomUser'
 
 
 REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
@@ -200,8 +203,21 @@ CACHES = {
 
 
 # JWT Config
-# SIMPLE_JWT = {
-#     "ACCESS_TOKEN_LIFETIME": timedelta(days=14),
-#     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
-#     "UPDATE_LAST_LOGIN": True,
-# }
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=14),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "UPDATE_LAST_LOGIN": True,
+}
+
+
+# EMAIL_BACKEND = config("EMAIL_BACKEND")
+# EMAIL_HOST = config("EMAIL_HOST")
+# EMAIL_PORT = config("EMAIL_PORT")
+# EMAIL_USE_TLS = config("EMAIL_USE_TLS")
+
+# EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+
+# EMAIL_SERVER = config("EMAIL_SERVER")
+# DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+# EMAIL_ADMIN = config("EMAIL_ADMIN")

@@ -5,13 +5,15 @@ from django.core.validators import RegexValidator
 from .managers import UserManager
 
 
-class CustomUser(AbstractBaseUser):
+class CustomUser(AbstractBaseUser,PermissionsMixin):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=255)
     full_name = models.CharField(max_length=255, blank=True, null=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     location = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255, null=True, blank=True)
+
+
     phone_number = models.CharField(
         max_length=13,
         validators=[RegexValidator(r"^\+996\d{9}$")],
@@ -21,6 +23,7 @@ class CustomUser(AbstractBaseUser):
     created_at = models.DateTimeField(auto_now_add=True)
     token_auth = models.CharField(max_length=64, blank=True, null=True)
     is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -28,10 +31,8 @@ class CustomUser(AbstractBaseUser):
     REQUIRED_FIELDS = ["username"]
 
     def __str__(self) -> str:
-        return self.email
+        return self.username
     
-    def has_perm(self, perm, obj=None):
-        return self.is_staff
-
-    def has_module_perms(self, app_label):
-        return self.is_staff
+    
+    
+   
