@@ -30,9 +30,8 @@ from drf_spectacular.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-
+    path("baskets/", include("app_basket.urls")),
     path("users/", include("app_user.urls")),
-    # path("baskets/", include("app_basket.urls")),
     path("favorites/", include("app_favorite.urls")),
     path("categorys/", include("app_category.urls")),
     path("products/", include("app_product.urls")),
