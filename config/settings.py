@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_spectacular',
-    # 'corsheaders',
+    'corsheaders',
+    'django_redis',
 
     #app
     "app_basket",
@@ -204,20 +205,14 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-CACHE_LOCATION = BASE_DIR / 'CACHE' 
-
-# Проверяем, существует ли папка кэша, и создаем ее, если необходимо
-if not os.path.exists(CACHE_LOCATION):
-    os.makedirs(CACHE_LOCATION)
-
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION':  str(CACHE_LOCATION), 
-        'TIMEOUT': 86400  ,  
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/0',
         'OPTIONS': {
-            'MAX_ENTRIES': 1000
-        }
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+        'TIMEOUT': 20, #7 * 24 * 3600
     }
 }
 
