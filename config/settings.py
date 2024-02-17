@@ -126,6 +126,23 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+import os
+CACHE_LOCATION = BASE_DIR / 'cache' 
+
+# Проверяем, существует ли папка кэша, и создаем ее, если необходимо
+if not os.path.exists(CACHE_LOCATION):
+    os.makedirs(CACHE_LOCATION)
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION':  str(CACHE_LOCATION), 
+        'TIMEOUT': 86400  ,  # Устанавливаем время жизни кэша в секундах (1 час)
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}
 
 
 SPECTACULAR_SETTINGS = {

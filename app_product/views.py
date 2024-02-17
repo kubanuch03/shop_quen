@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from app_product.serializer import ProductListSerializer, ProductcreateSerializer
 from app_product.models import Product
 from app_product.filters import PriceRangeFilter, SearchFilter

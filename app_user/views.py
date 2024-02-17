@@ -1,4 +1,4 @@
-
+from django.core.cache import cache
 
 
 from rest_framework import generics, permissions
@@ -25,8 +25,8 @@ class LoginUserView(generics.GenericAPIView):
         password = request.data.get("password", None)
 
         if email and password:
+            
             user = authenticate(username=email, password=password)
-            print(f"User: {user}")
 
             if user:
                 login(request, user)
