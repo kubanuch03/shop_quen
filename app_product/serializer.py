@@ -21,7 +21,6 @@ class ProductListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ["subcategory",
-                "author",
                 "subcategory_title",
                 "title", 
                 "price", 
@@ -42,7 +41,6 @@ class ProductcreateSerializer(serializers.ModelSerializer):
         model = Product
         fields = ["id",
                 "subcategory",
-                # "author",
                 "title", 
                 "price", 
                 "description", 
