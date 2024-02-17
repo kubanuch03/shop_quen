@@ -194,9 +194,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',  # Бэкенд кэша для хранения данных в памяти
-        'LOCATION': 'unique-snowflake',  # Уникальное имя кэша
-        'TIMEOUT': 3600,  # Время жизни кэша в секундах (в данном случае, 1 час)
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
     }
 }
 

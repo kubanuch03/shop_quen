@@ -21,8 +21,6 @@ class CreateProductApiView(CreateAPIView):
     serializer_class = ProductcreateSerializer
     permission_classes = [IsAuthenticated, ]
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
 
 
 class ProductDeleteApiView(DestroyAPIView):

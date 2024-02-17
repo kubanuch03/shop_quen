@@ -21,7 +21,6 @@ class Size(models.Model):
 
 
 class Product(models.Model):
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     price = models.PositiveIntegerField()
