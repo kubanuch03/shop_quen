@@ -33,6 +33,13 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     def __str__(self) -> str:
         return self.username
     
+    class Meta:
+        indexes = [
+            models.Index(fields=['email']), 
+            models.Index(fields=['username']),  
+            models.Index(fields=['id']),  
+        ]
+    
     
     
    

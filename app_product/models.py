@@ -18,6 +18,12 @@ class Size(models.Model):
 
     def __str__(self):
         return self.sizes
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['sizes']),  
+            
+        ]
 
 
 class Product(models.Model):
@@ -33,3 +39,9 @@ class Product(models.Model):
     images1 = models.ImageField(upload_to="app_product/image/", blank=True, null=True)
     images2 = models.ImageField(upload_to="app_product/image/", blank=True, null=True)
     images3 = models.ImageField(upload_to="app_product/image/", blank=True, null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['title']), 
+            models.Index(fields=['brand']),  
+        ]

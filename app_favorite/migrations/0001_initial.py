@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Basket",
+            name="Favorite",
             fields=[
                 (
                     "id",
@@ -22,21 +22,11 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
-        ),
-        migrations.CreateModel(
-            name="BasketItem",
-            fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("quantity", models.PositiveIntegerField(default=1)),
-            ],
+            options={
+                "verbose_name": "Favorites",
+                "verbose_name_plural": "Favorite",
+            },
         ),
     ]

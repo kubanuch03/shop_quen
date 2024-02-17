@@ -8,6 +8,12 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return self.title
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['title']), 
+            models.Index(fields=['id']),  
+        ]
 
 
 class SubCategory(models.Model):
@@ -18,6 +24,12 @@ class SubCategory(models.Model):
 
     def __str__(self) -> str:
         return self.title
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['title']), 
+            models.Index(fields=['id']),  
+        ]
 
 
     

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
@@ -88,12 +88,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
+
 
 
 DATABASES = {
@@ -126,6 +121,23 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+import os
+CACHE_LOCATION = BASE_DIR / 'cache' 
+
+# Проверяем, существует ли папка кэша, и создаем ее, если необходимо
+if not os.path.exists(CACHE_LOCATION):
+    os.makedirs(CACHE_LOCATION)
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION':  str(CACHE_LOCATION), 
+        'TIMEOUT': 86400  ,  # Устанавливаем время жизни кэша в секундах (1 час)
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}
 
 
 SPECTACULAR_SETTINGS = {
@@ -192,10 +204,21 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
+CACHE_LOCATION = BASE_DIR / 'CACHE' 
+
+# Проверяем, существует ли папка кэша, и создаем ее, если необходимо
+if not os.path.exists(CACHE_LOCATION):
+    os.makedirs(CACHE_LOCATION)
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
+        'LOCATION':  str(CACHE_LOCATION), 
+        'TIMEOUT': 86400  ,  
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
     }
 }
 
