@@ -37,6 +37,13 @@ class AddProductsBasketItem(APIView):
 
         for product_data in products_data:
             product_id = product_data.get('product_id')
+
+            try:
+                product = Product.objects.get(pk=product_id)
+            except Product.DoesNotExist:
+                return Response(f"Продукт с id {product_id} не существует", status=status.HTTP_404_NOT_FOUND)
+
+
             quantity = product_data.get('quantity', 1)
 
             product = Product.objects.get(pk=product_id)
