@@ -18,7 +18,7 @@ class ListAllProductApiView(ListAPIView):
 class CreateProductApiView(CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductcreateSerializer
-    permission_classes = [IsAuthenticated, ]
+    # permission_classes = [IsAuthenticated, ]
 
 
 
@@ -34,7 +34,25 @@ class ProductUpdateApiView(UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductcreateSerializer
     lookup_field = "id"
-    permission_classes = [IsCreatorOrAdmin, ]
+    # permission_classes = [IsAuthenticated, ]
+
+
+class AddDiscountProduct(UpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductcreateSerializer
+    lookup_field = "id"
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        instance = serializer.instance
+        instance.price = serializer.apply_discount_to_price(instance.price, serializer.validated_data.get('discount', 0))
+        instance.save()
 
 
 class ListOneProducApiView(APIView):
