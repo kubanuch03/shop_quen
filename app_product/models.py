@@ -46,3 +46,5 @@ class Product(models.Model):
             models.Index(fields=['title']), 
             models.Index(fields=['brand']),  
         ]
+
+
