@@ -29,11 +29,11 @@ class ProductListSerializer(serializers.ModelSerializer):
                 "discount",
 ]
     def to_representation(self, instance):
-        data_course = super().to_representation(instance)        
+        data_product = super().to_representation(instance)        
 
-        data_course['color'] = ColorSerializer(instance.color.all(),many=True).data
+        data_product['color'] = ColorSerializer(instance.color.all(),many=True).data
         
-        return data_course
+        return data_product
 
 class ProductcreateSerializer(serializers.ModelSerializer):
     discount = serializers.IntegerField(required=False)
