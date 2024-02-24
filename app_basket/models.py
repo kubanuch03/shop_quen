@@ -9,6 +9,9 @@ class Basket(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product, through='BasketItem')
 
+    def __str__(self):
+        return f'{self.user}'
+
     
 
 

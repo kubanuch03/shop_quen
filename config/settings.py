@@ -133,7 +133,7 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         'LOCATION':  str(CACHE_LOCATION), 
-        'TIMEOUT': 86400  ,  # Устанавливаем время жизни кэша в секундах (1 час)
+        'TIMEOUT': 86400  , 
         'OPTIONS': {
             'MAX_ENTRIES': 1000
         }
@@ -207,6 +207,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CACHES = {
     'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
+        'LOCATION':  str(CACHE_LOCATION), 
+        'TIMEOUT': 86400  ,  
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': 'redis://127.0.0.1:6379/0',
         'OPTIONS': {

@@ -32,8 +32,18 @@ class AddProductsBasketItem(APIView):
 
         products_data = request.data.get('products', [])
 
+        if not products_data:
+            return Response("Запрос не содержит продуктов для добавления в корзину", status=status.HTTP_400_BAD_REQUEST)
+
         for product_data in products_data:
             product_id = product_data.get('product_id')
+
+            try:
+                product = Product.objects.get(pk=product_id)
+            except Product.DoesNotExist:
+                return Response(f"Продукт с id {product_id} не существует", status=status.HTTP_404_NOT_FOUND)
+
+
             quantity = product_data.get('quantity', 1)
 
             product = Product.objects.get(pk=product_id)
@@ -52,7 +62,7 @@ class AddProductsBasketItem(APIView):
         total_price = sum(item['total'] for item in basket_data['items'])
         basket_data['total'] = total_price
 
-        redis_connection.set(basket_cache_key, json.dumps(basket_data), ex=20)  # ex=20 означает время жизни в секундах
+        redis_connection.set(basket_cache_key, json.dumps(basket_data), ex=12345678)
 
         return Response("Продукты успешно добавлены в корзину", status=status.HTTP_201_CREATED)
 
