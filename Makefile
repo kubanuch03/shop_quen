@@ -2,10 +2,14 @@
 
 
 install:
-	pip install -r requiremen.txt
+	pip install -r requirements.txt
  
 migrate:
-	python manage.py makemigrations
+	python manage.py makemigrations app_basket
+	python manage.py makemigrations app_category
+	python manage.py makemigrations app_favorite
+	python manage.py makemigrations app_product
+	python manage.py makemigrations app_user
 	python manage.py migrate
  
 createsuperuser:

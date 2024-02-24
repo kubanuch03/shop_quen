@@ -1,28 +1,20 @@
 from rest_framework import serializers
-from app_product.models import Product
 
+from app_product.models import Product, Color, Size
+
+
+
+class ColorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Color
+        fields = ['id','colors']
 
 class ProductListSerializer(serializers.ModelSerializer):
-    subcategory_title = serializers.SerializerMethodField()
-    color = serializers.SerializerMethodField()
-    size = serializers.SerializerMethodField()
-
-    def get_subcategory_title(self, obj):
-        return obj.subcategory.title if obj.subcategory.title else None
-
-    def get_color(self, obj):
-        colors = obj.color.all()
-        return [color.colors for color in colors]
-
-    def get_size(self, obj):
-        sizes = obj.size.all()
-        return [size.sizes for size in sizes]
-
+    color =ColorSerializer(many=True)
     class Meta:
         model = Product
         fields = ["id",
                 "subcategory",
-                "subcategory_title",
                 "title", 
                 "price", 
                 "description", 
@@ -36,7 +28,12 @@ class ProductListSerializer(serializers.ModelSerializer):
                 "size",
                 "discount",
 ]
+    def to_representation(self, instance):
+        data_course = super().to_representation(instance)        
+
+        data_course['color'] = ColorSerializer(instance.color.all(),many=True).data
         
+        return data_course
 
 class ProductcreateSerializer(serializers.ModelSerializer):
     discount = serializers.IntegerField(required=False)
