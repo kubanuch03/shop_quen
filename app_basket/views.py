@@ -10,13 +10,13 @@ from django_redis import cache as redis_cache
 from django_redis import get_redis_connection
 
 from app_product.models import Product
-
+# from app_basket.serializer import BasketSerializer
 
 
 
 
 class AddProductsBasketItem(APIView):
-    def post(self, request, format=None):
+    def post(self, request):
         user = request.user
         basket_cache_key = f'basket_{user.id}'
         
@@ -27,10 +27,15 @@ class AddProductsBasketItem(APIView):
         if basket_data:
             basket_data = basket_data.decode('utf-8')
             basket_data = json.loads(basket_data)
+
+            # basket_data_json = BasketSerializer(basket_data).data
+            # basket_data = BasketSerializer(data=basket_data_json).data
+
         else:
             basket_data = {'items': []}
 
         products_data = request.data.get('products', [])
+        # products_data = request.data.all()
 
         if not products_data:
             return Response("Запрос не содержит продуктов для добавления в корзину", status=status.HTTP_400_BAD_REQUEST)
@@ -45,6 +50,9 @@ class AddProductsBasketItem(APIView):
 
 
             quantity = product_data.get('quantity', 1)
+            if quantity <= 0:
+                return Response("Количество продукта должно быть положительным", status=status.HTTP_400_BAD_REQUEST)
+
 
             product = Product.objects.get(pk=product_id)
             product_price = product.price * quantity
