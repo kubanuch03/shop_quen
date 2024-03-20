@@ -1,16 +1,32 @@
 from rest_framework import serializers
-from .models import BasketItem
 
-class BasketItemSerializer(serializers.ModelSerializer):
-    product_title = serializers.SerializerMethodField()
-    product_price = serializers.SerializerMethodField()
+from app_product.models import Product, Color, Size
 
-    def get_product_title(self, obj):
-        return obj.product.title
-
-    def get_product_price(self, obj):
-        return obj.product.price
-    
+class SizeBasketSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BasketItem
-        fields = ('id', 'product', 'quantity', 'product_title', 'product_price')
+        model = Size
+        fields = ["id", "sizes"]
+
+
+class ColorBasketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Color
+        fields = ['id','colors']
+
+class BasketSerializer(serializers.ModelSerializer):
+    color =ColorBasketSerializer(many=True)
+    class Meta:
+        model = Product
+        fields = ["title", 
+                "price", 
+                "description", 
+                "color",
+                "size",
+                "discount",
+]
+    def to_representation(self, instance):
+        data_product = super().to_representation(instance)        
+        data_product['size'] = SizeBasketSerializer(instance.size.all(), many=True).data
+        data_product['color'] = ColorBasketSerializer(instance.color.all(),many=True).data
+        
+        return data_product

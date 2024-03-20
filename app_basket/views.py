@@ -5,12 +5,12 @@ from rest_framework.views import APIView
 
 import json
 
-
+# from app_product.serializer import ProductListSerializer
 from django_redis import cache as redis_cache
 from django_redis import get_redis_connection
 
 from app_product.models import Product
-
+from app_basket.serializer import BasketSerializer
 
 
 
@@ -27,6 +27,7 @@ class AddProductsBasketItem(APIView):
         if basket_data:
             basket_data = basket_data.decode('utf-8')
             basket_data = json.loads(basket_data)
+
         else:
             basket_data = {'items': []}
 
@@ -43,28 +44,29 @@ class AddProductsBasketItem(APIView):
             except Product.DoesNotExist:
                 return Response(f"Продукт с id {product_id} не существует", status=status.HTTP_404_NOT_FOUND)
 
-
             quantity = product_data.get('quantity', 1)
+            if quantity <= 0:
+                return Response("Количество продукта должно быть положительным", status=status.HTTP_400_BAD_REQUEST)
+            
+            product_serializer = BasketSerializer(product)
+            product_info = product_serializer.data
 
             product = Product.objects.get(pk=product_id)
-            product_price = product.price * quantity
 
-            product_info = {
-                'product_id': product_id,
-                'title': product.title,
-                'price': product.price,
-                'quantity': quantity,
-                'total': product_price
-            }
+
+            product_info['product_id'] = product_id
+            product_info['quantity'] = quantity
+            product_info['total'] = product.price * quantity
 
             basket_data['items'].append(product_info)
 
         total_price = sum(item['total'] for item in basket_data['items'])
         basket_data['total'] = total_price
 
-        redis_connection.set(basket_cache_key, json.dumps(basket_data), ex=12345678)
+        redis_connection.set(basket_cache_key, json.dumps(basket_data), ex=654323451)
 
         return Response("Продукты успешно добавлены в корзину", status=status.HTTP_201_CREATED)
+
 
 
 
