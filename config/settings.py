@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = ['db','*']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -90,8 +90,6 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -122,29 +120,18 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-import os
+
 CACHE_LOCATION = BASE_DIR / 'cache' 
 
 # Проверяем, существует ли папка кэша, и создаем ее, если необходимо
 if not os.path.exists(CACHE_LOCATION):
     os.makedirs(CACHE_LOCATION)
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION':  str(CACHE_LOCATION), 
-        'TIMEOUT': 86400 ,
-        'OPTIONS': {
-            'MAX_ENTRIES': 1000
-        }
-    }
-}
-
 
 SPECTACULAR_SETTINGS = {
     'TITILE': "Shop Quen APIS",
     'DESCRIPTION': "Simple shop app in rest framework",
-    'VERSION' : "1.0",
+    'VERSION': "1.0",
     
 }
 
@@ -167,7 +154,6 @@ CORS_ALLOW_ORIGINS = [
     "http://3.123.17.71"
 
 ]
-
 
 
 AUTH_USER_MODEL = 'app_user.CustomUser'
@@ -209,18 +195,28 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
-        'LOCATION':  str(CACHE_LOCATION), 
-        'TIMEOUT': 86400  ,  
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/0',
+        'LOCATION':  str(CACHE_LOCATION),
+        'TIMEOUT': 86400,
         'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        },
-        'TIMEOUT': 20, #7 * 24 * 3600
+            'MAX_ENTRIES': 1000
+        }
     }
 }
 
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
+#         'LOCATION':  str(CACHE_LOCATION),
+#         'TIMEOUT': 86400,
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://127.0.0.1:6379/0',
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         },
+#         'TIMEOUT': 20, #7 * 24 * 3600
+#     }
+# }
 
 
 # JWT Config

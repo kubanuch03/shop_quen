@@ -11,7 +11,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 from .models import CustomUser
-from .serializers import UserSerializer, LoginUserSerializer, ConfirmEmailSerializer
+from .serializers import *
 
 import time
 
@@ -54,30 +54,19 @@ class LoginUserView(generics.GenericAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-    def get(self, request, token):
-        try:
-            user = CustomUser.objects.get(activation_token=token)
-            user.is_active = True
-            user.save()
-        except CustomUser.DoesNotExist:
-            raise ({"error": "invalid-token"})
-
 
 class ConfirmEmailView(generics.GenericAPIView):
     serializer_class = ConfirmEmailSerializer
 
-    @staticmethod
-    def get(request, token):
-        try:
-            user = CustomUser.objects.get(token_auth=token)
+    def post(self, request):
+        user = CustomUser.objects.filter(token_auth=request.data.get('token')).first()
+        if user:
             if user.is_active:
                 return Response(
                     {"detail": "User is already activated"}, status=status.HTTP_200_OK
                 )
-
             user.is_active = True
             user.save()
-
             refresh = RefreshToken.for_user(user)
             return Response(
                 {
@@ -88,7 +77,7 @@ class ConfirmEmailView(generics.GenericAPIView):
                 status=status.HTTP_200_OK,
             )
 
-        except CustomUser.DoesNotExist:
+        else:
             return Response(
                 {"detail": "Invalid token"}, status=status.HTTP_404_NOT_FOUND
             )
@@ -96,7 +85,7 @@ class ConfirmEmailView(generics.GenericAPIView):
 
 class RegisterUserView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = CreateUserSerializer
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
@@ -104,7 +93,6 @@ class RegisterUserView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         client = serializer.save()
-
         print("After perform_create")
         return Response(
             {
@@ -115,6 +103,20 @@ class RegisterUserView(generics.CreateAPIView):
             },
             status=status.HTTP_201_CREATED,
         )
+
+
+class UserUpdateView(generics.UpdateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', True)
+        instance = request.user
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
 
 
 class UserListView(generics.ListAPIView):
@@ -128,10 +130,6 @@ class UserDeleteView(generics.DestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAdminUser]
 
-class UserUpdateView(generics.UpdateAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAdminUser]
 
 class UserDetailView(generics.RetrieveAPIView):
     queryset = CustomUser.objects.all()

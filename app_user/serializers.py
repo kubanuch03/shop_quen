@@ -16,37 +16,18 @@ class ConfirmEmailSerializer(serializers.Serializer):
     token = serializers.CharField()
 
 
-class UserSerializer(serializers.ModelSerializer):
+class CreateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
-    username = serializers.CharField(required=True)
-    password = serializers.CharField(write_only=True)
-    password2 = serializers.CharField(write_only=True)
 
     class Meta:
         model = CustomUser
-        fields = (
-            "id",
-            "email",
-            "username",
-            "password",
-            "password2",
-        )
-
-    def validate(self, attrs):
-        if attrs["password"] != attrs["password2"]:
-            raise serializers.ValidationError(
-                {"password": "Пароль не совпадает, попробуйте еще раз"}
-            )
-        return attrs
+        fields = ("email",)
 
     def create(self, validated_data):
         user = CustomUser.objects.create_user(
             email=validated_data["email"],
-            username=validated_data.get("username", ""),
-            phone_number=validated_data.get("phone_number", ""),
-            full_name=validated_data.get("full_name", ""),
-            password=validated_data["password"],
-            token_auth=get_random_string(64),
+            username=validated_data["email"],
+            token_auth=get_random_string(14),
         )
 
         current_site = get_current_site(self.context["request"])
@@ -56,8 +37,6 @@ class UserSerializer(serializers.ModelSerializer):
             "users:confirm_email", kwargs={"token": user.token_auth}
         )
 
-
-
         subject = "Подтверждение почты"
 
         # message = f"""Подтвердите почту по ссылке: \n\n{protocol}://{domain}{confirmation_link}\nВаши данные:\n почта: {client.email}\n пароль: {validated_data["password"]}"""
@@ -66,7 +45,6 @@ class UserSerializer(serializers.ModelSerializer):
                     'domain': domain,
                     'confirmation_link': confirmation_link,
                     'user_email': user.email,
-                    'user_password': validated_data["password"],
                 })
         text_message = strip_tags(html_message)
 
@@ -80,6 +58,31 @@ class UserSerializer(serializers.ModelSerializer):
         make_password(validated_data["password"])
 
         return user
+
+
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ("full_name", "phone_number", "password", "password2", )
+
+    def validate(self, attrs):
+        if attrs.get("password") or attrs.get("password2"):
+            if attrs["password"] != attrs["password2"]:
+                raise serializers.ValidationError(
+                    {"password": "Пароль не совпадает, попробуйте еще раз"}
+                )
+        return attrs
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+            if attr == "password":
+                instance.set_password(value)
+        instance.save()
+        return instance
 
 
 class LoginUserSerializer(serializers.ModelSerializer):
