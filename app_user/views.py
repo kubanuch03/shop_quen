@@ -54,13 +54,13 @@ class LoginUserView(generics.GenericAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-    def get(self, request, token):
-        try:
-            user = CustomUser.objects.get(activation_token=token)
-            user.is_active = True
-            user.save()
-        except CustomUser.DoesNotExist:
-            raise ({"error": "invalid-token"})
+    # def get(self, request, token):
+    #     try:
+    #         user = CustomUser.objects.get(activation_token=token)
+    #         user.is_active = True
+    #         user.save()
+    #     except CustomUser.DoesNotExist:
+    #         raise ({"error": "invalid-token"})
 
 
 class ConfirmEmailView(generics.GenericAPIView):

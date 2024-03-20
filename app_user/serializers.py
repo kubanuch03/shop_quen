@@ -33,9 +33,14 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, attrs):
-        if attrs["password"] != attrs["password2"]:
+        if attrs["password"].strip() != attrs["password2"].strip():
             raise serializers.ValidationError(
                 {"password": "Пароль не совпадает, попробуйте еще раз"}
+            )
+        if len(attrs["password"].strip()) and len(attrs["password2"].strip()) <8:
+            raise serializers.ValidationError(
+                ("Password must be at least 8 characters long."),
+                code='password_too_short',
             )
         return attrs
 
@@ -55,7 +60,8 @@ class UserSerializer(serializers.ModelSerializer):
         confirmation_link = reverse(
             "users:confirm_email", kwargs={"token": user.token_auth}
         )
-
+        if not confirmation_link.startswith('/'):
+            confirmation_link = '/' + confirmation_link
 
 
         subject = "Подтверждение почты"

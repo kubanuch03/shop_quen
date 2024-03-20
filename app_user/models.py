@@ -34,6 +34,8 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         return self.username
     
     class Meta:
+        verbose_name = 'Users'
+        verbose_name_plural = 'User'
         indexes = [
             models.Index(fields=['email']), 
             models.Index(fields=['username']),  

@@ -63,6 +63,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -123,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 import os
-CACHE_LOCATION = BASE_DIR / 'cache' 
+CACHE_LOCATION = BASE_DIR / 'CACHE' 
 
 # Проверяем, существует ли папка кэша, и создаем ее, если необходимо
 if not os.path.exists(CACHE_LOCATION):
@@ -231,14 +232,14 @@ SIMPLE_JWT = {
 }
 
 
-# EMAIL_BACKEND = config("EMAIL_BACKEND")
-# EMAIL_HOST = config("EMAIL_HOST")
-# EMAIL_PORT = config("EMAIL_PORT")
-# EMAIL_USE_TLS = config("EMAIL_USE_TLS")
+EMAIL_BACKEND = config("EMAIL_BACKEND")
+EMAIL_HOST = config("EMAIL_HOST")
+EMAIL_PORT = config("EMAIL_PORT")
+EMAIL_USE_TLS = config("EMAIL_USE_TLS")
 
-# EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
-# EMAIL_SERVER = config("EMAIL_SERVER")
-# DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
-# EMAIL_ADMIN = config("EMAIL_ADMIN")
+EMAIL_SERVER = config("EMAIL_SERVER")
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+EMAIL_ADMIN = config("EMAIL_ADMIN")
