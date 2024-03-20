@@ -10,6 +10,7 @@ migrate:
 	python manage.py makemigrations app_favorite
 	python manage.py makemigrations app_product
 	python manage.py makemigrations app_user
+	python manage.py makemigrations app_account
 	python manage.py migrate
  
 createsuperuser:
