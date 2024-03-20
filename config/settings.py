@@ -67,6 +67,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -127,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 import os
-CACHE_LOCATION = BASE_DIR / 'cache' 
+CACHE_LOCATION = BASE_DIR / 'CACHE' 
 
 # Проверяем, существует ли папка кэша, и создаем ее, если необходимо
 if not os.path.exists(CACHE_LOCATION):

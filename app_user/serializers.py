@@ -1,5 +1,5 @@
 from decouple import config
-
+import random
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth.hashers import make_password
@@ -33,55 +33,33 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, attrs):
-        if attrs["password"] != attrs["password2"]:
+        if attrs["password"].strip() != attrs["password2"].strip():
             raise serializers.ValidationError(
                 {"password": "Пароль не совпадает, попробуйте еще раз"}
+            )
+        if len(attrs["password"].strip()) and len(attrs["password2"].strip()) <8:
+            raise serializers.ValidationError(
+                ("Password must be at least 8 characters long."),
+                code='password_too_short',
             )
         return attrs
 
     def create(self, validated_data):
+        code = ''.join(random.choices('0123456789', k=6))  
         user = CustomUser.objects.create_user(
             email=validated_data["email"],
             username=validated_data.get("username", ""),
-            phone_number=validated_data.get("phone_number", ""),
-            full_name=validated_data.get("full_name", ""),
             password=validated_data["password"],
-            token_auth=get_random_string(64),
+            code=code  #
         )
 
-        current_site = get_current_site(self.context["request"])
-        domain = current_site.domain
-        protocol = "https" if self.context["request"].is_secure() else "http"
-        confirmation_link = reverse(
-            "users:confirm_email", kwargs={"token": user.token_auth}
-        )
-
-
-
-        subject = "Подтверждение почты"
-
-        # message = f"""Подтвердите почту по ссылке: \n\n{protocol}://{domain}{confirmation_link}\nВаши данные:\n почта: {client.email}\n пароль: {validated_data["password"]}"""
-        html_message = render_to_string('app_users/confirm_email.html', {
-                    'protocol': protocol,
-                    'domain': domain,
-                    'confirmation_link': confirmation_link,
-                    'user_email': user.email,
-                    'user_password': validated_data["password"],
-                })
-        text_message = strip_tags(html_message)
-
-        # from_email = config("EMAIL_HOST_USER")
-        # to_email = validated_data["email"]
-        # send_mail(subject, html_message, from_email, [to_email], fail_silently=False)
-
-        email = EmailMultiAlternatives(subject, text_message, from_email=config("EMAIL_HOST_USER"), to=[validated_data["email"]])
-        email.attach_alternative(html_message, "text/html")  # Установите альтернативный контент как HTML
+        subject = "Код подтверждения"
+        message = f"Ваш код подтверждения: {code}"
+        email = EmailMultiAlternatives(subject, message, to=[validated_data["email"]])
         email.send()
-        make_password(validated_data["password"])
 
         return user
-
-
+    
 class LoginUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True, required=True)
@@ -89,3 +67,14 @@ class LoginUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ("email", "password")
+
+class VerifyUserCodeSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=6, min_length=6, required=True)
+
+    def validate_code(self, value):
+        """
+        Validate the code field.
+        """
+        if not value.isdigit():
+            raise serializers.ValidationError("Code must contain only digits.")
+        return value
