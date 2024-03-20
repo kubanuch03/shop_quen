@@ -12,6 +12,8 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     address = models.CharField(max_length=255, null=True, blank=True)
     location = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255, null=True, blank=True)
+    
+    code = models.CharField(max_length=6, blank=True)
 
 
     phone_number = models.CharField(
