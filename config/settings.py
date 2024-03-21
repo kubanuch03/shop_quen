@@ -43,20 +43,20 @@ INSTALLED_APPS = [
     #lib
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
     'corsheaders',
     'django_redis',
 
     #app
+    "app_user",
     "app_basket",
     "app_category",
     "app_favorite",
     "app_product",
-    "app_user",
     "app_account",
 
     
-    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
