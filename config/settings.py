@@ -127,23 +127,23 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-import os
-CACHE_LOCATION = BASE_DIR / 'CACHE' 
+# import os
+# CACHE_LOCATION = BASE_DIR / 'CACHE' 
 
-# Проверяем, существует ли папка кэша, и создаем ее, если необходимо
-if not os.path.exists(CACHE_LOCATION):
-    os.makedirs(CACHE_LOCATION)
+# # Проверяем, существует ли папка кэша, и создаем ее, если необходимо
+# if not os.path.exists(CACHE_LOCATION):
+#     os.makedirs(CACHE_LOCATION)
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION':  str(CACHE_LOCATION), 
-        'TIMEOUT': 86400 ,
-        'OPTIONS': {
-            'MAX_ENTRIES': 1000
-        }
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'LOCATION':  str(CACHE_LOCATION), 
+#         'TIMEOUT': 86400 ,
+#         'OPTIONS': {
+#             'MAX_ENTRIES': 1000
+#         }
+#     }
+# }
 
 
 SPECTACULAR_SETTINGS = {
@@ -164,11 +164,13 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://localhost:5173",
     "http://3.123.17.71"
 ]
 
 CORS_ALLOW_ORIGINS = [
     "http://localhost:3000",
+    "http://localhost:5173",
     "http://3.123.17.71"
 
 ]
@@ -201,20 +203,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = "/static/"
-# STATIC_ROOT = "/usr/src/app/static"
+STATIC_ROOT = "/usr/src/app/static"
 
 MEDIA_URL = "/media/"
-# MEDIA_ROOT = "/usr/src/app/media"
+MEDIA_ROOT = "/usr/src/app/media"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
+import os
+CACHE_LOCATION = BASE_DIR / 'CACHE' 
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
         'LOCATION':  str(CACHE_LOCATION), 
         'TIMEOUT': 86400  ,  
         'BACKEND': 'django_redis.cache.RedisCache',
