@@ -86,7 +86,7 @@ class VerifyUserCodeView(generics.GenericAPIView):
                 "message": "Учетная запись успешно активирована.",
                 'id':user.id,
                 'email':user.email,
-                'refresh-token': str(refresh),
+                'refresh': str(refresh),
                 'access': str(refresh.access_token),
                 'refresh_lifetime_days': refresh.lifetime.days,
                 'access_lifetime_days': refresh.access_token.lifetime.days
