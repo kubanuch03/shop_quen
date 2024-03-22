@@ -21,3 +21,4 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentMethod
         fields = ['text']
+        

@@ -23,6 +23,9 @@ class BasketSerializer(serializers.ModelSerializer):
                 "color",
                 "size",
                 "discount",
+                "images1",
+                "images2",
+                "images3"
 ]
     def to_representation(self, instance):
         data_product = super().to_representation(instance)        

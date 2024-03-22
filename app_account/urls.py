@@ -8,4 +8,5 @@ urlpatterns = [
     path('logout/user/', LogoutView.as_view(), name='user logout'),
     path('payment/method/', PaymentMethodApiView.as_view()),
     path('order/history/', OrderHistory.as_view()),
+
 ]

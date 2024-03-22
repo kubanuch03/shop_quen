@@ -1,11 +1,9 @@
-from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 
 import json
 
-# from app_product.serializer import ProductListSerializer
 from django_redis import cache as redis_cache
 from django_redis import get_redis_connection
 from rest_framework import permissions
@@ -64,7 +62,7 @@ class AddProductsBasketItem(APIView):
         total_price = sum(item['total'] for item in basket_data['items'])
         basket_data['total'] = total_price
 
-        redis_connection.set(basket_cache_key, json.dumps(basket_data), ex=1)
+        redis_connection.set(basket_cache_key, json.dumps(basket_data), ex=100005)
 
         return Response("Продукты успешно добавлены в корзину", status=status.HTTP_201_CREATED)
 

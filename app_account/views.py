@@ -1,19 +1,21 @@
-from django.shortcuts import render
 from rest_framework.generics import ListAPIView
 from app_user.models import CustomUser
-from app_account.serializer import UserInfoSerializer, PaymentMethodSerializer
+from app_account.serializer import (
+    UserInfoSerializer,
+    PaymentMethodSerializer)
 from rest_framework import permissions, generics
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework import status
+
 from app_account.models import PaymentMethod
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django_redis import get_redis_connection
-import json
 
+import json
 
 
 
