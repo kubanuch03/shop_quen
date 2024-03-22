@@ -34,6 +34,7 @@ class LoginUserView(generics.GenericAPIView):
                 return Response(
                     {
                         "user_id": user.id,
+                        "is_staff": user.is_staff,
                         "email": user.email,
                         "username": user.username,
                         "refresh": str(refresh),
@@ -85,7 +86,7 @@ class VerifyUserCodeView(generics.GenericAPIView):
                 "message": "Учетная запись успешно активирована.",
                 'id':user.id,
                 'email':user.email,
-                'refresh-token': str(refresh),
+                'refresh': str(refresh),
                 'access': str(refresh.access_token),
                 'refresh_lifetime_days': refresh.lifetime.days,
                 'access_lifetime_days': refresh.access_token.lifetime.days
@@ -100,6 +101,10 @@ class UserListView(generics.ListAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAdminUser]
 
+class UserDetailView(generics.RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 class UserDeleteView(generics.DestroyAPIView):
     queryset = CustomUser.objects.all()
