@@ -11,8 +11,6 @@ from app_product.models import Product
 from app_basket.serializer import BasketSerializer
 
 
-
-
 class AddProductsBasketItem(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request, format=None):
@@ -62,12 +60,9 @@ class AddProductsBasketItem(APIView):
         total_price = sum(item['total'] for item in basket_data['items'])
         basket_data['total'] = total_price
 
-        redis_connection.set(basket_cache_key, json.dumps(basket_data), ex=100005)
+        redis_connection.set(basket_cache_key, json.dumps(basket_data), ex=7 * 24 * 30)
 
         return Response("Продукты успешно добавлены в корзину", status=status.HTTP_201_CREATED)
-
-
-
 
 
 
@@ -88,3 +83,29 @@ class ListBasketItem(APIView):
             return Response({"Корзина пуста или отсутствует в кеше."}, status=status.HTTP_404_NOT_FOUND)
 
 
+
+class DeleteBasketItem(APIView):
+    def delete(self, request, product_id, format=None):
+        user = request.user
+        basket_cache_key = f'basket_{user.id}'
+
+        redis_connection = get_redis_connection("default")
+        basket_data = redis_connection.get(basket_cache_key)
+
+        if basket_data:
+            basket_data = basket_data.decode('utf-8')
+            basket_data = json.loads(basket_data)
+            
+            items = basket_data.get('items', [])
+            filtered_items = [item for item in items if item['product_id'] != product_id]
+
+            basket_data['items'] = filtered_items
+
+            total_price = sum(item['total'] for item in basket_data['items'])
+            basket_data['total'] = total_price
+
+            redis_connection.set(basket_cache_key, json.dumps(basket_data), ex=7 * 24 * 30)
+
+            return Response("Продукт успешно удален из корзины", status=status.HTTP_200_OK)
+        else:
+            return Response({"Корзина пуста или отсутствует в кеше."}, status=status.HTTP_404_NOT_FOUND)

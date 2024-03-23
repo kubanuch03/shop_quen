@@ -19,7 +19,11 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
-
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 
 
 from .yasg import urlpatterns as doc
@@ -33,6 +37,14 @@ urlpatterns = [
     path("categorys/", include("app_category.urls")),
     path("products/", include("app_product.urls")),
     path("account/", include('app_account.urls')),
+
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+    path(
+        "api/schema/redoc/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc",
+    ),
 ]
 
 urlpatterns+=doc

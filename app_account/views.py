@@ -20,6 +20,7 @@ import json
 
 
 
+
 class PaymentMethodApiView(generics.ListCreateAPIView):
     queryset = PaymentMethod.objects.values('text')
     serializer_class = PaymentMethodSerializer
@@ -63,3 +64,59 @@ class OrderHistory(APIView):
             return Response(basket_data, status=status.HTTP_200_OK)
         else:
             return Response({"Корзина пуста или отсутствует в кеше."}, status=status.HTTP_404_NOT_FOUND)
+        
+
+
+
+
+
+from app_account.utils import send_verification_mail
+from app_account.serializer import SendResetCodeSerializer, ChangePasswordSerializer
+from rest_framework import permissions
+from django.utils.crypto import constant_time_compare
+from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import UpdateModelMixin
+
+
+
+class SendResetAPiView(UpdateModelMixin, GenericAPIView):
+    serializer_class = SendResetCodeSerializer
+
+    def get_object(self):
+        user = CustomUser.objects.get(email=self.request.data.get('email'))
+        return user
+
+    def patch(self, *args, **kwargs):
+        try:
+            email = self.get_object().email
+        except ObjectDoesNotExist:
+            return Response({'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
+        send_verification_mail(email)
+        return Response({'status': 'success'}, status=status.HTTP_200_OK)
+
+
+
+
+class ChangePasswordAPIVIew(UpdateModelMixin, GenericAPIView):
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        user = CustomUser.objects.get(id=self.request.user.id)
+        return user
+
+    def patch(self, *args, **kwargs):
+        serializer = self.get_serializer(data=self.request.data)
+        if serializer.is_valid():
+            new_password = self.request.data.get('new_password')
+            confirming_new_password = self.request.data.get('confirming_new_password')
+            if constant_time_compare(new_password, confirming_new_password):
+                user = self.get_object()
+                user.password = make_password(confirming_new_password)
+                user.save()
+                return Response({'Вы ушпешно поменяли свой пароль'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'Пароли не совподают'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors)

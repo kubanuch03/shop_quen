@@ -21,4 +21,17 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentMethod
         fields = ['text']
-        
+
+
+class SendResetCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['email']
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(max_length=30)
+    confirming_new_password = serializers.CharField(max_length=30)
+
+    class Meta:
+        fields = ['new_password', 'confirming_new_password']    

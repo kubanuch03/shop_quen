@@ -1,11 +1,12 @@
-from app_product.serializer import ProductListSerializer, ProductcreateSerializer
-from app_product.models import Product
+from app_product.serializer import ProductListSerializer, ProductcreateSerializer, SizeSerializer, ColorSerializer
+from app_product.models import Product, Size, Color
 from app_product.filters import PriceRangeFilter, SearchFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from app_product.permissions import IsCreatorOrAdmin
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+
 
 
 class ListAllProductApiView(ListAPIView):
@@ -56,3 +57,17 @@ class ProductBySubCategory(APIView):
         products = Product.objects.filter(subcategory_id=subcategory_id)
         serializer = ProductListSerializer(products, many=True)
         return Response(serializer.data)
+    
+
+
+
+class SizeCreateView(CreateAPIView):
+    queryset = Size.objects.all()
+    serializer_class = SizeSerializer
+    permission_classes = [IsAdminUser, ]
+
+
+class ColorCreateView(CreateAPIView):
+    queryset = Color.objects.all()
+    serializer_class = ColorSerializer
+    permission_classes = [IsAdminUser, ]

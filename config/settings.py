@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'corsheaders',
     'django_redis',
-    "drf_yasg",
 
     #app
     "app_user",
@@ -128,23 +127,23 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-# import os
-# CACHE_LOCATION = BASE_DIR / 'CACHE' 
+import os
+CACHE_LOCATION = BASE_DIR / 'CACHE' 
 
-# # Проверяем, существует ли папка кэша, и создаем ее, если необходимо
-# if not os.path.exists(CACHE_LOCATION):
-#     os.makedirs(CACHE_LOCATION)
+# Проверяем, существует ли папка кэша, и создаем ее, если необходимо
+if not os.path.exists(CACHE_LOCATION):
+    os.makedirs(CACHE_LOCATION)
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-#         'LOCATION':  str(CACHE_LOCATION), 
-#         'TIMEOUT': 86400 ,
-#         'OPTIONS': {
-#             'MAX_ENTRIES': 1000
-#         }
-#     }
-# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION':  str(CACHE_LOCATION), 
+        'TIMEOUT': 86400 ,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}
 
 
 SPECTACULAR_SETTINGS = {
@@ -165,13 +164,11 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://localhost:5173",
     "http://3.123.17.71"
 ]
 
 CORS_ALLOW_ORIGINS = [
     "http://localhost:3000",
-    "http://localhost:5173",
     "http://3.123.17.71"
 
 ]
@@ -204,20 +201,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = "/static/"
-STATIC_ROOT = "/usr/src/app/static"
+# STATIC_ROOT = "/usr/src/app/static"
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = "/usr/src/app/media"
+# MEDIA_ROOT = "/usr/src/app/media"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-import os
-CACHE_LOCATION = BASE_DIR / 'CACHE' 
+
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
         'LOCATION':  str(CACHE_LOCATION), 
         'TIMEOUT': 86400  ,  
         'BACKEND': 'django_redis.cache.RedisCache',
@@ -239,27 +236,14 @@ SIMPLE_JWT = {
 }
 
 
-EMAIL_BACKEND= 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = config("EMAIL_BACKEND")
+EMAIL_HOST = config("EMAIL_HOST")
+EMAIL_PORT = config("EMAIL_PORT")
+EMAIL_USE_TLS = config("EMAIL_USE_TLS")
 
-EMAIL_HOST= 'smtp.gmail.com'
-EMAIL_PORT= '587'
-EMAIL_USE_TLS= True
-EMAIL_HOST_USER = 'sadyr.top@gmail.com'
-EMAIL_HOST_PASSWORD = 'ayilzffegqmdngyq'
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
-EMAIL_SERVER= EMAIL_HOST_USER
-DEFAULT_FROM_EMAIL= EMAIL_HOST_USER
-EMAIL_ADMIN=['sadyr.top@gmail.com']
-
-
-# EMAIL_BACKEND = config("EMAIL_BACKEND")
-# EMAIL_HOST = config("EMAIL_HOST")
-# EMAIL_PORT = config("EMAIL_PORT")
-# EMAIL_USE_TLS = config("EMAIL_USE_TLS")
-
-# EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
-
-# EMAIL_SERVER = config("EMAIL_SERVER")
-# DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
-# EMAIL_ADMIN = config("EMAIL_ADMIN")
+EMAIL_SERVER = config("EMAIL_SERVER")
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+EMAIL_ADMIN = config("EMAIL_ADMIN")
