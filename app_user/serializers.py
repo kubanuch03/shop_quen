@@ -19,6 +19,7 @@ class ConfirmEmailSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     username = serializers.CharField(required=True)
+    phone_number = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
 
@@ -28,6 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
             "id",
             "email",
             "username",
+            "phone_number",
             "password",
             "password2",
         )
