@@ -128,23 +128,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-# import os
-# CACHE_LOCATION = BASE_DIR / 'CACHE' 
 
-# # Проверяем, существует ли папка кэша, и создаем ее, если необходимо
-# if not os.path.exists(CACHE_LOCATION):
-#     os.makedirs(CACHE_LOCATION)
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-#         'LOCATION':  str(CACHE_LOCATION), 
-#         'TIMEOUT': 86400 ,
-#         'OPTIONS': {
-#             'MAX_ENTRIES': 1000
-#         }
-#     }
-# }
 
 
 SPECTACULAR_SETTINGS = {
@@ -211,14 +196,10 @@ MEDIA_ROOT = "/usr/src/app/media"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-import os
-CACHE_LOCATION = BASE_DIR / 'CACHE' 
+
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION':  str(CACHE_LOCATION), 
         'TIMEOUT': 86400  ,  
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': 'redis://127.0.0.1:6379/0',
