@@ -127,6 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
 import os
 CACHE_LOCATION = BASE_DIR / 'CACHE' 
 
@@ -144,6 +145,7 @@ CACHES = {
         }
     }
 }
+
 
 
 SPECTACULAR_SETTINGS = {
@@ -208,11 +210,14 @@ MEDIA_URL = "/media/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 
 
 CACHES = {
     'default': {
+
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
         'LOCATION':  str(CACHE_LOCATION), 

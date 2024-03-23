@@ -31,6 +31,7 @@ class ProductListSerializer(serializers.ModelSerializer):
                 "color",
                 "size",
                 "discount",
+                "is_favorite",
 ]
     def to_representation(self, instance):
         data_product = super().to_representation(instance)        

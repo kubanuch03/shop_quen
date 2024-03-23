@@ -7,6 +7,7 @@ from .models import Favorite
 from .serializers import FavoriteSerializer
 from .permissions import IsUserOrAdmin
 
+from app_product.models import Product
 
 class FavoriteListApiView(generics.ListAPIView):
     queryset = Favorite.objects.all()
@@ -26,6 +27,24 @@ class FavoriteCreateApiView(generics.CreateAPIView):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        product_id = self.request.data['product']
+        try:
+            product = Product.objects.get(pk=product_id)
+        except Product.DoesNotExist:
+            return response.Response({"error":"Product does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+        favorite = Favorite.objects.create(user=request.user,product=product)
+        product.is_favorite=True
+        product.save()
+
+        serializer = self.get_serializer(favorite)
+        return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+
+        
 
     
 
