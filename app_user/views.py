@@ -11,9 +11,12 @@ from django.utils import timezone
 from datetime import timedelta
 
 from .models import CustomUser
-from .serializers import UserSerializer, LoginUserSerializer, ConfirmEmailSerializer, VerifyUserCodeSerializer
+from .serializers import UserSerializer, LoginUserSerializer, VerifyUserCodeSerializer,SendCodeSerializer,ForgetPasswordSerializer
+from .services import *
 
 import time
+
+
 
 
 class LoginUserView(generics.GenericAPIView):
@@ -96,6 +99,42 @@ class VerifyUserCodeView(generics.GenericAPIView):
             return Response({"message": "Неверный код подтверждения."}, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+#отправить код на почту       
+class ForgetPasswordSendCodeView(generics.UpdateAPIView):
+    serializer_class = SendCodeSerializer
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        email_or_phone = request.data.get("email_or_phone")
+        if not email_or_phone:
+            return Response({"required": "email_or_phone"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = CustomUser.objects.get(email_or_phone=email_or_phone)
+            # Если пользователь уже существует, просто обновите его код подтверждения и отправьте его
+            send_verification_code(email_or_phone=email_or_phone)
+            return Response({"success":"Код был отправлен на почту/телефон"}, status=status.HTTP_200_OK)
+        except CustomUser.DoesNotExist:
+            # Если пользователь не существует, создайте нового пользователя и отправьте ему код подтверждения
+            user = CustomUser.objects.create(email_or_phone=email_or_phone)
+            send_verification_code(email_or_phone=email_or_phone)
+            return Response({"success":"Код был отправлен на почту/телефон"}, status=status.HTTP_201_CREATED)
+
+# если user забыл пароль при входе
+class ForgetPasswordView(generics.UpdateAPIView):
+    serializer_class = ForgetPasswordSerializer
+
+    http_method_names = ['patch',]
+    def update(self, request, *args, **kwargs):
+        
+        result = ChangePasswordOnReset.change_password_on_reset(self=self,request=request)
+
+        if result == "success":
+            return Response({"success ":"Пароль успешно изменен"}, status=status.HTTP_200_OK)
+        else:
+            return Response(result, status=status.HTTP_400_BAD_REQUEST)
+        
 class UserListView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer

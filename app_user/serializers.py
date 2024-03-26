@@ -32,6 +32,8 @@ class UserSerializer(serializers.ModelSerializer):
             "phone_number",
             "password",
             "password2",
+            "is_staff",
+            "is_active"
         )
 
     def validate(self, attrs):
@@ -52,6 +54,7 @@ class UserSerializer(serializers.ModelSerializer):
             email=validated_data["email"],
             username=validated_data.get("username", ""),
             password=validated_data["password"],
+            phone_number=validated_data["phone_number"],
             code=code  #
         )
 
@@ -80,3 +83,20 @@ class VerifyUserCodeSerializer(serializers.Serializer):
         if not value.isdigit():
             raise serializers.ValidationError("Code must contain only digits.")
         return value
+    
+
+
+class SendCodeSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = CustomUser
+        fields = ['email']
+
+
+class ForgetPasswordSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=6,write_only=True)
+    password = serializers.CharField(max_length=20,write_only=True)
+    confirm_password = serializers.CharField(max_length=20,write_only=True)
+
+    class Meta:
+        fields = ['password','password2','code']
