@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'corsheaders',
     'django_redis',
+    'drf_yasg',
 
     #app
     "app_user",
