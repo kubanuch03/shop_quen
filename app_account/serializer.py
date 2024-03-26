@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from app_user.models import CustomUser
-from app_account.models import PaymentMethod
+from app_account.models import PaymentMethod, History, Deliver
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
@@ -35,3 +35,29 @@ class ChangePasswordSerializer(serializers.Serializer):
 
     class Meta:
         fields = ['new_password', 'confirming_new_password']    
+
+
+
+class DeliverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Deliver
+        fields = ['types', 'location']
+
+
+class HistoryListSerializer(serializers.ModelSerializer):
+    deliver = DeliverSerializer()
+    class Meta:
+        model = History
+        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'deliver', 'payment_type']
+
+
+class HistoryCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = History
+        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'deliver', 'payment_type']
+
+ 
+    
+
+
+

@@ -1,13 +1,26 @@
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView
 from app_user.models import CustomUser
 from app_account.serializer import (
     UserInfoSerializer,
-    PaymentMethodSerializer)
+    PaymentMethodSerializer,
+    SendResetCodeSerializer,
+    ChangePasswordSerializer,
+    HistoryCreateSerializer,
+    HistoryListSerializer)
 from rest_framework import permissions, generics
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework import status
+from app_account.utils import send_verification_mail
+# from app_account.serializer import SendResetCodeSerializer, ChangePasswordSerializer
+from rest_framework import permissions
+from django.utils.crypto import constant_time_compare
+from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import UpdateModelMixin
+from app_account.models import History
 
 from app_account.models import PaymentMethod
 from rest_framework.views import APIView
@@ -37,6 +50,16 @@ class UserInfoApiView(ListAPIView):
     
 
 
+class ChangeUserInfoApiView(generics.RetrieveAPIView):
+    serializer_class = UserInfoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return CustomUser.objects.filter(id=user.id)
+    
+
+
 class LogoutView(APIView):
     def post(self, request):
         try:
@@ -47,38 +70,6 @@ class LogoutView(APIView):
             return Response({'detail': 'Successfully logged out.'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'detail': 'Error logging out.'}, status=status.HTTP_400_BAD_REQUEST)
-        
-
-class OrderHistory(APIView):
-
-    def get(self, request, format=None):
-        user = request.user
-        basket_cache_key = f'basket_{user.id}'
-
-        redis_connection = get_redis_connection("default")
-        basket_data = redis_connection.get(basket_cache_key)
-
-        if basket_data:
-            basket_data = basket_data.decode('utf-8')
-            basket_data = json.loads(basket_data)
-            return Response(basket_data, status=status.HTTP_200_OK)
-        else:
-            return Response({"Корзина пуста или отсутствует в кеше."}, status=status.HTTP_404_NOT_FOUND)
-        
-
-
-
-
-
-from app_account.utils import send_verification_mail
-from app_account.serializer import SendResetCodeSerializer, ChangePasswordSerializer
-from rest_framework import permissions
-from django.utils.crypto import constant_time_compare
-from django.contrib.auth.hashers import make_password
-from django.core.exceptions import ObjectDoesNotExist
-from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import UpdateModelMixin
-
 
 
 class SendResetAPiView(UpdateModelMixin, GenericAPIView):
@@ -120,3 +111,15 @@ class ChangePasswordAPIVIew(UpdateModelMixin, GenericAPIView):
             else:
                 return Response({'Пароли не совподают'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors)
+
+
+
+class HistoryListApiView(ListAPIView):
+    queryset = History.objects.all()
+    serializer_class = HistoryListSerializer
+
+
+
+class HistoryCreateApiView(CreateAPIView):
+    queryset = History.objects.all()
+    serializer_class = HistoryCreateSerializer

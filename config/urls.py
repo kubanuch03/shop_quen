@@ -31,7 +31,7 @@ from .yasg import urlpatterns as doc
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("baskets/", include("app_basket.urls")),
+    # path("baskets/", include("app_basket.urls")),
     path("users/", include("app_user.urls")),
     path("favorites/", include("app_favorite.urls")),
     path("categorys/", include("app_category.urls")),
