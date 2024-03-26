@@ -19,19 +19,19 @@ def generate_verification_code(length=6):
 
 
 
-def send_verification_code(email_or_phone):
+def send_verification_code(email):
 
     verification_code = generate_verification_code()
 
     subject = 'Verification Code'
     message = f'Your verification code is: {verification_code}'
-    sender_email = 'tolomushev33@gmail.com'
-    recipient_email = email_or_phone
+    sender_email = 'kubanuch03@gmail.com'
+    recipient_email = email
 
     try:
-        user_obj = CustomUser.objects.get(email_or_phone=email_or_phone)
+        user_obj = CustomUser.objects.get(email=email)
     except CustomUser.DoesNotExist:
-        user_obj = CustomUser.objects.create(email_or_phone=email_or_phone)
+        user_obj = CustomUser.objects.create(email=email)
     user_obj.code = verification_code
     user_obj.save()
 
@@ -83,13 +83,11 @@ class CreateUserApiView(mixins.CreateModelMixin,generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        email_or_phone = serializer.validated_data['email_or_phone']
+        email = serializer.validated_data['email']
         serializer.save()
 
-        if "@" in email_or_phone:
-            send_verification_code(email_or_phone=email_or_phone)
-        else:
-            send_code_to_number(email_or_phone=int(email_or_phone))
+        if "@" in email:
+            send_verification_code(email=email)
 
         return Response({"success":"Код был отправлен на указанный реквизит"}, status=status.HTTP_201_CREATED)
 
@@ -100,21 +98,22 @@ class CheckCode():
         def check_code(code):
             try:
                 user = CustomUser.objects.get(code=code)
-                if not user.is_active:
-                    user.is_active=True
-                    user.save()
-                    refresh = RefreshToken.for_user(user=user)
-                    return Response({
-                        'detail': 'Successfully confirmed your code',
-                        'id':user.id,
-                        'email':user.email_or_phone,
-                        'refresh-token': str(refresh),
-                        'access': str(refresh.access_token),
-                        'refresh_lifetime_days': refresh.lifetime.days,
-                        'access_lifetime_days': refresh.access_token.lifetime.days
-                    })
-                else:
-                    return Response({'status': 'The user is already active'}, status=status.HTTP_202_ACCEPTED)
+                user.is_active = True
+                user.save()
+                refresh = RefreshToken.for_user(user=user)
+                return Response({
+                    'detail': 'Successfully confirmed your code',
+                    'id': user.id,
+                    'is_staff': user.is_staff,
+                    'is_active': user.is_active,
+                    'phone_number': user.phone_number,
+                    'email': user.email,
+                    'refresh-token': str(refresh),
+                    'access': str(refresh.access_token),
+                    'refresh_lifetime_days': refresh.lifetime.days,
+                    'access_lifetime_days': refresh.access_token.lifetime.days,
+                    'message': 'Код успешно обновлен'
+                })
             except CustomUser.DoesNotExist:
                 return Response({"error":"Пользователь не найден"})
 

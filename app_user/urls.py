@@ -13,5 +13,5 @@ urlpatterns = [
     path("login/user/", LoginUserView.as_view(), name="login_user"),
 
     path('send-code-to-email/', ForgetPasswordSendCodeView.as_view(), name='send_password_reset_code'), # отправить code в почту
-    path('verify/register-code/', VerifyUserCodeView.as_view(), name='verify_user_code'),
+    path('verify/register-code/', UserVerifyRegisterCode.as_view(), name='verify_user_code'),
 ]

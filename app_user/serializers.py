@@ -12,8 +12,7 @@ from rest_framework import serializers
 from .models import CustomUser
 
 
-class ConfirmEmailSerializer(serializers.Serializer):
-    token = serializers.CharField()
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -37,34 +36,17 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, attrs):
-        if attrs["password"].strip() != attrs["password2"].strip():
-            raise serializers.ValidationError(
-                {"password": "Пароль не совпадает, попробуйте еще раз"}
-            )
-        if len(attrs["password"].strip()) and len(attrs["password2"].strip()) <8:
-            raise serializers.ValidationError(
-                ("Password must be at least 8 characters long."),
-                code='password_too_short',
-            )
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError("Пароли не совпадают")
         return attrs
 
-    def create(self, validated_data):
-        code = ''.join(random.choices('0123456789', k=6))  
-        user = CustomUser.objects.create_user(
-            email=validated_data["email"],
-            username=validated_data.get("username", ""),
-            password=validated_data["password"],
-            phone_number=validated_data["phone_number"],
-            code=code  #
-        )
-
-        subject = "Код подтверждения"
-        message = f"Ваш код подтверждения: {code}"
-        email = EmailMultiAlternatives(subject, message, to=[validated_data["email"]])
-        email.send()
-
-        return user
+ 
     
+    def create(self, validated_data):
+        validated_data.pop('password2')
+        user = CustomUser.objects.create_user(**validated_data)
+        return user
+
 class LoginUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True, required=True)
@@ -73,25 +55,14 @@ class LoginUserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ("email", "password")
 
-class VerifyUserCodeSerializer(serializers.Serializer):
-    code = serializers.CharField(max_length=6, min_length=6, required=True)
-
-    def validate_code(self, value):
-        """
-        Validate the code field.
-        """
-        if not value.isdigit():
-            raise serializers.ValidationError("Code must contain only digits.")
-        return value
-    
-
-
-class SendCodeSerializer(serializers.ModelSerializer):
+class VerifyUserCodeSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = CustomUser
-        fields = ['email']
+        fields = ['code']
 
+    
+    
 
 class ForgetPasswordSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=6,write_only=True)
@@ -100,3 +71,9 @@ class ForgetPasswordSerializer(serializers.Serializer):
 
     class Meta:
         fields = ['password','password2','code']
+
+class SendCodeSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = CustomUser
+        fields = ['email']
