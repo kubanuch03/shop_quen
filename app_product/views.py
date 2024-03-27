@@ -3,7 +3,7 @@ from app_product.models import Product, Size, Color
 from app_product.filters import PriceRangeFilter, SearchFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from app_product.permissions import IsCreatorOrAdmin
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 
@@ -61,13 +61,25 @@ class ProductBySubCategory(APIView):
 
 
 
-class SizeCreateView(CreateAPIView):
+class SizeApiView(ListCreateAPIView):
     queryset = Size.objects.all()
     serializer_class = SizeSerializer
     permission_classes = [IsAdminUser, ]
 
 
-class ColorCreateView(CreateAPIView):
+class SizeRUDView(RetrieveUpdateDestroyAPIView):
+    queryset = Size.objects.all()
+    serializer_class = SizeSerializer
+    permission_classes = [IsAdminUser, ]
+
+
+class ColorApiView(ListCreateAPIView):
+    queryset = Color.objects.all()
+    serializer_class = ColorSerializer
+    permission_classes = [IsAdminUser, ]
+
+
+class ColorRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
     permission_classes = [IsAdminUser, ]

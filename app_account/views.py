@@ -1,4 +1,4 @@
-from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView,RetrieveUpdateAPIView
 from app_user.models import CustomUser
 from app_account.serializer import (
     UserInfoSerializer,
@@ -13,7 +13,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework import status
 from app_account.utils import send_verification_mail
-# from app_account.serializer import SendResetCodeSerializer, ChangePasswordSerializer
+
 from rest_framework import permissions
 from django.utils.crypto import constant_time_compare
 from django.contrib.auth.hashers import make_password
@@ -26,9 +26,6 @@ from app_account.models import PaymentMethod
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django_redis import get_redis_connection
-
-import json
 
 
 
@@ -47,6 +44,17 @@ class UserInfoApiView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return CustomUser.objects.filter(id=user.id)
+    
+
+
+class UserUpdateApiView(RetrieveUpdateAPIView):
+    queryset = CustomUser.objects.all() 
+    serializer_class = UserInfoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
     
 
 
