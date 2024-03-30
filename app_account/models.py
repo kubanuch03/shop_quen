@@ -17,12 +17,13 @@ class Deliver(models.Model):
     location = models.CharField(max_length=255)
 
 
-# class Author(models.Model):
-#     lastname = models.CharField(max_length=255)
-#     firstname = models.CharField(max_length=255)
-
-
 class History(models.Model):
+    STATUS = (
+        ('Оплачено', 'Оплачено'),
+        ('На проверке', 'На проверке'),
+        ('Доставлено', 'Доставлено'),
+
+    )
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product)
     price = models.PositiveIntegerField()
@@ -32,3 +33,4 @@ class History(models.Model):
     # location = models.CharField(max_length=255)
     deliver = models.ForeignKey(Deliver, on_delete=models.CASCADE)
     payment_type = models.CharField(max_length=255)
+    status = models.CharField(choices=STATUS, blank=True)

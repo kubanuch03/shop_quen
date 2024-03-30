@@ -40,9 +40,9 @@ class Product(models.Model):
     discount = models.PositiveIntegerField(blank=True, null=True)
     created_at = models.DateField(auto_now_add=True)
     is_favorite = models.BooleanField(default=False)
-    images1 = models.ImageField(upload_to="app_product/image/", blank=True, null=True)
-    images2 = models.ImageField(upload_to="app_product/image/", blank=True, null=True)
-    images3 = models.ImageField(upload_to="app_product/image/", blank=True, null=True)
+    images1 = models.ImageField(upload_to="text/", blank=True, null=True)
+    images2 = models.ImageField(upload_to="text/", blank=True, null=True)
+    images3 = models.ImageField(upload_to="text/", blank=True, null=True)
 
 
     class Meta:
