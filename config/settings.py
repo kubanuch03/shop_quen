@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     "app_favorite",
     "app_product",
     "app_account",
-    "app_collection"
+    "app_collection",
+    "app_banner"
 
     
 ]
