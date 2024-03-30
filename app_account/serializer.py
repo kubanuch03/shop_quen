@@ -3,6 +3,16 @@ from app_user.models import CustomUser
 from app_account.models import PaymentMethod, History, Deliver
 
 
+class ChangeUserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = (
+            'id',
+            'username',
+            'full_name',
+        )
+
+
 class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -48,13 +58,13 @@ class HistoryListSerializer(serializers.ModelSerializer):
     deliver = DeliverSerializer()
     class Meta:
         model = History
-        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'deliver', 'payment_type']
+        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'deliver', 'payment_type', 'status']
 
 
 class HistoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = History
-        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'deliver', 'payment_type']
+        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'deliver', 'payment_type', 'status']
 
  
     

@@ -6,7 +6,8 @@ from app_account.serializer import (
     SendResetCodeSerializer,
     ChangePasswordSerializer,
     HistoryCreateSerializer,
-    HistoryListSerializer)
+    HistoryListSerializer,
+    ChangeUserInfoSerializer,)
 from rest_framework import permissions, generics
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -49,7 +50,7 @@ class UserInfoApiView(ListAPIView):
 
 class UserUpdateApiView(RetrieveUpdateAPIView):
     queryset = CustomUser.objects.all() 
-    serializer_class = UserInfoSerializer
+    serializer_class = ChangeUserInfoSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
