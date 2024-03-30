@@ -58,13 +58,16 @@ class HistoryListSerializer(serializers.ModelSerializer):
     deliver = DeliverSerializer()
     class Meta:
         model = History
-        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'deliver', 'payment_type', 'status']
+        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'deliver', 'payment_type', 'status', 'delivery_date']
 
 
 class HistoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = History
-        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'deliver', 'payment_type', 'status']
+        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'deliver', 'payment_type', 'status', 'delivery_date']
+
+
+
 
  
     

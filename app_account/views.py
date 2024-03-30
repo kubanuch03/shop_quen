@@ -23,6 +23,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin
 from app_account.models import History
 
+from django.utils import timezone
 from app_account.models import PaymentMethod
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -132,3 +133,12 @@ class HistoryListApiView(ListAPIView):
 class HistoryCreateApiView(CreateAPIView):
     queryset = History.objects.all()
     serializer_class = HistoryCreateSerializer
+
+
+
+
+
+class HistoryDetailView(generics.RetrieveUpdateAPIView):
+    queryset = History.objects.all()
+    serializer_class = HistoryCreateSerializer
+    lookup_field = "id"

@@ -2,6 +2,10 @@ from django.db import models
 from django.db import models
 from app_user.models import CustomUser 
 from app_product.models import Product, Size, Color
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
+
 
 
 class PaymentMethod(models.Model):
@@ -34,3 +38,11 @@ class History(models.Model):
     deliver = models.ForeignKey(Deliver, on_delete=models.CASCADE)
     payment_type = models.CharField(max_length=255)
     status = models.CharField(choices=STATUS, blank=True)
+    delivery_date = models.DateTimeField(null=True, blank=True)
+
+    @staticmethod
+    @receiver(post_save, sender='app_account.History')
+    def update_delivery_date(sender, instance, **kwargs):
+        if instance.status == 'Доставлено' and not instance.delivery_date:
+            instance.delivery_date = timezone.now()
+            instance.save()
