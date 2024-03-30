@@ -71,6 +71,7 @@ class SizeRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Size.objects.all()
     serializer_class = SizeSerializer
     permission_classes = [IsAdminUser, ]
+    lookup_field = "id"
 
 
 class ColorApiView(ListCreateAPIView):
@@ -83,3 +84,4 @@ class ColorRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
     permission_classes = [IsAdminUser, ]
+    lookup_field = "id"
