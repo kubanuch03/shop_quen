@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'corsheaders',
     'django_redis',
-    'drf_yasg',
 
     #app
     "app_user",
@@ -56,10 +55,9 @@ INSTALLED_APPS = [
     "app_favorite",
     "app_product",
     "app_account",
-    "app_collection",
-    "app_banner"
+    "app_collection"
 
-    
+
 ]
 
 MIDDLEWARE = [
@@ -132,7 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 import os
-CACHE_LOCATION = BASE_DIR / 'CACHE' 
+CACHE_LOCATION = BASE_DIR / 'CACHE'
 
 # Проверяем, существует ли папка кэша, и создаем ее, если необходимо
 if not os.path.exists(CACHE_LOCATION):
@@ -141,7 +139,7 @@ if not os.path.exists(CACHE_LOCATION):
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION':  str(CACHE_LOCATION), 
+        'LOCATION':  str(CACHE_LOCATION),
         'TIMEOUT': 86400 ,
         'OPTIONS': {
             'MAX_ENTRIES': 1000
@@ -155,7 +153,7 @@ SPECTACULAR_SETTINGS = {
     'TITILE': "Shop Quen APIS",
     'DESCRIPTION': "Simple shop app in rest framework",
     'VERSION' : "1.0",
-    
+
 }
 
 CORS_ALLOW_METHODS = [
@@ -206,10 +204,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = "/static/"
-STATIC_ROOT = "/usr/src/app/static"
+# STATIC_ROOT = "/usr/src/app/static"
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = "/usr/src/app/media"
+# MEDIA_ROOT = "/usr/src/app/media"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -223,8 +221,8 @@ CACHES = {
 
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
-        'LOCATION':  str(CACHE_LOCATION), 
-        'TIMEOUT': 86400  ,  
+        'LOCATION':  str(CACHE_LOCATION),
+        'TIMEOUT': 86400  ,
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': 'redis://127.0.0.1:6379/0',
         'OPTIONS': {
