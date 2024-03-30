@@ -1,9 +1,10 @@
-from app_product.serializer import ProductListSerializer, ProductcreateSerializer, SizeSerializer, ColorSerializer
-from app_product.models import Product, Size, Color
+from app_product.serializer import ProductListSerializer, ProductcreateSerializer, SizeSerializer, ColorSerializer, CharacteristikSerializer
+from app_product.models import Product, Size, Color, CharacteristikTopik
 from app_product.filters import PriceRangeFilter, SearchFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
+from rest_framework.viewsets import ModelViewSet
 from app_product.permissions import IsCreatorOrAdmin
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 
@@ -35,7 +36,7 @@ class ProductUpdateApiView(UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductcreateSerializer
     lookup_field = "id"
-    # permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAdminUser, ]
 
     def perform_update(self, serializer):
         instance = serializer.instance
@@ -83,3 +84,22 @@ class ColorRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
     permission_classes = [IsAdminUser, ]
+
+
+#==== Characteristik ============================
+
+class CharacteristikViewSet(ModelViewSet):
+    queryset = CharacteristikTopik.objects.all()
+    serializer_class = CharacteristikSerializer
+    permission_classes = [IsAdminUser]
+
+class CharacteristikListView(ListAPIView):
+    queryset = CharacteristikTopik.objects.all()
+    serializer_class = CharacteristikSerializer
+    permission_classes = [AllowAny]
+
+class CharacteristikDetailView(RetrieveAPIView):
+    queryset = CharacteristikTopik.objects.all()
+    serializer_class = CharacteristikSerializer
+    permission_classes = [AllowAny]
+    

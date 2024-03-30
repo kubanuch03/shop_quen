@@ -33,7 +33,7 @@ class Product(models.Model):
     price = models.PositiveIntegerField()
     description = models.TextField()
     brand = models.CharField(max_length=255)
-    characteristics = models.TextField()
+    characteristics = models.ManyToManyField('CharacteristikTopik')
     is_any = models.BooleanField(default=False)
     color = models.ManyToManyField(Color)
     size = models.ManyToManyField(Size)
@@ -51,4 +51,10 @@ class Product(models.Model):
             models.Index(fields=['brand']),  
         ]
 
+class CharacteristikTopik(models.Model):
+    title = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.title
 
