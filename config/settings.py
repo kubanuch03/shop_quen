@@ -131,23 +131,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-import os
-CACHE_LOCATION = BASE_DIR / 'CACHE' 
+# import os
+# CACHE_LOCATION = BASE_DIR / 'CACHE' 
 
-# Проверяем, существует ли папка кэша, и создаем ее, если необходимо
-if not os.path.exists(CACHE_LOCATION):
-    os.makedirs(CACHE_LOCATION)
+# # Проверяем, существует ли папка кэша, и создаем ее, если необходимо
+# if not os.path.exists(CACHE_LOCATION):
+#     os.makedirs(CACHE_LOCATION)
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION':  str(CACHE_LOCATION), 
-        'TIMEOUT': 86400 ,
-        'OPTIONS': {
-            'MAX_ENTRIES': 1000
-        }
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'LOCATION':  str(CACHE_LOCATION), 
+#         'TIMEOUT': 86400 ,
+#         'OPTIONS': {
+#             'MAX_ENTRIES': 1000
+#         }
+#     }
+# }
 
 
 
@@ -218,21 +218,21 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 
-CACHES = {
-    'default': {
+# CACHES = {
+#     'default': {
 
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
-        'LOCATION':  str(CACHE_LOCATION), 
-        'TIMEOUT': 86400  ,  
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/0',
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        },
-        'TIMEOUT': 20, #7 * 24 * 3600
-    }
-}
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
+#         'LOCATION':  str(CACHE_LOCATION), 
+#         'TIMEOUT': 86400  ,  
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://127.0.0.1:6379/0',
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         },
+#         'TIMEOUT': 20, #7 * 24 * 3600
+#     }
+# }
 
 
 
