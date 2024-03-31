@@ -142,3 +142,5 @@ class HistoryDetailView(generics.RetrieveUpdateAPIView):
     queryset = History.objects.all()
     serializer_class = HistoryCreateSerializer
     lookup_field = "id"
+
+

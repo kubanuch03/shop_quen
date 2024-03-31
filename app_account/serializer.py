@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from app_user.models import CustomUser
-from app_account.models import PaymentMethod, History, Deliver
+from app_account.models import PaymentMethod, History
 
 
 class ChangeUserInfoSerializer(serializers.ModelSerializer):
@@ -27,6 +27,17 @@ class UserInfoSerializer(serializers.ModelSerializer):
         )
 
 
+class HistoryUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = (
+            'id',
+            'username',
+            'email',
+        )
+
+
+
 class PaymentMethodSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentMethod
@@ -48,23 +59,45 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 
 
-class DeliverSerializer(serializers.ModelSerializer):
+
+
+from app_product.models import Product
+
+
+class ProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Deliver
-        fields = ['types', 'location']
+        model = Product
+        fields = ["id", "discount", "price", "images1", "images2", "images3"]
+
+
+
+
+
+
+
 
 
 class HistoryListSerializer(serializers.ModelSerializer):
-    deliver = DeliverSerializer()
+    products = serializers.SerializerMethodField()
+    user = HistoryUserSerializer()
     class Meta:
         model = History
-        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'deliver', 'payment_type', 'status', 'delivery_date']
+        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'types', 'location', 'payment_type', 'status', 'delivery_date']
+
+    def get_products(self, obj):
+        products_queryset = obj.products.all()
+        products_data = ProductSerializer(products_queryset, many=True).data
+        return products_data
+
+
+
+
 
 
 class HistoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = History
-        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'deliver', 'payment_type', 'status', 'delivery_date']
+        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'types', 'location', 'payment_type', 'status', 'delivery_date']
 
 
 

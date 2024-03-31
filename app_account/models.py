@@ -16,9 +16,7 @@ class PaymentMethod(models.Model):
     
 
 
-class Deliver(models.Model):
-    types = models.CharField(max_length=255)
-    location = models.CharField(max_length=255)
+
 
 
 class History(models.Model):
@@ -31,11 +29,10 @@ class History(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product)
     price = models.PositiveIntegerField()
-    # author = models.ForeignKey(Author, on_delete=models.CASCADE)
     lastname = models.CharField(max_length=255)
     firstname = models.CharField(max_length=255)
-    # location = models.CharField(max_length=255)
-    deliver = models.ForeignKey(Deliver, on_delete=models.CASCADE)
+    types = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
     payment_type = models.CharField(max_length=255)
     status = models.CharField(choices=STATUS, blank=True)
     delivery_date = models.DateTimeField(null=True, blank=True)
