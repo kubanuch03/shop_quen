@@ -6,6 +6,7 @@ from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from django.shortcuts import get_object_or_404
 
 class Color(models.Model):
     colors = models.CharField(max_length=255)
@@ -47,6 +48,7 @@ class Product(models.Model):
 
     class Meta:
         indexes = [
+            models.Index(fields=['id']), 
             models.Index(fields=['title']), 
             models.Index(fields=['brand']),  
         ]

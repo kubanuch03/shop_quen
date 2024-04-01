@@ -17,7 +17,7 @@ class CharacteristikSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CharacteristikTopik
-        fields = ['title','value']
+        fields = ['id','title','value']
 
 class ProductListSerializer(serializers.ModelSerializer):
     color =ColorSerializer(many=True)
@@ -48,6 +48,8 @@ class ProductListSerializer(serializers.ModelSerializer):
         data_product['characteristics'] = CharacteristikSerializer(instance.characteristics.all(),many=True).data
         
         return data_product
+
+
 
 class ProductcreateSerializer(serializers.ModelSerializer):
     discount = serializers.IntegerField(required=False)

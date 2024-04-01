@@ -188,6 +188,8 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 30,
 }
 
 
@@ -218,21 +220,21 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 
-# CACHES = {
-#     'default': {
+CACHES = {
+    'default': {
 
-#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-#         'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
-#         'LOCATION':  str(CACHE_LOCATION), 
-#         'TIMEOUT': 86400  ,  
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': 'redis://127.0.0.1:6379/0',
-#         'OPTIONS': {
-#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#         },
-#         'TIMEOUT': 20, #7 * 24 * 3600
-#     }
-# }
+        # 'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        # 'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
+        # 'LOCATION':  str(CACHE_LOCATION), 
+        # 'TIMEOUT': 86400  ,  
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/0',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+        'TIMEOUT': 20, #7 * 24 * 3600
+    }
+}
 
 
 

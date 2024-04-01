@@ -8,6 +8,16 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "subcategory", "price", "brand", "description")
 
 
-admin.site.register(Size)
-admin.site.register(Color)
-admin.site.register(CharacteristikTopik)
+
+class ColorAdmin(admin.ModelAdmin):
+    list_display = ['id','colors']
+
+class SizeAdmin(admin.ModelAdmin):
+    list_display = ['id','sizes']
+
+class CharacteristikTopikAdmin(admin.ModelAdmin):
+    list_display = ['id','title','value']
+
+admin.site.register(Size,SizeAdmin)
+admin.site.register(Color,ColorAdmin)
+admin.site.register(CharacteristikTopik,CharacteristikTopikAdmin)

@@ -38,6 +38,7 @@ class LoginUserView(generics.GenericAPIView):
                     {
                         "user_id": user.id,
                         "is_staff": user.is_staff,
+                        "is_active": user.is_active,
                         "email": user.email,
                         "username": user.username,
                         "refresh": str(refresh),
