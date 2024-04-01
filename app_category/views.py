@@ -7,6 +7,8 @@ from app_category.models import Category, SubCategory
 from app_category.serializer import (CategoryListRUDSerializer, 
 CategoryCreateSerializer, SubCategoryListSerializer, SubCategoryCreateSerializer)
 from app_product.filters import SearchFilter
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework.permissions import IsAdminUser, AllowAny
 
 
@@ -16,6 +18,10 @@ class CategoryAllListApiView(ListAPIView):
     filter_backends = [SearchFilter]
     permission_classes = [AllowAny]
 
+    @method_decorator(cache_page(60*60))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 
 class ListOneCategoryApiView(APIView):
@@ -24,6 +30,11 @@ class ListOneCategoryApiView(APIView):
         category = Category.objects.filter(id=id)
         serializer = CategoryListRUDSerializer(category, many=True)
         return Response(serializer.data)
+    
+    @method_decorator(cache_page(60*60))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 
 
@@ -49,6 +60,10 @@ class SubCategoryAllListApiView(ListAPIView):
     permission_classes = [AllowAny, ]
     filter_backends = [SearchFilter]
 
+    @method_decorator(cache_page(60*60))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 class ListOneSubCategoryApiView(APIView):
     permission_classes = [AllowAny, ]
@@ -56,6 +71,10 @@ class ListOneSubCategoryApiView(APIView):
         subcategory = SubCategory.objects.filter(id=id)
         serializer = CategoryListRUDSerializer(subcategory, many=True)
         return Response(serializer.data)
+    
+    @method_decorator(cache_page(60*60))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class SubCategoryCreateApiView(CreateAPIView):
@@ -78,3 +97,8 @@ class CategoryBySubCategory(APIView):
         subcategory = SubCategory.objects.filter(category_id=category_id)
         serializer = SubCategoryListSerializer(subcategory, many=True)
         return Response(serializer.data)
+    
+    @method_decorator(cache_page(60*60))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+    
