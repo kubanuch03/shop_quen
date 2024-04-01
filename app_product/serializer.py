@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from app_product.models import Product, Color, Size
+from app_product.models import Product, Color, Size, CharacteristikTopik
 
 class SizeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,8 +13,15 @@ class ColorSerializer(serializers.ModelSerializer):
         model = Color
         fields = ['id','colors']
 
+class CharacteristikSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CharacteristikTopik
+        fields = ['id','title','value']
+
 class ProductListSerializer(serializers.ModelSerializer):
     color =ColorSerializer(many=True)
+    characteristics =CharacteristikSerializer(many=True)
     class Meta:
         model = Product
         fields = ["id",
@@ -32,13 +39,17 @@ class ProductListSerializer(serializers.ModelSerializer):
                 "size",
                 "discount",
                 "is_favorite",
+                
 ]
     def to_representation(self, instance):
         data_product = super().to_representation(instance)        
         data_product['size'] = SizeSerializer(instance.size.all(), many=True).data
         data_product['color'] = ColorSerializer(instance.color.all(),many=True).data
+        data_product['characteristics'] = CharacteristikSerializer(instance.characteristics.all(),many=True).data
         
         return data_product
+
+
 
 class ProductcreateSerializer(serializers.ModelSerializer):
     discount = serializers.IntegerField(required=False)
@@ -77,3 +88,4 @@ class ProductcreateSerializer(serializers.ModelSerializer):
                 "discount",
 ]
         
+

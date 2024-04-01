@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'corsheaders',
     'django_redis',
+    'drf_yasg',
 
     #app
     "app_user",
@@ -55,7 +56,8 @@ INSTALLED_APPS = [
     "app_favorite",
     "app_product",
     "app_account",
-    "app_collection"
+    "app_collection",
+    "app_banner"
 
     
 ]
@@ -129,23 +131,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-import os
-CACHE_LOCATION = BASE_DIR / 'CACHE' 
+# import os
+# CACHE_LOCATION = BASE_DIR / 'CACHE' 
 
-# Проверяем, существует ли папка кэша, и создаем ее, если необходимо
-if not os.path.exists(CACHE_LOCATION):
-    os.makedirs(CACHE_LOCATION)
+# # Проверяем, существует ли папка кэша, и создаем ее, если необходимо
+# if not os.path.exists(CACHE_LOCATION):
+#     os.makedirs(CACHE_LOCATION)
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION':  str(CACHE_LOCATION), 
-        'TIMEOUT': 86400 ,
-        'OPTIONS': {
-            'MAX_ENTRIES': 1000
-        }
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'LOCATION':  str(CACHE_LOCATION), 
+#         'TIMEOUT': 86400 ,
+#         'OPTIONS': {
+#             'MAX_ENTRIES': 1000
+#         }
+#     }
+# }
 
 
 
@@ -186,6 +188,8 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 30,
 }
 
 
@@ -204,10 +208,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = "/static/"
-# STATIC_ROOT = "/usr/src/app/static"
+STATIC_ROOT = "/usr/src/app/static"
 
 MEDIA_URL = "/media/"
-# MEDIA_ROOT = "/usr/src/app/media"
+MEDIA_ROOT = "/usr/src/app/media"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -219,10 +223,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CACHES = {
     'default': {
 
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
-        'LOCATION':  str(CACHE_LOCATION), 
-        'TIMEOUT': 86400  ,  
+        # 'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        # 'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
+        # 'LOCATION':  str(CACHE_LOCATION), 
+        # 'TIMEOUT': 86400  ,  
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': 'redis://127.0.0.1:6379/0',
         'OPTIONS': {

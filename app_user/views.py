@@ -11,9 +11,12 @@ from django.utils import timezone
 from datetime import timedelta
 
 from .models import CustomUser
-from .serializers import UserSerializer, LoginUserSerializer, ConfirmEmailSerializer, VerifyUserCodeSerializer
+from .serializers import UserSerializer, LoginUserSerializer, VerifyUserCodeSerializer,SendCodeSerializer,ForgetPasswordSerializer
+from .services import *
 
 import time
+
+
 
 
 class LoginUserView(generics.GenericAPIView):
@@ -35,6 +38,7 @@ class LoginUserView(generics.GenericAPIView):
                     {
                         "user_id": user.id,
                         "is_staff": user.is_staff,
+                        "is_active": user.is_active,
                         "email": user.email,
                         "username": user.username,
                         "refresh": str(refresh),
@@ -61,41 +65,61 @@ class LoginUserView(generics.GenericAPIView):
 
 
 
-class RegisterUserView(generics.CreateAPIView):
+class RegisterUserView(CreateUserApiView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
 
 
-class VerifyUserCodeView(generics.GenericAPIView):
+class UserVerifyRegisterCode(generics.UpdateAPIView):
     serializer_class = VerifyUserCodeSerializer
 
-    def post(self, request, *args, **kwargs):
+    http_method_names = ['patch',]
+    def patch(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        code = request.data.get("code")
-        if not code:
-            return Response({"code": ["Это поле обязательно."]}, status=status.HTTP_400_BAD_REQUEST)
+        code = serializer.validated_data.get('code')
+        return CheckCode.check_code(code=code)
+
+
+
+#отправить код на почту       
+class ForgetPasswordSendCodeView(generics.UpdateAPIView):
+    serializer_class = SendCodeSerializer
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        email = request.data.get("email")
+        if not email:
+            return Response({"required": "email"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            user = CustomUser.objects.get(code=code)
-            user.is_active = True
-            user.save()
-            refresh = RefreshToken.for_user(user=user)
-            return Response({
-                "message": "Учетная запись успешно активирована.",
-                'id':user.id,
-                'email':user.email,
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-                'refresh_lifetime_days': refresh.lifetime.days,
-                'access_lifetime_days': refresh.access_token.lifetime.days
-
-                })
+            user = CustomUser.objects.get(email=email)
+            # Если пользователь уже существует, просто обновите его код подтверждения и отправьте его
+            send_verification_code(email=email)
+            return Response({"success":"Код был отправлен на почту"}, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
-            return Response({"message": "Неверный код подтверждения."}, status=status.HTTP_400_BAD_REQUEST)
+            # Если пользователь не существует, создайте нового пользователя и отправьте ему код подтверждения
+            user = CustomUser.objects.create(email=email)
+            send_verification_code(email=email)
+            return Response({"success":"Код был отправлен на почту"}, status=status.HTTP_201_CREATED)
+        
+        
 
+# если user забыл пароль при входе
+class ForgetPasswordView(generics.UpdateAPIView):
+    serializer_class = ForgetPasswordSerializer
 
+    http_method_names = ['patch',]
+    def update(self, request, *args, **kwargs):
+        
+        result = ChangePasswordOnReset.change_password_on_reset(self=self,request=request)
+
+        if result == "success":
+            return Response({"success ":"Пароль успешно изменен"}, status=status.HTTP_200_OK)
+        else:
+            return Response(result, status=status.HTTP_400_BAD_REQUEST)
+        
 class UserListView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
@@ -111,10 +135,10 @@ class UserDeleteView(generics.DestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAdminUser]
 
-class UserUpdateView(generics.UpdateAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAdminUser]
+# class UserUpdateView(generics.UpdateAPIView):
+#     queryset = CustomUser.objects.all()
+#     serializer_class = UserSerializer
+#     permission_classes = [permissions.IsAdminUser]
 
 class UserDetailView(generics.RetrieveAPIView):
     queryset = CustomUser.objects.all()
