@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import *
+from app_user.views import *
 
 
 app_name = "users"
@@ -12,6 +12,6 @@ urlpatterns = [
     path("register/user/", RegisterUserView.as_view(), name="register_user"),
     path("login/user/", LoginUserView.as_view(), name="login_user"),
 
-    path('send-code-to-email/', ForgetPasswordSendCodeView.as_view(), name='send_password_reset_code'), # отправить code в почту
+    path('send-code-to-email/', ForgetPasswordSendCodeView.as_view(), name='send_password_reset_code'),
     path('verify/register-code/', UserVerifyRegisterCode.as_view(), name='verify_user_code'),
 ]

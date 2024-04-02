@@ -32,7 +32,8 @@ class ListAllProductApiView(ListAPIView):
 class CreateProductApiView(CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductcreateSerializer
-    permission_classes = [IsAdminUser, ]
+    permission_classes = [IsAuthenticated, ]
+
 
 
 
@@ -49,6 +50,9 @@ class ProductUpdateApiView(UpdateAPIView):
     serializer_class = ProductcreateSerializer
     lookup_field = "id"
     permission_classes = [IsAdminUser, ]
+
+
+   
     
     def perform_update(self, serializer):
         instance = serializer.instance
