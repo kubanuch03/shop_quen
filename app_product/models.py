@@ -14,6 +14,12 @@ class Color(models.Model):
     def __str__(self):
         return self.colors
     
+    class Meta:
+        indexes = [
+            models.Index(fields=['id']),  
+            models.Index(fields=['colors']),  
+            
+        ]
 
 class Size(models.Model):
     sizes = models.CharField(max_length=255)
@@ -23,6 +29,7 @@ class Size(models.Model):
     
     class Meta:
         indexes = [
+            models.Index(fields=['id']),  
             models.Index(fields=['sizes']),  
             
         ]
@@ -59,5 +66,12 @@ class CharacteristikTopik(models.Model):
 
     def __str__(self):
         return self.title
+
+    indexes = [
+            models.Index(fields=['id']),  
+            models.Index(fields=['title']),  
+            models.Index(fields=['value']),  
+            
+        ]
 
 

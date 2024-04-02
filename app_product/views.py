@@ -18,15 +18,16 @@ from django.views.decorators.cache import cache_page
 
 
 class ListAllProductApiView(ListAPIView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().select_related('subcategory').prefetch_related('color', 'size')
     serializer_class = ProductListSerializer
     filter_backends = [PriceRangeFilter, SearchFilter]
-    permission_classes = [AllowAny, ]
     pagination_class = PageNumberPagination
 
-    @method_decorator(cache_page(60*60))  # Установите здесь желаемое время жизни кэша в секундах
+    @method_decorator(cache_page(60*60))  
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+
+
 
 class CreateProductApiView(CreateAPIView):
     queryset = Product.objects.all()
@@ -48,16 +49,6 @@ class ProductUpdateApiView(UpdateAPIView):
     serializer_class = ProductcreateSerializer
     lookup_field = "id"
     permission_classes = [IsAdminUser, ]
-
-    def get_queryset(self):
-        return Product.objects.all()
-
-    def get_object(self):
-        queryset = self.get_queryset()
-        obj = queryset.filter(id=self.kwargs[self.lookup_field]).first()
-        if obj is None:
-            raise Http404("Product does not exist")
-        return obj
     
     def perform_update(self, serializer):
         instance = serializer.instance
@@ -66,9 +57,8 @@ class ProductUpdateApiView(UpdateAPIView):
 
 
 class ListOneProducApiView(APIView):
-    permission_classes = [AllowAny,]
 
-    @method_decorator(cache_page(60*60)) 
+    @method_decorator(cache_page(60*60))  
     def get(self, request, id):
         products = get_object_or_404(Product, id=id)
         serializer = ProductListSerializer(products)
@@ -76,7 +66,6 @@ class ListOneProducApiView(APIView):
     
 
 class ProductBySubCategory(APIView):
-    permission_classes = [AllowAny, ]
     def get(self, request, subcategory_id):
         products = get_object_or_404(Product,subcategory_id=subcategory_id)
         serializer = ProductListSerializer(products, many=True)
@@ -90,6 +79,11 @@ class SizeApiView(ListCreateAPIView):
     serializer_class = SizeSerializer
     permission_classes = [IsAdminUser, ]
 
+    @method_decorator(cache_page(60))  
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
 
 class SizeRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Size.objects.all()
@@ -102,6 +96,10 @@ class ColorApiView(ListCreateAPIView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
     permission_classes = [IsAdminUser, ]
+
+    @method_decorator(cache_page(60))  
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class ColorRUDView(RetrieveUpdateDestroyAPIView):
@@ -117,14 +115,23 @@ class CharacteristikViewSet(ModelViewSet):
     queryset = CharacteristikTopik.objects.all()
     serializer_class = CharacteristikSerializer
     permission_classes = [IsAdminUser]
+    
 
 class CharacteristikListView(ListAPIView):
     queryset = CharacteristikTopik.objects.all()
     serializer_class = CharacteristikSerializer
-    permission_classes = [AllowAny]
+
+    @method_decorator(cache_page(60*60))  
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class CharacteristikDetailView(RetrieveAPIView):
     queryset = CharacteristikTopik.objects.all()
     serializer_class = CharacteristikSerializer
-    permission_classes = [AllowAny]
+
+    @method_decorator(cache_page(60*60))  
+    def get(self, request, id):
+        products = get_object_or_404(Product, id=id)
+        serializer = ProductListSerializer(products)
+        return Response(serializer.data)
     
