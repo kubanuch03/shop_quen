@@ -86,6 +86,7 @@ class SizeApiView(ListCreateAPIView):
     serializer_class = SizeSerializer
     permission_classes = [IsAdminUser, ]
 
+    
     # @method_decorator(cache_page(60))  
     # def dispatch(self, *args, **kwargs):
     #     return super().dispatch(*args, **kwargs)

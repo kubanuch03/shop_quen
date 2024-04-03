@@ -27,6 +27,7 @@ class CharacteristikSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"error":"title,value cannot contain is digit!"})
         return super().create(validated_data)
     
+    
 class ProductListSerializer(serializers.ModelSerializer):
     color =ColorSerializer(many=True)
     characteristics =CharacteristikSerializer(many=True)
@@ -76,7 +77,7 @@ class ProductcreateSerializer(serializers.ModelSerializer):
         brand = validated_data['brand']
         description = validated_data['description']
 
-               
+
         
         if discount is not None:
             discounted_price = self.apply_discount_to_price(price, discount)
@@ -88,7 +89,8 @@ class ProductcreateSerializer(serializers.ModelSerializer):
         if (title.isdigit() or brand.isdigit() or description.isdigit()):
             raise serializers.ValidationError({"error":"title, brand, description cannot contain only digits."})
 
-
+        if not any(c.isalpha() for c in title) or not any(c.isalpha() for c in brand):
+            raise serializers.ValidationError({"error": "title and brand must contain at least one letter."})
 
         return super().create(validated_data)
 
@@ -112,4 +114,7 @@ class ProductcreateSerializer(serializers.ModelSerializer):
                 "discount",
 ]
         
+
+
+
 
