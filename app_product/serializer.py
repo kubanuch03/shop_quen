@@ -1,23 +1,55 @@
 from rest_framework import serializers
-
+import re
 from app_product.models import Product, Color, Size, CharacteristikTopik
 
 class SizeSerializer(serializers.ModelSerializer):
+    sizes = serializers.CharField()
+
     class Meta:
         model = Size
         fields = ["id", "sizes"]
 
+    def validate(self, attrs):
+        sizes = attrs['sizes']
+
+        if not re.match("^[a-zA-Z]+$", sizes):
+            raise serializers.ValidationError(
+                'размер должен содержать только английские буквы'
+            )
+
+        attrs['sizes'] = sizes.upper()
+
+        return attrs
+
 
 class ColorSerializer(serializers.ModelSerializer):
+    colors = serializers.CharField()
+
     class Meta:
         model = Color
-        fields = ['id','colors']
+        fields = ['id', 'colors']
+
+    def validate(self, attrs):
+        colors = attrs['colors']
+
+        if not colors.isalpha():
+            raise serializers.ValidationError(
+                'цвет должен содержать только буквы'
+            )
+
+        attrs['colors'] = colors.upper()
+
+        return attrs
+
+
 
 class CharacteristikSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CharacteristikTopik
         fields = ['id','title','value']
+
+
 
 class ProductListSerializer(serializers.ModelSerializer):
     color =ColorSerializer(many=True)

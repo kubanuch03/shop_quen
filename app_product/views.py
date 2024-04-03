@@ -3,7 +3,11 @@ from app_product.models import Product, Size, Color, CharacteristikTopik
 from app_product.filters import PriceRangeFilter, SearchFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
+from rest_framework.generics import (
+ListAPIView, CreateAPIView, UpdateAPIView, 
+DestroyAPIView, ListCreateAPIView,
+RetrieveUpdateDestroyAPIView, RetrieveAPIView
+)
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import PageNumberPagination
 
@@ -24,7 +28,7 @@ class ListAllProductApiView(ListAPIView):
     permission_classes = [AllowAny, ]
     pagination_class = PageNumberPagination
 
-    @method_decorator(cache_page(60*60))  # Установите здесь желаемое время жизни кэша в секундах
+    @method_decorator(cache_page(60*60))
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 

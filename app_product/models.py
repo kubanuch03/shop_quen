@@ -1,22 +1,17 @@
 from django.db import models
 from app_category.models import SubCategory
-from app_user.models import  CustomUser
-from django.core.cache import cache
-from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.db import models
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
-from django.shortcuts import get_object_or_404
+
 
 class Color(models.Model):
-    colors = models.CharField(max_length=255)
+    colors = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.colors
     
 
 class Size(models.Model):
-    sizes = models.CharField(max_length=255)
+    sizes = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.sizes
