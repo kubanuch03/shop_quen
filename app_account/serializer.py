@@ -10,6 +10,7 @@ class ChangeUserInfoSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'full_name',
+            "phone_number",
         )
 
 
@@ -58,9 +59,6 @@ class ChangePasswordSerializer(serializers.Serializer):
         fields = ['new_password', 'confirming_new_password']    
 
 
-
-
-
 from app_product.models import Product
 
 
@@ -72,17 +70,12 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 
-
-
-
-
-
 class HistoryListSerializer(serializers.ModelSerializer):
     products = serializers.SerializerMethodField()
     user = HistoryUserSerializer()
     class Meta:
         model = History
-        fields = ['products', 'user', 'price', 'lastname', 'firstname', 'types', 'location', 'payment_type', 'status', 'delivery_date']
+        fields = ['id', 'products', 'user', 'price', 'lastname', 'firstname', 'types', 'location', 'payment_type', 'status', 'delivery_date']
 
     def get_products(self, obj):
         products_queryset = obj.products.all()
@@ -92,18 +85,7 @@ class HistoryListSerializer(serializers.ModelSerializer):
 
 
 
-
-
 class HistoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = History
         fields = ['products', 'user', 'price', 'lastname', 'firstname', 'types', 'location', 'payment_type', 'status', 'delivery_date']
-
-
-
-
- 
-    
-
-
-

@@ -21,8 +21,8 @@ class PaymentMethod(models.Model):
 
 class History(models.Model):
     STATUS = (
-        ('Оплачено', 'Оплачено'),
         ('На проверке', 'На проверке'),
+        ('Оплачено', 'Оплачено'),
         ('Доставлено', 'Доставлено'),
 
     )
@@ -34,7 +34,7 @@ class History(models.Model):
     types = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
     payment_type = models.CharField(max_length=255)
-    status = models.CharField(choices=STATUS, blank=True)
+    status = models.CharField(choices=STATUS, default='На проверке')
     delivery_date = models.DateTimeField(null=True, blank=True)
 
     @staticmethod

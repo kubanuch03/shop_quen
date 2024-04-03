@@ -39,13 +39,12 @@ class PaymentMethodApiView(generics.ListCreateAPIView):
 
 
 
-class UserInfoApiView(ListAPIView):
-    serializer_class = UserInfoSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
+class UserInfoApiView(APIView):
+    def get(self, request, *args, **kwargs):
         user = self.request.user
-        return CustomUser.objects.filter(id=user.id)
+        queryset = CustomUser.objects.filter(id=user.id).first()
+        serializer = UserInfoSerializer(queryset)
+        return Response(serializer.data)
     
 
 
@@ -127,12 +126,27 @@ class ChangePasswordAPIVIew(UpdateModelMixin, GenericAPIView):
 class HistoryListApiView(ListAPIView):
     queryset = History.objects.all()
     serializer_class = HistoryListSerializer
+    permission_classes = [permissions.IsAdminUser, ]
+
+
+
+class HistoryByUserListApiView(ListAPIView):
+    queryset = History.objects.all()
+    serializer_class = HistoryListSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        user_object = CustomUser.objects.get(id=user.id)
+        queryset = History.objects.filter(user=user_object)
+        return queryset
+
 
 
 
 class HistoryCreateApiView(CreateAPIView):
     queryset = History.objects.all()
     serializer_class = HistoryCreateSerializer
+    permission_classes = [permissions.IsAdminUser, ]
 
 
 
@@ -141,6 +155,7 @@ class HistoryCreateApiView(CreateAPIView):
 class HistoryDetailView(generics.RetrieveUpdateAPIView):
     queryset = History.objects.all()
     serializer_class = HistoryCreateSerializer
+    permission_classes = [permissions.IsAdminUser, ]
     lookup_field = "id"
 
 
