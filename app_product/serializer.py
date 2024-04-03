@@ -32,9 +32,9 @@ class ColorSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         colors = attrs['colors']
 
-        if not colors.isalpha():
+        if not re.match("^[a-zA-Z]+$", colors):
             raise serializers.ValidationError(
-                'цвет должен содержать только буквы'
+                'размер должен содержать только английские буквы'
             )
 
         attrs['colors'] = colors.upper()
