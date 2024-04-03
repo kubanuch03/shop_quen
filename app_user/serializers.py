@@ -35,8 +35,9 @@ class UserSerializer(serializers.ModelSerializer):
             "is_active"
         )
 
+
     def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
+        if attrs['password'].strip() != attrs['password2'].strip():
             raise serializers.ValidationError("Пароли не совпадают")
         return attrs
 

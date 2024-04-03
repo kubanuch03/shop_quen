@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 from .models import Favorite
 from .serializers import FavoriteSerializer
@@ -23,9 +24,9 @@ class FavoriteListApiView(generics.ListAPIView):
             return Favorite.objects.filter(user=user)
         return Favorite.objects.none()
     
-    @method_decorator(cache_page(60*60))  
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(100))  
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
 
     
@@ -39,10 +40,13 @@ class FavoriteCreateApiView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         product_id = self.request.data['product']
         try:
-            product = Favorite.objects.get(pk=product_id)
+            product = Product.objects.get(pk=product_id)
+            if Favorite.objects.filter(user=request.user, product=product).exists():
+                return response.Response({"error": "Product  is already in favorites"}, status=status.HTTP_400_BAD_REQUEST)
+            
         except Favorite.DoesNotExist:
             return response.Response({"error":"Product does not exist"}, status=status.HTTP_400_BAD_REQUEST)
-
+        
         favorite = Favorite.objects.create(user=request.user,product=product)
         product.is_favorite=True
         product.save()
@@ -86,6 +90,14 @@ class FavoriteDeleteApiView(generics.DestroyAPIView):
         if obj is None:
             raise Http404("Product does not exist")
         return obj
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        # Удаляем соответствующий кеш по ключу
+        cache_key = f'favorite_detail_{instance.id}'
+        cache.delete(cache_key)
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class FavoriteUpdateApiView(generics.UpdateAPIView):

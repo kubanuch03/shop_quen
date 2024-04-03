@@ -18,7 +18,15 @@ class CharacteristikSerializer(serializers.ModelSerializer):
     class Meta:
         model = CharacteristikTopik
         fields = ['id','title','value']
+    
+    def create(self, validated_data):
+        title = validated_data['title']
+        value = validated_data['value']
 
+        if title.isdigit() or value.isdigit():
+            raise serializers.ValidationError({"error":"title,value cannot contain is digit!"})
+        return super().create(validated_data)
+    
 class ProductListSerializer(serializers.ModelSerializer):
     color =ColorSerializer(many=True)
     characteristics =CharacteristikSerializer(many=True)
@@ -64,11 +72,27 @@ class ProductcreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         discount = validated_data.get('discount')
         price = validated_data['price']
+        title = validated_data['title']
+        brand = validated_data['brand']
+        description = validated_data['description']
+
+               
+        
         if discount is not None:
             discounted_price = self.apply_discount_to_price(price, discount)
             validated_data['price'] = discounted_price
+        
+        if price is not None and price <= 0:
+            raise serializers.ValidationError({"price": "Price must be a positive integer."})
+        
+        if (title.isdigit() or brand.isdigit() or description.isdigit()):
+            raise serializers.ValidationError({"error":"title, brand, description cannot contain only digits."})
+
+
+
         return super().create(validated_data)
 
+    
     
     class Meta:
         model = Product
