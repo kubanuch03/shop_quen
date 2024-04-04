@@ -40,11 +40,12 @@ class PaymentMethodApiView(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
+
         if PaymentMethod.objects.filter(text=serializer.validated_data['text']).exists():
             return Response({"error":"dublicate!"})
         
         return Response(serializer.data, status=status.HTTP_201_CREATED,)
+
 
 class UserInfoApiView(APIView):
     def get(self, request, *args, **kwargs):
