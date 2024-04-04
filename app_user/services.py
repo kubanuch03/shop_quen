@@ -108,7 +108,7 @@ class CheckCode():
                     'is_active': user.is_active,
                     'phone_number': user.phone_number,
                     'email': user.email,
-                    'refresh-token': str(refresh),
+                    'refresh': str(refresh),
                     'access': str(refresh.access_token),
                     'refresh_lifetime_days': refresh.lifetime.days,
                     'access_lifetime_days': refresh.access_token.lifetime.days,
@@ -116,6 +116,7 @@ class CheckCode():
                 })
             except CustomUser.DoesNotExist:
                 return Response({"error":"Пользователь не найден"})
+
 
 
 class ChangePasswordOnReset:

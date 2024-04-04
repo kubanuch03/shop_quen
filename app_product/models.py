@@ -9,6 +9,12 @@ class Color(models.Model):
     def __str__(self):
         return self.colors
     
+    class Meta:
+        indexes = [
+            models.Index(fields=['id']),  
+            models.Index(fields=['colors']),  
+            
+        ]
 
 class Size(models.Model):
     sizes = models.CharField(max_length=255, unique=True)
@@ -18,6 +24,7 @@ class Size(models.Model):
     
     class Meta:
         indexes = [
+            models.Index(fields=['id']),  
             models.Index(fields=['sizes']),  
             
         ]
@@ -33,7 +40,7 @@ class Product(models.Model):
     is_any = models.BooleanField(default=False)
     color = models.ManyToManyField(Color)
     size = models.ManyToManyField(Size)
-    discount = models.PositiveIntegerField(blank=True, null=True)
+    discount = models.CharField(blank=True, null=True)
     created_at = models.DateField(auto_now_add=True)
     is_favorite = models.BooleanField(default=False)
     images1 = models.ImageField(upload_to="text/", blank=True, null=True)
@@ -54,5 +61,12 @@ class CharacteristikTopik(models.Model):
 
     def __str__(self):
         return self.title
+
+    indexes = [
+            models.Index(fields=['id']),  
+            models.Index(fields=['title']),  
+            models.Index(fields=['value']),  
+            
+        ]
 
 

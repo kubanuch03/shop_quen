@@ -48,7 +48,16 @@ class CharacteristikSerializer(serializers.ModelSerializer):
     class Meta:
         model = CharacteristikTopik
         fields = ['id','title','value']
+    
+    def create(self, validated_data):
+        title = validated_data['title']
+        value = validated_data['value']
 
+        if title.isdigit():
+            raise serializers.ValidationError({"error":"title cannot contain is digit!"})
+        return super().create(validated_data)
+    
+    
 
 
 class ProductListSerializer(serializers.ModelSerializer):
@@ -84,23 +93,48 @@ class ProductListSerializer(serializers.ModelSerializer):
 
 
 class ProductcreateSerializer(serializers.ModelSerializer):
-    discount = serializers.IntegerField(required=False)
+    discount = serializers.CharField(required=False)
 
     def apply_discount_to_price(self, price, discount):
-        if discount > 0 and discount <= 100:
-            discounted_price = price - (price * discount) // 100
-            return discounted_price
+        if '%' in discount: 
+            discount_percentage = int(discount.replace('%', ''))
+            if discount_percentage > 0 and discount_percentage <= 100:
+                discounted_price = price - (price * discount_percentage) // 100
+                return discounted_price
         else:
-            return price
+            discount_value = int(discount)
+            if discount_value > 0:
+                discounted_price = price - discount_value
+                return discounted_price
+        return price
 
     def create(self, validated_data):
         discount = validated_data.get('discount')
         price = validated_data['price']
+        title = validated_data['title']
+        brand = validated_data['brand']
+        description = validated_data['description']
+        
+        # Применяем скидку к цене, если указана
         if discount is not None:
             discounted_price = self.apply_discount_to_price(price, discount)
             validated_data['price'] = discounted_price
+        
+        # Проверяем, что цена положительная
+        if price <= 0:
+            raise serializers.ValidationError({"price": "Price must be a positive integer."})
+        
+        # Проверяем, что title, brand и description не содержат только цифры
+        if (title.isdigit() or brand.isdigit() or description.isdigit()):
+            raise serializers.ValidationError({"error":"title, brand, description cannot contain only digits."})
+
+        # Проверяем, что в title и brand есть хотя бы одна буква
+        if not any(c.isalpha() for c in title) or not any(c.isalpha() for c in brand):
+            raise serializers.ValidationError({"error": "title and brand must contain at least one letter."})
+
         return super().create(validated_data)
 
+    
     
     class Meta:
         model = Product
@@ -120,4 +154,7 @@ class ProductcreateSerializer(serializers.ModelSerializer):
                 "discount",
 ]
         
+
+
+
 
