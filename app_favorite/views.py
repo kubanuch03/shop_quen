@@ -48,11 +48,14 @@ class FavoriteCreateApiView(generics.CreateAPIView):
             return response.Response({"error":"Product does not exist"}, status=status.HTTP_400_BAD_REQUEST)
         
         favorite = Favorite.objects.create(user=request.user,product=product)
-        product.is_favorite=True
-        product.save()
+        favorite.is_favorite=True
+        favorite.save()
 
         serializer = self.get_serializer(favorite)
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+
 
 
 
