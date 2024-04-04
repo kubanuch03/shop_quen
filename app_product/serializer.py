@@ -53,8 +53,8 @@ class CharacteristikSerializer(serializers.ModelSerializer):
         title = validated_data['title']
         value = validated_data['value']
 
-        if title.isdigit() or value.isdigit():
-            raise serializers.ValidationError({"error":"title,value cannot contain is digit!"})
+        if title.isdigit():
+            raise serializers.ValidationError({"error":"title cannot contain is digit!"})
         return super().create(validated_data)
     
     
