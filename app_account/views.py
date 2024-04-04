@@ -162,7 +162,7 @@ class HistoryCreateApiView(CreateAPIView):
 
 class HistoryDetailView(generics.RetrieveUpdateAPIView):
     queryset = History.objects.all()
-    serializer_class = HistoryCreateSerializer
+    serializer_class = HistoryListSerializer
     permission_classes = [permissions.IsAdminUser, ]
     lookup_field = "id"
 
