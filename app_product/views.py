@@ -70,7 +70,7 @@ class ProductUpdateApiView(UpdateAPIView):
 
 class ListOneProducApiView(APIView):
 
-    @method_decorator(cache_page(60*60))  
+    # @method_decorator(cache_page(60*60))  
     def get(self, request, id):
         products = get_object_or_404(Product, id=id)
         serializer = ProductListSerializer(products)
@@ -110,9 +110,9 @@ class ColorApiView(ListCreateAPIView):
     serializer_class = ColorSerializer
     permission_classes = [IsAdminUser, ]
 
-    @method_decorator(cache_page(60))  
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(60))  
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
 
 class ColorRUDView(RetrieveUpdateDestroyAPIView):
