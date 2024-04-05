@@ -36,6 +36,7 @@ class Product(models.Model):
     price = models.PositiveIntegerField()
     description = models.TextField()
     brand = models.CharField(max_length=255)
+    count = models.PositiveIntegerField()
     characteristics = models.ManyToManyField('CharacteristikTopik')
     is_any = models.BooleanField(default=False)
     color = models.ManyToManyField(Color)
