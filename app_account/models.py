@@ -43,3 +43,8 @@ class History(models.Model):
         if instance.status == 'Доставлено' and not instance.delivery_date:
             instance.delivery_date = timezone.now()
             instance.save()
+
+
+
+
+ 
