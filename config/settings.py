@@ -169,12 +169,12 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://3.123.17.71"
+    "https://queen-shops.com"
 ]
 
 CORS_ALLOW_ORIGINS = [
     "http://localhost:3000",
-    "http://3.123.17.71"
+    "https://queen-shops.com"
 
 ]
 
@@ -228,7 +228,7 @@ CACHES = {
         # 'LOCATION':  str(CACHE_LOCATION), 
         # 'TIMEOUT': 86400  ,  
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/0',
+        'LOCATION': 'redis://redis:6379/0',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         },
@@ -259,3 +259,5 @@ DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
 EMAIL_ADMIN = config("EMAIL_ADMIN")
 
 
+CSRF_USE_SESSIONS = True
+CSRF_TRUSTED_ORIGINS = ["https://queen-shops.com"]
