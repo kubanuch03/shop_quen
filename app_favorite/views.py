@@ -8,14 +8,14 @@ from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
 from .models import Favorite
-from .serializers import FavoriteSerializer
+from .serializers import FavoriteListSerializer
 from .permissions import IsUserOrAdmin
 
 from app_product.models import Product
 
 class FavoriteListApiView(generics.ListAPIView):
     queryset = Favorite.objects.all().select_related('product').prefetch_related('user',)
-    serializer_class = FavoriteSerializer
+    serializer_class = FavoriteListSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -34,7 +34,7 @@ class FavoriteListApiView(generics.ListAPIView):
 
 class FavoriteCreateApiView(generics.CreateAPIView):
     queryset = Favorite.objects.all()
-    serializer_class = FavoriteSerializer
+    serializer_class = FavoriteListSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
@@ -66,7 +66,7 @@ class FavoriteCreateApiView(generics.CreateAPIView):
 
 class FavoriteDetailApiView(generics.RetrieveAPIView):
     queryset = Favorite.objects.all()
-    serializer_class = FavoriteSerializer
+    serializer_class = FavoriteListSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     @method_decorator(cache_page(60))  
@@ -82,7 +82,7 @@ class FavoriteDetailApiView(generics.RetrieveAPIView):
 
 class FavoriteDeleteApiView(generics.DestroyAPIView):
     queryset = Favorite.objects.all()
-    serializer_class = FavoriteSerializer
+    serializer_class = FavoriteListSerializer
     permission_classes = [permissions.AllowAny]
 
 
@@ -108,5 +108,5 @@ class FavoriteDeleteApiView(generics.DestroyAPIView):
 
 class FavoriteUpdateApiView(generics.UpdateAPIView):
     queryset = Favorite.objects.all()
-    serializer_class = FavoriteSerializer
+    serializer_class = FavoriteListSerializer
     permission_classes = [permissions.AllowAny]

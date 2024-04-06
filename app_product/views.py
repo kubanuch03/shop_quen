@@ -1,4 +1,4 @@
-from app_product.serializer import ProductListSerializer, ProductcreateSerializer, SizeSerializer, ColorSerializer, CharacteristikSerializer
+from app_product.serializer import ProductDetailSerializer, ProductcreateSerializer, SizeSerializer, ColorSerializer, CharacteristikSerializer, ProductListSerializer
 from app_product.models import Product, Size, Color, CharacteristikTopik
 from app_product.filters import PriceRangeFilter, SearchFilter
 
@@ -32,11 +32,10 @@ class ListAllProductApiView(ListAPIView):
     filter_backends = [PriceRangeFilter, SearchFilter]
     pagination_class = PageNumberPagination
 
-    
-    # def get(self, request, *args, **kwargs):
-    #     products = display_all_products.delay().get()  # Получаем результаты выполнения задачи
-    #     serialized_products = ProductListSerializer(products, many=True).data  # Сериализуем данные
-    #     return Response(serialized_products)
+    @method_decorator(cache_page(60)) 
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+        
 
 
 
@@ -80,14 +79,14 @@ class ListOneProducApiView(APIView):
     @method_decorator(cache_page(60))  
     def get(self, request, id):
         products = get_object_or_404(Product, id=id)
-        serializer = ProductListSerializer(products)
+        serializer = ProductDetailSerializer(products)
         return Response(serializer.data)
     
 
 class ProductBySubCategory(APIView):
     def get(self, request, subcategory_id):
         products = get_object_or_404(Product,subcategory_id=subcategory_id)
-        serializer = ProductListSerializer(products, many=True)
+        serializer = ProductDetailSerializer(products, many=True)
         return Response(serializer.data)
     
 
@@ -163,6 +162,6 @@ class CharacteristikDetailView(RetrieveAPIView):
     @method_decorator(cache_page(60))  
     def get(self, request, id):
         products = get_object_or_404(Product, id=id)
-        serializer = ProductListSerializer(products)
+        serializer = ProductDetailSerializer(products)
         return Response(serializer.data)
     

@@ -57,12 +57,29 @@ class CharacteristikSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"error":"title cannot contain is digit!"})
         return super().create(validated_data)
     
-    
-
+#=====  Product   ===================================================================================================================================================================
 
 class ProductListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Product
+        fields = [
+            'id',
+            'title',
+            'price',
+            'images1',
+            'subcategory',
+            "color",
+            "size",
+            ]
+
+
+
+class ProductDetailSerializer(serializers.ModelSerializer):
     color =ColorSerializer(many=True)
+    size = SizeSerializer(many=True)
     characteristics =CharacteristikSerializer(many=True)
+    
     class Meta:
         model = Product
         fields = ["id",
@@ -80,9 +97,14 @@ class ProductListSerializer(serializers.ModelSerializer):
                 "color",
                 "size",
                 "discount",
-                "is_favorite",
                 
-]
+                
+]   
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.select_related('subcategory').prefetch_related('color', 'characteristics', 'size')
+        return queryset
+    
     def to_representation(self, instance):
         data_product = super().to_representation(instance)        
         data_product['size'] = SizeSerializer(instance.size.all(), many=True).data

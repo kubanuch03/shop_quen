@@ -228,7 +228,7 @@ CACHES = {
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         },
-        'TIMEOUT': 20, #7 * 24 * 3600
+        'TIMEOUT': 20, 
     }
 }
 # from kombu import Exchange, Queue
