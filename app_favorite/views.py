@@ -24,9 +24,9 @@ class FavoriteListApiView(generics.ListAPIView):
             return Favorite.objects.filter(user=user)
         return Favorite.objects.none()
     
-    # @method_decorator(cache_page(100))  
-    # def dispatch(self, *args, **kwargs):
-    #     return super().dispatch(*args, **kwargs)
+    @method_decorator(cache_page(100))  
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
     
@@ -69,9 +69,10 @@ class FavoriteDetailApiView(generics.RetrieveAPIView):
     serializer_class = FavoriteSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    @method_decorator(cache_page(60))  
     def get_queryset(self):
         return Favorite.objects.all()
-
+    
     def get_object(self):
         queryset = self.get_queryset()
         obj = queryset.filter(id=self.kwargs[self.lookup_field]).first()
@@ -84,6 +85,8 @@ class FavoriteDeleteApiView(generics.DestroyAPIView):
     serializer_class = FavoriteSerializer
     permission_classes = [permissions.AllowAny]
 
+
+    @method_decorator(cache_page(60))  
     def get_queryset(self):
         return Favorite.objects.all()
 

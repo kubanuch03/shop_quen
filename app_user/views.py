@@ -26,11 +26,6 @@ class LoginUserView(generics.GenericAPIView):
         password = request.data.get("password", None)
 
         if email and password:
-            cache_key = f"user_login:{email}:{password}"
-            cached_data = cache.get(cache_key)
-            if cached_data:
-                return Response(cached_data, status=status.HTTP_200_OK)
-
             user = authenticate(username=email, password=password)
 
             if user:
@@ -45,7 +40,7 @@ class LoginUserView(generics.GenericAPIView):
                     "refresh": str(refresh),
                     "access": str(refresh.access_token),
                 }
-                cache.set(cache_key, data, timeout=3600)  # Кеширование на 1 час
+                
                 return Response(data, status=status.HTTP_200_OK)
             else:
                 return Response(

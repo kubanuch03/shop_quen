@@ -29,7 +29,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 
@@ -48,6 +49,7 @@ class PaymentMethodApiView(generics.ListCreateAPIView):
 
 
 class UserInfoApiView(APIView):
+    @method_decorator(cache_page(160))
     def get(self, request, *args, **kwargs):
         user = self.request.user
         queryset = CustomUser.objects.filter(id=user.id).first()

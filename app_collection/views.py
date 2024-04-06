@@ -4,7 +4,8 @@ from app_collection.models import NewCollection, Recommendations
 from app_collection.serializers import (NewCollectionCreateSerializer, NewCollectionListSerializer,
 RecommendationCreateSerializer, RecommendationListSerializer)
 
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 class NewCollectionCreateApiView(generics.CreateAPIView):
     queryset = NewCollection.objects.all()
@@ -16,6 +17,9 @@ class NewCollectionListApiView(generics.ListAPIView):
     queryset = NewCollection.objects.all()
     serializer_class = NewCollectionListSerializer
 
+    @method_decorator(cache_page(60))  
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class NewCollectionRUDApiView(generics.RetrieveUpdateDestroyAPIView):
@@ -34,6 +38,9 @@ class RecommendationListApiView(generics.ListAPIView):
     queryset = Recommendations.objects.all()
     serializer_class = RecommendationListSerializer
 
+    @method_decorator(cache_page(60))  
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class RecommendationCreateApiView(generics.CreateAPIView):
     queryset = Recommendations.objects.all()

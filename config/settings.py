@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'corsheaders',
     'django_redis',
+    'django_celery_results',
     'drf_yasg',
 
     #app
@@ -222,21 +223,25 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CACHES = {
     'default': {
-
-        # 'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        # 'LOCATION': '/home/hello/Desktop/shop_quen/shop_quen/CACHE',
-        # 'LOCATION':  str(CACHE_LOCATION), 
-        # 'TIMEOUT': 86400  ,  
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://redis:6379/0',
+        'LOCATION': 'redis://localhost:6379/1',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         },
         'TIMEOUT': 20, #7 * 24 * 3600
     }
 }
+# from kombu import Exchange, Queue
 
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Bishkek'
 
+CELERY_CACHE_BACKEND = 'default'
 
 # JWT Config
 SIMPLE_JWT = {
