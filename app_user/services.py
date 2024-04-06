@@ -13,32 +13,34 @@ import string
 import requests
 
 
+from .tasks import send_verification_email
+
 def generate_verification_code(length=6):
     """Generate a random verification code."""
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
 
+# def send_verification_code(email):
 
-def send_verification_code(email):
+#     verification_code = generate_verification_code()
 
-    verification_code = generate_verification_code()
+#     subject = 'Verification Code'
+#     message = f'Your verification code is: {verification_code}'
+#     sender_email = 'kubanuch03@gmail.com'
+#     recipient_email = email
 
-    subject = 'Verification Code'
-    message = f'Your verification code is: {verification_code}'
-    sender_email = 'kubanuch03@gmail.com'
-    recipient_email = email
+#     try:
+#         user_obj = CustomUser.objects.get(email=email)
+#     except CustomUser.DoesNotExist:
+#         user_obj = CustomUser.objects.create(email=email)
+#     user_obj.code = verification_code
+#     user_obj.save()
 
-    try:
-        user_obj = CustomUser.objects.get(email=email)
-    except CustomUser.DoesNotExist:
-        user_obj = CustomUser.objects.create(email=email)
-    user_obj.code = verification_code
-    user_obj.save()
+#     send_mail(subject, message, sender_email, [recipient_email], fail_silently=False)
 
-    send_mail(subject, message, sender_email, [recipient_email], fail_silently=False)
-    # user_obj = CustomUser.objects.get(email_or_phone=email_or_phone)
-    # user_obj.code = verification_code
-    # user_obj.save()
+
+
+
 
 
 
@@ -77,21 +79,21 @@ def send_code_to_number(email_or_phone):
 
 
 
-class CreateUserApiView(mixins.CreateModelMixin,generics.GenericAPIView):
-
+class CreateUserApiView(mixins.CreateModelMixin, generics.GenericAPIView):
+    
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         email = serializer.validated_data['email']
+        verification_code = generate_verification_code()  # Функция генерации кода верификации
+
         serializer.save()
 
         if "@" in email:
-            send_verification_code(email=email)
+            send_verification_email(email, verification_code)  # Вызов задачи для отправки сообщения
 
-        return Response({"success":"Код был отправлен на указанный реквизит"}, status=status.HTTP_201_CREATED)
-
-
+        return Response({"success": "Код был отправлен на указанный реквизит"}, status=status.HTTP_201_CREATED)
 
 class CheckCode():
         @staticmethod
