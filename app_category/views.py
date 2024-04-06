@@ -60,9 +60,9 @@ class SubCategoryAllListApiView(ListAPIView):
     permission_classes = [AllowAny, ]
     filter_backends = [SearchFilter]
 
-    @method_decorator(cache_page(60*60))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(60*60))
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
 
 class ListOneSubCategoryApiView(APIView):
@@ -72,9 +72,9 @@ class ListOneSubCategoryApiView(APIView):
         serializer = CategoryListRUDSerializer(subcategory, many=True)
         return Response(serializer.data)
     
-    @method_decorator(cache_page(60*60))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(60*60))
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
 
 class SubCategoryCreateApiView(CreateAPIView):
@@ -98,7 +98,7 @@ class CategoryBySubCategory(APIView):
         serializer = SubCategoryListSerializer(subcategory, many=True)
         return Response(serializer.data)
     
-    @method_decorator(cache_page(60*60))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(60*60))
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
     
