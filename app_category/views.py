@@ -41,14 +41,14 @@ class ListOneCategoryApiView(APIView):
 class CategoryCreateApiView(CreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryCreateSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser, ]
 
 
 
 class CategoryRUDApiView(RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryListRUDSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser, ]
     lookup_field = "id"
 
 '=============================================== Category ======================================================= '
