@@ -77,6 +77,8 @@ class HistoryListSerializer(serializers.ModelSerializer):
         model = History
         fields = ['id', 'products', 'user', 'price', 'lastname', 'firstname', 'types', 'location', 'payment_type', 'status', 'delivery_date']
 
+    
+
     def get_products(self, obj):
         products_queryset = obj.products.all()
         products_data = ProductSerializer(products_queryset, many=True).data
