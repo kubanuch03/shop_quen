@@ -11,7 +11,7 @@ from .models import Favorite
 from .serializers import FavoriteListSerializer,UserFavoriteSerializer
 from .permissions import IsUserOrAdmin
 
-from app_product.models import Product
+from app_product.models import Product, IsFavorite
 from app_user.models import CustomUser
 
 class FavoriteListApiView(generics.ListAPIView):
@@ -43,25 +43,38 @@ class FavoriteCreateApiView(generics.CreateAPIView):
     serializer_class = FavoriteListSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    # def create(self, request, *args, **kwargs):
+    #     product_id = self.request.data.get('product') 
+    #     try:
+    #         product = Product.objects.get(pk=product_id)
+    #         if Favorite.objects.filter(user=request.user, product=product).exists():
+    #             return response.Response({"error": "Product  is already in favorites"}, status=status.HTTP_400_BAD_REQUEST)
+            
+    #     except Favorite.DoesNotExist:
+    #         return response.Response({"error":"Product does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+    #     is_favorite_instance = IsFavorite.objects.create(user=request.user)
+    #     product.is_favorite.add(request.user)
+    #     product.save()
+
+    #     serializer = self.get_serializer(is_favorite_instance)
+    #     return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+
     def create(self, request, *args, **kwargs):
         product_id = self.request.data['product']
-        try:
-            product = Product.objects.get(pk=product_id)
-            if Favorite.objects.filter(user=request.user, product=product).exists():
-                return response.Response({"error": "Product  is already in favorites"}, status=status.HTTP_400_BAD_REQUEST)
-            
-        except Favorite.DoesNotExist:
-            return response.Response({"error":"Product does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        product = Product.objects.get(pk=product_id)
         
-        favorite = Favorite.objects.create(user=request.user,product=product)
-        product.is_favorite=True
-        favorite.is_favorite=True
+        # Создаем экземпляр IsFavorite для текущего пользователя
+        is_favorite_instance = IsFavorite.objects.create(user=request.user)
+        
+        # Создаем объект Favorite и добавляем его к продукту
+        favorite = Favorite.objects.create(user=request.user, product=product)
+        
+        # Добавляем экземпляр IsFavorite к продукту
+        product.is_favorite.add(is_favorite_instance)
         product.save()
-        favorite.save()
-
+        
         serializer = self.get_serializer(favorite)
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
-
 
 
 
