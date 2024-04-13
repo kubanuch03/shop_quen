@@ -11,7 +11,7 @@ class FavoriteListSerializer(serializers.ModelSerializer):
     product_title = serializers.CharField(source='product.title', read_only=True) 
     class Meta:
         model = Favorite
-        fields = ['id','user','product','product_title','product_image','created_at','is_favorite']
+        fields = ['id','user','product','product_title','product_image','created_at',]
 
 
 class UserFavoriteSerializer(serializers.ModelSerializer):
