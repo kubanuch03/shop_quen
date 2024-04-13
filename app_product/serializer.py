@@ -100,7 +100,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
                 "brand", 
                 "characteristics", 
                 "is_any", 
-                "is_favorite"
+                "is_favorite",
                 "images1", 
                 "images2", 
                 "images3", 
