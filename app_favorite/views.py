@@ -8,10 +8,11 @@ from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
 from .models import Favorite
-from .serializers import FavoriteListSerializer
+from .serializers import FavoriteListSerializer,UserFavoriteSerializer
 from .permissions import IsUserOrAdmin
 
 from app_product.models import Product
+from app_user.models import CustomUser
 
 class FavoriteListApiView(generics.ListAPIView):
     queryset = Favorite.objects.all().select_related('product').prefetch_related('user',)
@@ -21,10 +22,15 @@ class FavoriteListApiView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         if user.is_authenticated:
-            return Favorite.objects.filter(user=user)
+            if user.is_superuser:
+                # Если пользователь - администратор, возвращаем все объекты Favorite
+                return Favorite.objects.all()
+            else:
+                # Возвращаем объекты Favorite только для текущего пользователя
+                return Favorite.objects.filter(user=user)
         return Favorite.objects.none()
     
-    @method_decorator(cache_page(100))  
+    # @method_decorator(cache_page(100))  
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
@@ -110,3 +116,9 @@ class FavoriteUpdateApiView(generics.UpdateAPIView):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteListSerializer
     permission_classes = [permissions.AllowAny]
+
+
+class UserDetailFavoriteView(generics.RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserFavoriteSerializer
+    permission_classes = [permissions.IsAdminUser]

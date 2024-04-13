@@ -1,9 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
 from django.core.validators import RegexValidator
-
+# from app_favorite.models import Favorite
 from .managers import UserManager
-
 
 class CustomUser(AbstractBaseUser,PermissionsMixin):
     email = models.EmailField(unique=True)
@@ -15,6 +14,7 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     
     code = models.CharField(max_length=6, blank=True)
 
+    favorites = models.ManyToManyField("app_favorite.Favorite")
 
     phone_number = models.CharField(
         max_length=13,

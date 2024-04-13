@@ -11,6 +11,8 @@ from django.utils.html import strip_tags
 from rest_framework import serializers
 from .models import CustomUser
 
+from app_favorite.serializers import FavoriteListSerializer
+from app_favorite.models import Favorite
 
 
 

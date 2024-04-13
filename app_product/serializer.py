@@ -72,9 +72,9 @@ class ProductListSerializer(serializers.ModelSerializer):
             'is_any',
             'discount',
             'created_at',
-            'is_favorite',
             'title',
             'price',
+            'is_favorite',
             'images1',
             'images2',
             'images3',
@@ -100,6 +100,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
                 "brand", 
                 "characteristics", 
                 "is_any", 
+                "is_favorite"
                 "images1", 
                 "images2", 
                 "images3", 

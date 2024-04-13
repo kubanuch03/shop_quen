@@ -32,7 +32,7 @@ class ListAllProductApiView(ListAPIView):
     filter_backends = [PriceRangeFilter, SearchFilter]
     pagination_class = PageNumberPagination
 
-    @method_decorator(cache_page(60)) 
+    # @method_decorator(cache_page(60)) 
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
         
