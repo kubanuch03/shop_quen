@@ -264,4 +264,4 @@ EMAIL_ADMIN = config("EMAIL_ADMIN")
 
 
 CSRF_USE_SESSIONS = True
-CSRF_TRUSTED_ORIGINS = ["https://queen-shops.com"]
+CSRF_TRUSTED_ORIGINS = ["https://back.queen-shops.com"]
