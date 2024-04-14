@@ -31,6 +31,7 @@ class Size(models.Model):
 class IsFavorite(models.Model):
     isfavorite = models.BooleanField(default=True)
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE )
+    favorite = models.ForeignKey("app_favorite.Favorite",on_delete=models.CASCADE,null=True,blank=True)
 
     def __str__(self) -> str:
         return f"{str(self.user)}"

@@ -113,8 +113,8 @@ class FavoriteDeleteApiView(generics.DestroyAPIView):
             instance = self.get_object()
             # Удаление объекта из модели Favorite
             self.perform_destroy(instance)
-            # Удаление объекта из модели IsFavorite
-            IsFavorite.objects.filter(user=request.user, product=instance.product).delete()
+            # Удаление связанных объектов из модели IsFavorite
+            IsFavorite.objects.filter(favorite=instance).delete()
             return response.Response({"success": "Deleted!"}, status=status.HTTP_204_NO_CONTENT)
         except Http404 as e:
             return response.Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
