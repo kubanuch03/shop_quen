@@ -47,8 +47,13 @@ class FavoriteCreateApiView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         product_id = self.request.data['product']
-        product = Product.objects.get(pk=product_id)
-        
+        try:
+            product = Product.objects.get(pk=product_id)
+            if Favorite.objects.filter(user=request.user, product=product).exists():
+                return response.Response({"error":"Product is already in favorites"}, status=status.HTTP_400_BAD_REQUEST)
+        except Favorite.DoesNotExist:
+            return response.Response({"error":"Product does not exist"})
+
         is_favorite_instance = IsFavorite.objects.create(user=request.user)
         
         favorite = Favorite.objects.create(user=request.user, product=product)

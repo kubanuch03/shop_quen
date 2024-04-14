@@ -76,7 +76,7 @@ class ProductUpdateApiView(UpdateAPIView):
 
 class ListOneProducApiView(APIView):
 
-    @method_decorator(cache_page(60))  
+    # @method_decorator(cache_page(60))  
     def get(self, request, id):
         products = get_object_or_404(Product, id=id)
         serializer = ProductDetailSerializer(products)
