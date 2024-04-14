@@ -78,7 +78,7 @@ class FavoriteDetailApiView(generics.RetrieveAPIView):
     serializer_class = FavoriteListSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    @method_decorator(cache_page(60))  
+    # @method_decorator(cache_page(60))  
     def get_queryset(self):
         return Favorite.objects.all()
     
@@ -95,9 +95,7 @@ class FavoriteDeleteApiView(generics.DestroyAPIView):
     permission_classes = [permissions.AllowAny]
 
 
-    @method_decorator(cache_page(60))  
-    def get_queryset(self):
-        return Favorite.objects.all()
+    
 
     def get_object(self):
         queryset = self.get_queryset()
@@ -109,10 +107,7 @@ class FavoriteDeleteApiView(generics.DestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
-        # Удаляем соответствующий кеш по ключу
-        cache_key = f'favorite_detail_{instance.id}'
-        cache.delete(cache_key)
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
+        return response.Response({"succes":"delete!"},status=status.HTTP_204_NO_CONTENT)
 
 
 class FavoriteUpdateApiView(generics.UpdateAPIView):
