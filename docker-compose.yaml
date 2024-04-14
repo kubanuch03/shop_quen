@@ -16,7 +16,7 @@ services:
       - LETSENCRYPT_HOST=back.queen-shops.com
 
     ports:
-      - 8000:8000
+      - 443:443
     depends_on:
       - db
       - redis
