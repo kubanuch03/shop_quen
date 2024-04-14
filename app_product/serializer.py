@@ -67,7 +67,7 @@ class IsFavoriteSerializer(serializers.ModelSerializer):
 #=====  Product   ===================================================================================================================================================================
 
 class ProductListSerializer(serializers.ModelSerializer):
-
+    is_favorite =IsFavoriteSerializer(many=True)
     class Meta:
         model = Product
         fields = [
@@ -89,7 +89,11 @@ class ProductListSerializer(serializers.ModelSerializer):
             "color",
             "size",
             ]
-
+    def to_representation(self, instance):
+        data_product = super().to_representation(instance)        
+        data_product['is_favorite'] = IsFavoriteSerializer(instance.is_favorite.all(),many=True).data
+        
+        return data_product   
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
@@ -116,8 +120,10 @@ class ProductDetailSerializer(serializers.ModelSerializer):
                 "size",
                 "discount",
                 
-                
-]   
+                ]
+
+    
+
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.select_related('subcategory').prefetch_related('color', 'characteristics', 'size')
