@@ -59,7 +59,7 @@ services:
     image: jwilder/nginx-proxy:1.2
     ports:
     - "81:81"
-    - "443:4444"
+    - "443:443"
     volumes:
     - ./nginx/default.conf:/etc/nginx/vhost.d/nginx.conf
     - static_volume:/usr/src/app/static
