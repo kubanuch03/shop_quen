@@ -15,8 +15,8 @@ services:
       - VIRTUAL_HOST=back.queen-shops.com
       - LETSENCRYPT_HOST=back.queen-shops.com
 
-    ports:
-      - 443:443
+    # ports:
+    #   - 8000:8000
     depends_on:
       - db
       - redis
@@ -59,7 +59,7 @@ services:
     image: jwilder/nginx-proxy:1.2
     ports:
     - "81:81"
-    - "443:443"
+    # - "443:443"
     volumes:
     - ./nginx/default.conf:/etc/nginx/vhost.d/nginx.conf
     - static_volume:/usr/src/app/static
