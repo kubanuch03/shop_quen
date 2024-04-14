@@ -92,22 +92,32 @@ class FavoriteDetailApiView(generics.RetrieveAPIView):
 class FavoriteDeleteApiView(generics.DestroyAPIView):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteListSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
-
-    
 
     def get_object(self):
-        queryset = self.get_queryset()
-        obj = queryset.filter(id=self.kwargs[self.lookup_field]).first()
-        if obj is None:
-            raise Http404("Product does not exist")
-        return obj
+        try:
+            # Получаем объект избранного по переданному идентификатору
+            obj = self.queryset.get(pk=self.kwargs['pk'])
+            # Проверяем, принадлежит ли объект текущему пользователю
+            if obj.user != self.request.user:
+                raise Http404("Вы не можете удалить этот объект избранного.")
+            return obj
+        except Favorite.DoesNotExist:
+            raise Http404("Объект избранного не существует.")
+
+    
     
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return response.Response({"succes":"delete!"},status=status.HTTP_204_NO_CONTENT)
+        try:
+            instance = self.get_object()
+            # Удаление объекта из модели Favorite
+            self.perform_destroy(instance)
+            # Удаление объекта из модели IsFavorite
+            IsFavorite.objects.filter(user=request.user, product=instance.product).delete()
+            return response.Response({"success": "Deleted!"}, status=status.HTTP_204_NO_CONTENT)
+        except Http404 as e:
+            return response.Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
 
 class FavoriteUpdateApiView(generics.UpdateAPIView):
