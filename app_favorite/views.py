@@ -54,11 +54,12 @@ class FavoriteCreateApiView(generics.CreateAPIView):
         except Favorite.DoesNotExist:
             return response.Response({"error":"Product does not exist"})
 
-        is_favorite_instance = IsFavorite.objects.create(user=request.user)
+        
         
         favorite = Favorite.objects.create(user=request.user, product=product)
-        
+        is_favorite_instance = IsFavorite.objects.create(user=request.user,favorite=favorite)
         product.is_favorite.add(is_favorite_instance)
+
         product.save()
         
         serializer = self.get_serializer(favorite)
@@ -106,7 +107,7 @@ class FavoriteDeleteApiView(generics.DestroyAPIView):
         except Favorite.DoesNotExist:
             raise Http404("Объект избранного не существует.")
 
-    
+
     
     def destroy(self, request, *args, **kwargs):
         try:

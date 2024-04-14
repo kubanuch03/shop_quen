@@ -64,6 +64,13 @@ class IsFavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = IsFavorite
         fields = ['id','user']
+    
+
+class IsFavoriteDeleteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = IsFavorite
+        fields = ['id','user','product',]
 #=====  Product   ===================================================================================================================================================================
 
 class ProductListSerializer(serializers.ModelSerializer):

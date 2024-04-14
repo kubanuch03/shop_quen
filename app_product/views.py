@@ -1,6 +1,7 @@
-from app_product.serializer import ProductDetailSerializer, ProductcreateSerializer, SizeSerializer, ColorSerializer, CharacteristikSerializer, ProductListSerializer
-from app_product.models import Product, Size, Color, CharacteristikTopik
+from app_product.serializer import ProductDetailSerializer, ProductcreateSerializer, SizeSerializer, ColorSerializer, CharacteristikSerializer, ProductListSerializer,IsFavoriteDeleteSerializer
+from app_product.models import Product, Size, Color, CharacteristikTopik, IsFavorite
 from app_product.filters import PriceRangeFilter, SearchFilter
+from app_favorite.models import Favorite
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -11,7 +12,7 @@ RetrieveUpdateDestroyAPIView, RetrieveAPIView
 )
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import PageNumberPagination
-from rest_framework import status
+from rest_framework import status, response
 
 from app_product.permissions import IsCreatorOrAdmin
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
@@ -25,6 +26,9 @@ from django.views.decorators.cache import cache_page
 from redis import Redis
 from django.conf import settings
 import json
+
+from django.http import Http404
+
 
 class ListAllProductApiView(ListAPIView):
     queryset = Product.objects.all()
@@ -165,3 +169,30 @@ class CharacteristikDetailView(RetrieveAPIView):
         serializer = ProductDetailSerializer(products)
         return Response(serializer.data)
     
+
+
+
+class IsFavoriteApiView(DestroyAPIView):
+    queryset = IsFavorite.objects.all()
+    serializer_class = IsFavoriteDeleteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        try:
+            obj = self.queryset.get(pk=self.kwargs['pk'])
+            if obj.user != self.request.user:
+                raise Http404("You cannot delete this favorite object.")
+            return obj
+        except IsFavorite.DoesNotExist:
+            raise Http404("Favorite object does not exist.")
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            # Удаление связанных объектов из модели Favorite
+            instance.favorite.delete()
+            # Удаление объекта из модели IsFavorite
+            self.perform_destroy(instance)
+            return Response({"success": "Deleted!"}, status=status.HTTP_204_NO_CONTENT)
+        except Http404 as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)

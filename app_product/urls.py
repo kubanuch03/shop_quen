@@ -16,7 +16,8 @@ from app_product.views import (
 
     CharacteristikListView,
     CharacteristikDetailView,
-    CharacteristikViewSet
+    CharacteristikViewSet,
+    IsFavoriteApiView
       )
 router = DefaultRouter()
 router.register(r"characteristik",CharacteristikViewSet, basename='characteristik')
@@ -37,5 +38,8 @@ urlpatterns = [
 
     path('list/characteristik/', CharacteristikListView.as_view()),
     path('detail/characteristik/<int:pk>/', CharacteristikDetailView.as_view()),
+
+    path('delete/isfavorite/<int:pk>/', IsFavoriteApiView.as_view(),name='delete-is_favorite'),
+
 
 ]+ router.urls
