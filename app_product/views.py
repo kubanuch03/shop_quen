@@ -179,7 +179,9 @@ class IsFavoriteApiView(DestroyAPIView):
 
     def get_object(self):
         try:
-            obj = self.queryset.get(pk=self.kwargs['pk'])
+            # Ищем объект IsFavorite по полю product
+            obj = IsFavorite.objects.get(product=self.kwargs['product'])
+            # Проверяем, принадлежит ли объект текущему пользователю
             if obj.user != self.request.user:
                 raise Http404("You cannot delete this favorite object.")
             return obj
