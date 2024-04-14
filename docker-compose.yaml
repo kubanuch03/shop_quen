@@ -58,7 +58,7 @@ services:
   nginx:
     image: jwilder/nginx-proxy:1.2
     ports:
-    - "82:82"
+    - "81:81"
     - "443:443"
     volumes:
     - ./nginx/default.conf:/etc/nginx/vhost.d/nginx.conf
