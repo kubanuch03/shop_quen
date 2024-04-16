@@ -1,6 +1,6 @@
 from rest_framework import serializers
 import re
-from app_product.models import Product, Color, Size, CharacteristikTopik
+from app_product.models import Product, Color, Size, CharacteristikTopik, IsFavorite
 
 class SizeSerializer(serializers.ModelSerializer):
     sizes = serializers.CharField()
@@ -56,11 +56,25 @@ class CharacteristikSerializer(serializers.ModelSerializer):
         if title.isdigit():
             raise serializers.ValidationError({"error":"title cannot contain is digit!"})
         return super().create(validated_data)
+
+
+
+class IsFavoriteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = IsFavorite
+        fields = ['id','user']
     
+
+class IsFavoriteDeleteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = IsFavorite
+        fields = ['id','user','product',]
 #=====  Product   ===================================================================================================================================================================
 
 class ProductListSerializer(serializers.ModelSerializer):
-
+    is_favorite =IsFavoriteSerializer(many=True)
     class Meta:
         model = Product
         fields = [
@@ -72,9 +86,9 @@ class ProductListSerializer(serializers.ModelSerializer):
             'is_any',
             'discount',
             'created_at',
-            'is_favorite',
             'title',
             'price',
+            'is_favorite',
             'images1',
             'images2',
             'images3',
@@ -82,13 +96,18 @@ class ProductListSerializer(serializers.ModelSerializer):
             "color",
             "size",
             ]
-
+    def to_representation(self, instance):
+        data_product = super().to_representation(instance)        
+        data_product['is_favorite'] = IsFavoriteSerializer(instance.is_favorite.all(),many=True).data
+        
+        return data_product   
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
     color =ColorSerializer(many=True)
     size = SizeSerializer(many=True)
     characteristics =CharacteristikSerializer(many=True)
+    is_favorite =IsFavoriteSerializer(many=True)
     
     class Meta:
         model = Product
@@ -100,6 +119,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
                 "brand", 
                 "characteristics", 
                 "is_any", 
+                "is_favorite",
                 "images1", 
                 "images2", 
                 "images3", 
@@ -107,8 +127,10 @@ class ProductDetailSerializer(serializers.ModelSerializer):
                 "size",
                 "discount",
                 
-                
-]   
+                ]
+
+    
+
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.select_related('subcategory').prefetch_related('color', 'characteristics', 'size')
@@ -119,6 +141,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         data_product['size'] = SizeSerializer(instance.size.all(), many=True).data
         data_product['color'] = ColorSerializer(instance.color.all(),many=True).data
         data_product['characteristics'] = CharacteristikSerializer(instance.characteristics.all(),many=True).data
+        data_product['is_favorite'] = IsFavoriteSerializer(instance.is_favorite.all(),many=True).data
         
         return data_product
 

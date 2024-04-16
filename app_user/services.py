@@ -105,7 +105,7 @@ class CheckCode():
                 refresh = RefreshToken.for_user(user=user)
                 return Response({
                     'detail': 'Successfully confirmed your code',
-                    'id': user.id,
+                    'user_id': user.id,
                     'is_staff': user.is_staff,
                     'is_active': user.is_active,
                     'phone_number': user.phone_number,

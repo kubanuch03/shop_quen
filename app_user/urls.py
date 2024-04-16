@@ -5,7 +5,6 @@ from app_user.views import *
 app_name = "users"
 urlpatterns = [
     path("list/user/", UserListView.as_view(), name="list_user"),
-    path("detail/user/<int:pk>/", UserDetailView.as_view(), name="detail_user"),
     path("delete/user/<int:pk>/", UserDeleteView.as_view(), name="delete_user"),
     
 

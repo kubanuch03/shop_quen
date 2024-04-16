@@ -1,6 +1,7 @@
-from app_product.serializer import ProductDetailSerializer, ProductcreateSerializer, SizeSerializer, ColorSerializer, CharacteristikSerializer, ProductListSerializer
-from app_product.models import Product, Size, Color, CharacteristikTopik
+from app_product.serializer import ProductDetailSerializer, ProductcreateSerializer, SizeSerializer, ColorSerializer, CharacteristikSerializer, ProductListSerializer,IsFavoriteDeleteSerializer
+from app_product.models import Product, Size, Color, CharacteristikTopik, IsFavorite
 from app_product.filters import PriceRangeFilter, SearchFilter
+from app_favorite.models import Favorite
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -11,7 +12,7 @@ RetrieveUpdateDestroyAPIView, RetrieveAPIView
 )
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import PageNumberPagination
-from rest_framework import status
+from rest_framework import status, response
 
 from app_product.permissions import IsCreatorOrAdmin
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
@@ -21,6 +22,8 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 from django.core.cache import cache
 from django.views.decorators.cache import cache_page
+from django.http import Http404
+
 
 
 
@@ -31,6 +34,7 @@ class ListAllProductApiView(ListAPIView): # Было 5 стало 5
     serializer_class = ProductListSerializer
     filter_backends = [PriceRangeFilter, SearchFilter]
     pagination_class = PageNumberPagination
+
 
 
     @method_decorator(cache_page(60)) 
@@ -75,7 +79,7 @@ class ProductUpdateApiView(UpdateAPIView):
 
 class ListOneProducApiView(APIView):   #Было 7 SQL запроса стало 4
 
-    @method_decorator(cache_page(60))  
+    # @method_decorator(cache_page(60))  
     def get(self, request, id):
         product = get_object_or_404(
             Product.objects.select_related('subcategory')
@@ -169,3 +173,32 @@ class CharacteristikDetailView(RetrieveAPIView):
         serializer = ProductDetailSerializer(products)
         return Response(serializer.data)
     
+
+
+
+class IsFavoriteApiView(DestroyAPIView):
+    queryset = IsFavorite.objects.all()
+    serializer_class = IsFavoriteDeleteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        try:
+            # Ищем объект IsFavorite по полю product
+            obj = IsFavorite.objects.get(product=self.kwargs['product'])
+            # Проверяем, принадлежит ли объект текущему пользователю
+            if obj.user != self.request.user:
+                raise Http404("You cannot delete this favorite object.")
+            return obj
+        except IsFavorite.DoesNotExist:
+            raise Http404("Favorite object does not exist.")
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            # Удаление связанных объектов из модели Favorite
+            instance.favorite.delete()
+            # Удаление объекта из модели IsFavorite
+            self.perform_destroy(instance)
+            return Response({"success": "Deleted!"}, status=status.HTTP_204_NO_CONTENT)
+        except Http404 as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)

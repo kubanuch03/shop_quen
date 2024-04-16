@@ -13,7 +13,7 @@ from datetime import timedelta
 from .models import CustomUser
 from .serializers import UserSerializer, LoginUserSerializer, VerifyUserCodeSerializer,SendCodeSerializer,ForgetPasswordSerializer
 from .services import *
-
+from .tasks import send_verification_email
 import time
 
 
@@ -26,10 +26,6 @@ class LoginUserView(generics.GenericAPIView):
         password = request.data.get("password", None)
 
         if email and password:
-            cache_key = f"user_login:{email}:{password}"
-            cached_data = cache.get(cache_key)
-            if cached_data:
-                return Response(cached_data, status=status.HTTP_200_OK)
 
             user = authenticate(username=email, password=password)
 
@@ -45,7 +41,6 @@ class LoginUserView(generics.GenericAPIView):
                     "refresh": str(refresh),
                     "access": str(refresh.access_token),
                 }
-                cache.set(cache_key, data, timeout=60) 
                 return Response(data, status=status.HTTP_200_OK)
             else:
                 return Response(
@@ -97,15 +92,15 @@ class ForgetPasswordSendCodeView(generics.UpdateAPIView):
         try:
             user = CustomUser.objects.get(email=email)
             # Если пользователь уже существует, просто обновите его код подтверждения и отправьте его
-            send_verification_code(email=email)
+            send_verification_email(email=email)
             return Response({"success":"Код был отправлен на почту"}, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
             # Если пользователь не существует, создайте нового пользователя и отправьте ему код подтверждения
             user = CustomUser.objects.create(email=email)
-            send_verification_code(email=email)
+            send_verification_email(email=email)
             return Response({"success":"Код был отправлен на почту"}, status=status.HTTP_201_CREATED)
         
-        
+
 
 # если user забыл пароль при входе
 class ForgetPasswordView(generics.UpdateAPIView):
@@ -122,26 +117,16 @@ class ForgetPasswordView(generics.UpdateAPIView):
             return Response(result, status=status.HTTP_400_BAD_REQUEST)
         
 class UserListView(generics.ListAPIView):
-    queryset = CustomUser.objects.all()
+    queryset = CustomUser.objects.filter(is_superuser=False)
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAdminUser]
 
-class UserDetailView(generics.RetrieveAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAdminUser]
+
 
 class UserDeleteView(generics.DestroyAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAdminUser]
 
-# class UserUpdateView(generics.UpdateAPIView):
-#     queryset = CustomUser.objects.all()
-#     serializer_class = UserSerializer
-#     permission_classes = [permissions.IsAdminUser]
 
-class UserDetailView(generics.RetrieveAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAdminUser]
+
