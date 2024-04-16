@@ -13,8 +13,8 @@ class NewCollectionCreateApiView(generics.CreateAPIView):
 
 
 
-class NewCollectionListApiView(generics.ListAPIView):
-    queryset = NewCollection.objects.all()
+class NewCollectionListApiView(generics.ListAPIView): #Было 4 SQL запроса стало 3
+    queryset = NewCollection.objects.all().prefetch_related('product')
     serializer_class = NewCollectionListSerializer
 
     @method_decorator(cache_page(60))  
@@ -35,7 +35,7 @@ class NewCollectionRUDApiView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class RecommendationListApiView(generics.ListAPIView):
-    queryset = Recommendations.objects.all()
+    queryset = Recommendations.objects.all().prefetch_related('product')  #Было 4 SQL запроса стало 3
     serializer_class = RecommendationListSerializer
 
     @method_decorator(cache_page(60))  

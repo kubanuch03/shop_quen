@@ -22,22 +22,21 @@ from django.shortcuts import get_object_or_404
 from django.core.cache import cache
 from django.views.decorators.cache import cache_page
 
-from redis import Redis
-from django.conf import settings
-import json
 
-class ListAllProductApiView(ListAPIView):
-    queryset = Product.objects.all()
+
+
+
+class ListAllProductApiView(ListAPIView): # Было 5 стало 5
+    queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size')
     serializer_class = ProductListSerializer
     filter_backends = [PriceRangeFilter, SearchFilter]
     pagination_class = PageNumberPagination
+
 
     @method_decorator(cache_page(60)) 
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
         
-
-
 
 
 
@@ -74,18 +73,23 @@ class ProductUpdateApiView(UpdateAPIView):
         instance.save()
 
 
-class ListOneProducApiView(APIView):
+class ListOneProducApiView(APIView):   #Было 7 SQL запроса стало 4
 
     @method_decorator(cache_page(60))  
     def get(self, request, id):
-        products = get_object_or_404(Product, id=id)
-        serializer = ProductDetailSerializer(products)
+        product = get_object_or_404(
+            Product.objects.select_related('subcategory')
+            .prefetch_related('characteristics', 'color', 'size'),id=id
+        )
+        serializer = ProductDetailSerializer(product)
         return Response(serializer.data)
     
 
-class ProductBySubCategory(APIView):
+class ProductBySubCategory(APIView):  #Было 7 SQL запроса стало 4
     def get(self, request, subcategory_id):
-        products = get_object_or_404(Product,subcategory_id=subcategory_id)
+        products = Product.objects.filter(subcategory_id=subcategory_id)\
+            .select_related('subcategory')\
+            .prefetch_related('characteristics', 'color', 'size')
         serializer = ProductDetailSerializer(products, many=True)
         return Response(serializer.data)
     
