@@ -47,8 +47,9 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'corsheaders',
     'django_redis',
-    'django_celery_results',
+    # 'django_celery_results',
     'drf_yasg',
+    'debug_toolbar',
 
     #app
     "app_user",
@@ -72,6 +73,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -224,17 +226,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://redis:6379/1',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         },
-        'TIMEOUT': 20, 
+        'TIMEOUT': 20,
     }
 }
 # from kombu import Exchange, Queue
 
-CELERY_BROKER_URL = 'redis://redis:6379'
-CELERY_RESULT_BACKEND = 'redis://redis:6379'
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379' 
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'  
+
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -265,3 +268,11 @@ EMAIL_ADMIN = config("EMAIL_ADMIN")
 
 CSRF_USE_SESSIONS = True
 CSRF_TRUSTED_ORIGINS = ["https://back.queen-shops.com"]
+
+
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]

@@ -54,27 +54,27 @@ class CategoryRUDApiView(RetrieveUpdateDestroyAPIView):
 '=============================================== Category ======================================================= '
 
 
-class SubCategoryAllListApiView(ListAPIView):
-    queryset = SubCategory.objects.all()
+class SubCategoryAllListApiView(ListAPIView):  # было 3 SQL запроса стало 2
+    queryset = SubCategory.objects.all().select_related('category')
     serializer_class = SubCategoryListSerializer
     permission_classes = [AllowAny, ]
     filter_backends = [SearchFilter]
 
-    # @method_decorator(cache_page(60*60))
-    # def dispatch(self, *args, **kwargs):
-    #     return super().dispatch(*args, **kwargs)
+    @method_decorator(cache_page(60*60))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
-class ListOneSubCategoryApiView(APIView):
+class ListOneSubCategoryApiView(APIView):  # было 2 SQL запроса стало 1
     permission_classes = [AllowAny, ]
-    def get(self, request, id):
-        subcategory = SubCategory.objects.filter(id=id)
+    def get(self, request, id):  
+        subcategory = SubCategory.objects.filter(id=id).select_related('category')
         serializer = CategoryListRUDSerializer(subcategory, many=True)
         return Response(serializer.data)
     
-    # @method_decorator(cache_page(60*60))
-    # def dispatch(self, *args, **kwargs):
-    #     return super().dispatch(*args, **kwargs)
+    @method_decorator(cache_page(60*60))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class SubCategoryCreateApiView(CreateAPIView):
@@ -91,10 +91,10 @@ class SubCategoryRUDApiView(RetrieveUpdateDestroyAPIView):
 
 
 
-class CategoryBySubCategory(APIView):
+class CategoryBySubCategory(APIView):  # было 2 SQL запроса стало 1
     permission_classes = [AllowAny, ]
     def get(self, request, category_id):
-        subcategory = SubCategory.objects.filter(category_id=category_id)
+        subcategory = SubCategory.objects.filter(category_id=category_id).select_related('category')
         serializer = SubCategoryListSerializer(subcategory, many=True)
         return Response(serializer.data)
     

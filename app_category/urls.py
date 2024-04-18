@@ -15,6 +15,6 @@ urlpatterns = [
     path('create/subcategory/', SubCategoryCreateApiView.as_view(), name="создание категории"),
     path('rud/subcategory/<int:id>/', SubCategoryRUDApiView.as_view(), name="удаление, изменение, детали"),
     path('categories/<int:category_id>/subcategory/', CategoryBySubCategory.as_view(), name='подкатегории отпределеной категории'),
-    path('list/one/subcategory/<int:id>/', ListOneCategoryApiView.as_view(), name="список определено категории по id"),
+    path('list/one/subcategory/<int:id>/', ListOneSubCategoryApiView.as_view(), name="список определено категории по id"),
    
 ]
