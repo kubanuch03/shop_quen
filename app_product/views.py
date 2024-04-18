@@ -37,7 +37,7 @@ class ListAllProductApiView(ListAPIView): # Было 5 стало 5
 
 
 
-    @method_decorator(cache_page(60)) 
+    @method_decorator(cache_page(30)) 
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
         
@@ -106,7 +106,7 @@ class SizeApiView(ListCreateAPIView):
     permission_classes = [IsAdminUser, ]
 
     
-    @method_decorator(cache_page(60))  
+    @method_decorator(cache_page(30))  
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
@@ -124,7 +124,7 @@ class ColorApiView(ListCreateAPIView):
     serializer_class = ColorSerializer
     permission_classes = [IsAdminUser, ]
 
-    @method_decorator(cache_page(60))  
+    @method_decorator(cache_page(20))  
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
