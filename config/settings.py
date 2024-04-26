@@ -179,7 +179,7 @@ CORS_ALLOWED_ORIGINS = [
 
     "http://queen-shops.com",
     "http://www.queen-shops.com",
-    "http://back.queen-shops.com",
+    # "http://back.queen-shops.com",
 
 ]
 
