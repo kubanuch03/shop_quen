@@ -198,11 +198,11 @@ CORS_ALLOW_ORIGINS = [
     "https://195.38.164.47:85",
     "https://queen-shops.com",
     "https://www.queen-shops.com",
-    "https://back.queen-shops.com",
+    # "https://back.queen-shops.com",
 
     "http://queen-shops.com",
     "http://www.queen-shops.com",
-    "http://back.queen-shops.com",
+    # "http://back.queen-shops.com",
 
 
 
