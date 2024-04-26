@@ -171,14 +171,15 @@ CORS_ALLOW_METHODS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://195.38.164.47",
+    "https://195.38.164.47",
     "https://back.queen-shops.com"
     "https://queen-shops.com"
 ]
 
 CORS_ALLOW_ORIGINS = [
-    "http://195.38.164.47",
+    "https://195.38.164.47",
     "https://queen-shops.com"
+    "https://www.queen-shops.com"
     "https://back.queen-shops.com"
 
 
