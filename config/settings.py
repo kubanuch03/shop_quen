@@ -172,11 +172,7 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOWED_ORIGINS = [
     "https://195.38.164.47",
-    "https://195.38.164.47:81",
-    "https://195.38.164.47:82",
-    "https://195.38.164.47:83",
-    "https://195.38.164.47:84",
-    "https://195.38.164.47:85",
+
     "https://back.queen-shops.com",
     "https://queen-shops.com",
     "https://www.queen-shops.com",
@@ -190,12 +186,7 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_ORIGINS = [
     "https://195.38.164.47",
-    "https://195.38.164.47:80",
-    "https://195.38.164.47:81",
-    "https://195.38.164.47:82",
-    "https://195.38.164.47:83",
-    "https://195.38.164.47:84",
-    "https://195.38.164.47:85",
+    
     "https://queen-shops.com",
     "https://www.queen-shops.com",
     # "https://back.queen-shops.com",
