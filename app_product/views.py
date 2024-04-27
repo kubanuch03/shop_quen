@@ -28,7 +28,6 @@ from django.http import Http404
 
 
 
-
 class ListAllProductApiView(ListAPIView): # Было 5 стало 5
     queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size')
     serializer_class = ProductListSerializer
@@ -43,18 +42,13 @@ class ListAllProductApiView(ListAPIView): # Было 5 стало 5
         
 
 
-
 class CreateProductApiView(CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductcreateSerializer
     permission_classes = [IsAdminUser, ]
 
 
-        
 
-        
-
- 
 
 class ProductDeleteApiView(DestroyAPIView):
     queryset = Product.objects.all()
