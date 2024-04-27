@@ -171,13 +171,32 @@ CORS_ALLOW_METHODS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://back.queen-shops.com"
+    "https://195.38.164.47",
+
+    "https://back.queen-shops.com",
+    "https://queen-shops.com",
+    "https://www.queen-shops.com",
+
+
+    "http://queen-shops.com",
+    "http://www.queen-shops.com",
+    "http://back.queen-shops.com",
+
 ]
 
 CORS_ALLOW_ORIGINS = [
-    "http://localhost:3000",
-    "https://back.queen-shops.com"
+    "https://195.38.164.47",
+    
+    "https://queen-shops.com",
+    "https://www.queen-shops.com",
+    # "https://back.queen-shops.com",
+
+    "http://queen-shops.com",
+    "http://www.queen-shops.com",
+    # "http://back.queen-shops.com",
+
+
+
 
 ]
 
@@ -226,7 +245,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'LOCATION': 'redis://redis:6379/1',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         },
@@ -235,8 +254,8 @@ CACHES = {
 }
 # from kombu import Exchange, Queue
 
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379' 
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'  
+CELERY_BROKER_URL = 'redis://redis:6379' 
+CELERY_RESULT_BACKEND = 'redis://redis:6379'  
 
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -273,6 +292,6 @@ CSRF_TRUSTED_ORIGINS = ["https://back.queen-shops.com"]
 
 INTERNAL_IPS = [
     # ...
-    "127.0.0.1",
+    "195.38.164.47",
     # ...
 ]

@@ -11,12 +11,12 @@ services:
       - static_volume:/usr/src/app/static
       - media_volume:/usr/src/app/media
     
-    environment:
-      - VIRTUAL_HOST=back.queen-shops.com
-      - LETSENCRYPT_HOST=back.queen-shops.com
+    # environment:
+    #   - VIRTUAL_HOST=back.queen-shops.com
+    #   - LETSENCRYPT_HOST=back.queen-shops.com
 
-    ports:
-      - 8000:8000
+    # ports:
+    #   - 8000:8000
     depends_on:
       - db
       - redis
@@ -55,35 +55,35 @@ services:
       - redis
       - db
 
-  nginx:
-    image: jwilder/nginx-proxy:1.2
-    ports:
-    - "81:81"
-    - "443:443"
-    volumes:
-    - ./nginx/default.conf:/etc/nginx/vhost.d/nginx.conf
-    - static_volume:/usr/src/app/static
-    - media_volume:/usr/src/app/media
-    - /var/run/docker.sock:/tmp/docker.sock:ro
-    - html:/usr/share/nginx/html
-    - vhost:/etc/nginx/vhost.d
-    - certs:/etc/nginx/certs
+  # nginx:
+  #   image: jwilder/nginx-proxy:1.2
+  #   ports:
+  #   - "81:81"
+  #   - "443:443"
+  #   volumes:
+  #   - ./nginx/default.conf:/etc/nginx/vhost.d/nginx.conf
+  #   - static_volume:/usr/src/app/static
+  #   - media_volume:/usr/src/app/media
+  #   - /var/run/docker.sock:/tmp/docker.sock:ro
+  #   - html:/usr/share/nginx/html
+  #   - vhost:/etc/nginx/vhost.d
+  #   - certs:/etc/nginx/certs
 
-  acme_companion:
-    image: nginxproxy/acme-companion:2.2.10
-    container_name: acme_companion
-    volumes_from:
-    - nginx
-    volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-    - acme:/etc/acme.sh
+  # acme_companion:
+  #   image: nginxproxy/acme-companion:2.2.10
+  #   container_name: acme_companion
+  #   volumes_from:
+  #   - nginx
+  #   volumes:
+  #   - /var/run/docker.sock:/var/run/docker.sock
+  #   - acme:/etc/acme.sh
 
 
 volumes:
   db_data:
   static_volume:
   media_volume:
-  certs:
-  acme:
-  vhost:
-  html:
+  # certs:
+  # acme:
+  # vhost:
+  # html:

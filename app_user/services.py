@@ -6,7 +6,7 @@ from rest_framework import status
 from django.utils.translation import gettext as _
 from django.core.mail import send_mail
 from django.contrib.auth.hashers import check_password
-
+from .tasks import send_verification_email
 from .models import CustomUser
 import random
 import string
@@ -176,7 +176,7 @@ class ChangePassword:
         try:
             CustomUser.objects.get(email_or_phone=email_or_phone)
             if "@" in email_or_phone:
-                send_verification_code(email_or_phone=email_or_phone)
+                send_verification_email(email_or_phone=email_or_phone)
                 return Response({"success":"Код был отправлен на ваш email"})
             elif "996" in email_or_phone:
                 send_code_to_number(email_or_phone=int(email_or_phone))
