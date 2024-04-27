@@ -72,8 +72,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -172,9 +173,11 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOWED_ORIGINS = [
     "https://195.38.164.47",
-
+    "http://192.168.80.2:8000",
+    "https://192.168.80.2:8000",
     "https://back.queen-shops.com",
     "https://queen-shops.com",
+    "queen-shops.com",
     "https://www.queen-shops.com",
 
 
@@ -186,14 +189,16 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_ORIGINS = [
     "https://195.38.164.47",
-    
+    "http://192.168.80.2:8000",
+    "https://192.168.80.2:8000",
     "https://queen-shops.com",
+    "queen-shops.com",
     "https://www.queen-shops.com",
-    # "https://back.queen-shops.com",
+    "https://back.queen-shops.com",
 
     "http://queen-shops.com",
     "http://www.queen-shops.com",
-    # "http://back.queen-shops.com",
+    "http://back.queen-shops.com",
 
 
 
