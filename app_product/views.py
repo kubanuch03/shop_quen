@@ -37,9 +37,7 @@ class ListAllProductApiView(ListAPIView): # Было 5 стало 5
 
 
 
-    @method_decorator(cache_page(10)) 
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+
         
 
 
@@ -80,7 +78,6 @@ class ProductUpdateApiView(UpdateAPIView):
 class ListOneProducApiView(APIView):   #Было 7 SQL запроса стало 4
     serializer_class = ProductDetailSerializer
 
-    @method_decorator(cache_page(10))  
     def get(self, request, id):
         product = get_object_or_404(
             Product.objects.select_related('subcategory')
@@ -109,9 +106,7 @@ class SizeApiView(ListCreateAPIView):
     permission_classes = [IsAdminUser, ]
 
     
-    @method_decorator(cache_page(10))  
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+
 
 
 
@@ -126,10 +121,6 @@ class ColorApiView(ListCreateAPIView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
     permission_classes = [IsAdminUser, ]
-
-    @method_decorator(cache_page(10))  
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
 
 class ColorRUDView(RetrieveUpdateDestroyAPIView):
@@ -162,7 +153,6 @@ class CharacteristikListView(ListAPIView):
     queryset = CharacteristikTopik.objects.all()
     serializer_class = CharacteristikSerializer
 
-    @method_decorator(cache_page(10))  
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
@@ -170,7 +160,6 @@ class CharacteristikDetailView(RetrieveAPIView):
     queryset = CharacteristikTopik.objects.all()
     serializer_class = CharacteristikSerializer
 
-    @method_decorator(cache_page(10))  
     def get(self, request, id):
         products = get_object_or_404(Product, id=id)
         serializer = ProductDetailSerializer(products)

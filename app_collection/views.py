@@ -17,7 +17,7 @@ class NewCollectionListApiView(generics.ListAPIView): #Было 4 SQL запро
     queryset = NewCollection.objects.all().prefetch_related('product')
     serializer_class = NewCollectionListSerializer
 
-    @method_decorator(cache_page(10))  
+    @method_decorator(cache_page(5))  
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
