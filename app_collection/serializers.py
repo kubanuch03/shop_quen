@@ -2,12 +2,9 @@ from rest_framework import serializers
 from app_collection.models import NewCollection, Recommendations
 from app_product.models import Product
 from drf_spectacular.utils import extend_schema
-# from types import Any
+from django.conf import settings
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ["title", "price", "images1", "images2", "images3"]
+from app_product.serializer import ProductListSerializer
 
 
 class NewCollectionCreateSerializer(serializers.ModelSerializer):
@@ -17,17 +14,10 @@ class NewCollectionCreateSerializer(serializers.ModelSerializer):
         fields = ["product"]
 
 
-class NewCollectionListSerializer(serializers.ModelSerializer):
-    products = serializers.SerializerMethodField()
 
-    class Meta:
-        model = NewCollection
-        fields = ["products"]
 
-    def get_products(self, obj) -> str:
-        products_queryset = obj.product.all()
-        products_data = ProductSerializer(products_queryset, many=True).data
-        return products_data
+
+
 
 
 
@@ -37,16 +27,37 @@ class RecommendationCreateSerializer(serializers.ModelSerializer):
         model = Recommendations
         fields = ["product"]
 
+    
+    
 
 class RecommendationListSerializer(serializers.ModelSerializer):
     products = serializers.SerializerMethodField()
     class Meta:
         model = Recommendations
         fields = ["products"]
-   
-    def get_products(self, obj) -> str:
-        products_queryset = obj.product.all()
-        products_data = ProductSerializer(products_queryset, many=True).data
-        return products_data
+        
+        def get_products(self, obj):
+            request = self.context.get('request')
+            products_queryset = obj.product.all()
+            products_data = ProductListSerializer(products_queryset, many=True, context={'request': request}).data
+            for product in products_data:
+                product['images1'] = request.build_absolute_uri(settings.MEDIA_URL + product['images1'])
+            return products_data
 
+
+class NewCollectionListSerializer(serializers.ModelSerializer):
+    products = serializers.SerializerMethodField()
+
+    class Meta:
+        model = NewCollection
+        fields = ["products"]
+        
+
+    def get_products(self, obj):
+        request = self.context.get('request')
+        products_queryset = obj.product.all()
+        products_data = ProductListSerializer(products_queryset, many=True, context={'request': request}).data
+        for product in products_data:
+            product['images1'] = request.build_absolute_uri(settings.MEDIA_URL + product['images1'])
+        return products_data
     
