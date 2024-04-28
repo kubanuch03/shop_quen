@@ -37,9 +37,9 @@ urlpatterns = [
     path('rud/colors/<int:id>/', ColorRUDView.as_view()),
 
     path('list/characteristik/', CharacteristikListView.as_view()),
-    path('detail/characteristik/<int:product>/', CharacteristikDetailView.as_view()),
+    path('detail/characteristik/<int:pk>/', CharacteristikDetailView.as_view()),
 
-    path('delete/isfavorite/<int:product>/', IsFavoriteApiView.as_view(),name='delete-is_favorite'),
+    path('delete/isfavorite/<int:id>/', IsFavoriteApiView.as_view(),name='delete-is_favorite'),
 
 
 ]+ router.urls

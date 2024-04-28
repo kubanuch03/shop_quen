@@ -153,17 +153,16 @@ class CharacteristikListView(ListAPIView):
     queryset = CharacteristikTopik.objects.all()
     serializer_class = CharacteristikSerializer
 
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+  
 
 class CharacteristikDetailView(RetrieveAPIView):
     queryset = CharacteristikTopik.objects.all()
     serializer_class = CharacteristikSerializer
 
-    def get(self, request, id):
-        products = get_object_or_404(Product, id=id)
-        serializer = ProductDetailSerializer(products)
-        return Response(serializer.data)
+    # def get(self, request, id):
+    #     products = get_object_or_404(Product, id=id)
+    #     serializer = CharacteristikSerializer(products)
+    #     return Response(serializer.data)
     
 
 
