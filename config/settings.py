@@ -172,7 +172,7 @@ CORS_ALLOW_METHODS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    # "*",
+    "*",
     "http://localhost:3000",
 
     "https://back.queen-shops.com",
@@ -187,7 +187,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_ORIGINS = [
-    # "*",
+    "*",
     "https://queen-shops.com",
     "http://localhost:3000",
     "https://www.queen-shops.com",
