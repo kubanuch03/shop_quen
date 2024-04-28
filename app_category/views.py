@@ -10,7 +10,7 @@ from app_product.filters import SearchFilter
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework.permissions import IsAdminUser, AllowAny
-
+from rest_framework import status
 
 class CategoryAllListApiView(ListAPIView):
     queryset = Category.objects.all()
@@ -18,9 +18,7 @@ class CategoryAllListApiView(ListAPIView):
     filter_backends = [SearchFilter]
     permission_classes = [AllowAny]
 
-    @method_decorator(cache_page(10))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+
 
 
 
@@ -33,9 +31,7 @@ class ListOneCategoryApiView(APIView):
         serializer = CategoryListRUDSerializer(category, many=True)
         return Response(serializer.data)
     
-    @method_decorator(cache_page(10))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+
 
 
 
@@ -45,6 +41,22 @@ class CategoryCreateApiView(CreateAPIView):
     serializer_class = CategoryCreateSerializer
     permission_classes = [IsAdminUser, ]
 
+    def create(self, request, *args, **kwargs):
+        title = self.request.data['title']
+
+        try:
+            
+            if Category.objects.filter(title=title):
+                return Response({"error":"Category is already"}, status=status.HTTP_400_BAD_REQUEST)
+        except Category.DoesNotExist:
+            return Response({"success":"Category is created"})
+
+        category = Category.objects.create(title=title)
+
+        category.save()
+        
+        serializer = self.get_serializer(category)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class CategoryRUDApiView(RetrieveUpdateDestroyAPIView):
@@ -62,9 +74,9 @@ class SubCategoryAllListApiView(ListAPIView):  # было 3 SQL запроса �
     permission_classes = [AllowAny, ]
     filter_backends = [SearchFilter]
 
-    @method_decorator(cache_page(10))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(10))
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
 
 class ListOneSubCategoryApiView(APIView):  # было 2 SQL запроса стало 1
@@ -75,10 +87,7 @@ class ListOneSubCategoryApiView(APIView):  # было 2 SQL запроса ст�
         subcategory = SubCategory.objects.filter(id=id).select_related('category')
         serializer = CategoryListRUDSerializer(subcategory, many=True)
         return Response(serializer.data)
-    
-    @method_decorator(cache_page(10))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+
 
 
 class SubCategoryCreateApiView(CreateAPIView):
@@ -104,7 +113,5 @@ class CategoryBySubCategory(APIView):  # было 2 SQL запроса стал�
         serializer = SubCategoryListSerializer(subcategory, many=True)
         return Response(serializer.data)
     
-    @method_decorator(cache_page(10))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    
     

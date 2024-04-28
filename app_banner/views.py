@@ -18,9 +18,9 @@ class BannerList(generics.ListAPIView):
     serializer_class = BannerCRUDserializer
     permission_classes = [AllowAny]
 
-    @method_decorator(cache_page(10))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(10))
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
 class BannerDeleteandREtvew(generics.RetrieveUpdateDestroyAPIView):
     queryset = Banner.objects.all()
