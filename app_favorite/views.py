@@ -30,7 +30,7 @@ class FavoriteListApiView(generics.ListAPIView):
                 return Favorite.objects.filter(user=user)
         return Favorite.objects.none()
     
-    # @method_decorator(cache_page(100))  
+    @method_decorator(cache_page(10))  
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 

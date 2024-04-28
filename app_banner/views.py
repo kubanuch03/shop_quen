@@ -18,7 +18,7 @@ class BannerList(generics.ListAPIView):
     serializer_class = BannerCRUDserializer
     permission_classes = [AllowAny]
 
-    @method_decorator(cache_page(60*60))
+    @method_decorator(cache_page(10))
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 

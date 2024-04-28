@@ -50,7 +50,6 @@ class PaymentMethodApiView(generics.ListCreateAPIView):
 
 class UserInfoApiView(APIView):
     serializer_class = UserInfoSerializer
-    @method_decorator(cache_page(160))
     def get(self, request, *args, **kwargs):
         user = self.request.user
         queryset = CustomUser.objects.filter(id=user.id).first()
