@@ -49,6 +49,7 @@ class PaymentMethodApiView(generics.ListCreateAPIView):
 
 
 class UserInfoApiView(APIView):
+    serializer_class = UserInfoSerializer
     @method_decorator(cache_page(160))
     def get(self, request, *args, **kwargs):
         user = self.request.user
@@ -80,6 +81,7 @@ class ChangeUserInfoApiView(generics.RetrieveAPIView):
 
 
 class LogoutView(APIView):
+    serializer_class = None
     def post(self, request):
         try:
             refresh_token = request.data['refresh_token']

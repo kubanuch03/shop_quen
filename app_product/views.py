@@ -78,8 +78,9 @@ class ProductUpdateApiView(UpdateAPIView):
 
 
 class ListOneProducApiView(APIView):   #Было 7 SQL запроса стало 4
+    serializer_class = ProductDetailSerializer
 
-    # @method_decorator(cache_page(60))  
+    @method_decorator(cache_page(10))  
     def get(self, request, id):
         product = get_object_or_404(
             Product.objects.select_related('subcategory')
@@ -90,6 +91,8 @@ class ListOneProducApiView(APIView):   #Было 7 SQL запроса стало
     
 
 class ProductBySubCategory(APIView):  #Было 7 SQL запроса стало 4
+    serializer_class = ProductDetailSerializer
+    
     def get(self, request, subcategory_id):
         products = Product.objects.filter(subcategory_id=subcategory_id)\
             .select_related('subcategory')\

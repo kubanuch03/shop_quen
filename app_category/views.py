@@ -18,7 +18,7 @@ class CategoryAllListApiView(ListAPIView):
     filter_backends = [SearchFilter]
     permission_classes = [AllowAny]
 
-    @method_decorator(cache_page(60))
+    @method_decorator(cache_page(30))
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
@@ -26,12 +26,14 @@ class CategoryAllListApiView(ListAPIView):
 
 class ListOneCategoryApiView(APIView):
     permission_classes = [AllowAny, ]
+    serializer_class = CategoryListRUDSerializer
+
     def get(self, request, id):
         category = Category.objects.filter(id=id)
         serializer = CategoryListRUDSerializer(category, many=True)
         return Response(serializer.data)
     
-    @method_decorator(cache_page(60))
+    @method_decorator(cache_page(30))
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
@@ -67,6 +69,8 @@ class SubCategoryAllListApiView(ListAPIView):  # было 3 SQL запроса �
 
 class ListOneSubCategoryApiView(APIView):  # было 2 SQL запроса стало 1
     permission_classes = [AllowAny, ]
+    serializer_class = SubCategoryListSerializer
+
     def get(self, request, id):  
         subcategory = SubCategory.objects.filter(id=id).select_related('category')
         serializer = CategoryListRUDSerializer(subcategory, many=True)
@@ -93,6 +97,8 @@ class SubCategoryRUDApiView(RetrieveUpdateDestroyAPIView):
 
 class CategoryBySubCategory(APIView):  # было 2 SQL запроса стало 1
     permission_classes = [AllowAny, ]
+    serializer_class = SubCategoryListSerializer
+
     def get(self, request, category_id):
         subcategory = SubCategory.objects.filter(category_id=category_id).select_related('category')
         serializer = SubCategoryListSerializer(subcategory, many=True)

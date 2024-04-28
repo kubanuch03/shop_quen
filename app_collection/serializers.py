@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from app_collection.models import NewCollection, Recommendations
 from app_product.models import Product
-
-
+from drf_spectacular.utils import extend_schema
+# from types import Any
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,7 +24,7 @@ class NewCollectionListSerializer(serializers.ModelSerializer):
         model = NewCollection
         fields = ["products"]
 
-    def get_products(self, obj):
+    def get_products(self, obj) -> str:
         products_queryset = obj.product.all()
         products_data = ProductSerializer(products_queryset, many=True).data
         return products_data
@@ -43,8 +43,8 @@ class RecommendationListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recommendations
         fields = ["products"]
-
-    def get_products(self, obj):
+   
+    def get_products(self, obj) -> str:
         products_queryset = obj.product.all()
         products_data = ProductSerializer(products_queryset, many=True).data
         return products_data
