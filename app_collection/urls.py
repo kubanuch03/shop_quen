@@ -14,6 +14,6 @@ urlpatterns = [
 
 
 
-    path('delete/all//recommendation/', NewCollectionDeleteAllApiView.as_view()),
+    path('delete/all/collection/', NewCollectionDeleteAllApiView.as_view()),
 
 ]
