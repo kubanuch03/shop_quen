@@ -27,7 +27,11 @@ class NewCollectionRUDApiView(generics.RetrieveUpdateDestroyAPIView):
 
 
 
+class NewCollectionDeleteAllApiView(generics.DestroyAPIView):
+    queryset = NewCollection.objects.all()
 
+    def perform_destroy(self, instance):
+        instance.delete()
 
 
 
