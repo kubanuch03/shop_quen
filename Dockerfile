@@ -20,7 +20,8 @@ RUN apt-get update && apt-get install -y redis-server
 
 
 COPY . /app/
-
+USER root
+COPY pgbouncer.ini /etc/pgbouncer/pgbouncer.ini
 
 # Run the entrypoint script when the container starts
 CMD ["bash", "entrypoint.sh"]
