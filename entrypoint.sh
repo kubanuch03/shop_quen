@@ -18,4 +18,4 @@ celery -A config beat --loglevel=info --detach
 
 # Ожидаем завершения Gunicorn (или любого другого процесса, запущенного перед)
 wait -n
-
+service pgbouncer start   
