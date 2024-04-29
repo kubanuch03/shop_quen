@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y redis-server
 
 
 COPY . /app/
+USER root
 COPY pgbouncer.ini /etc/pgbouncer/pgbouncer.ini
 RUN chmod 644 /etc/pgbouncer/pgbouncer.ini
 
