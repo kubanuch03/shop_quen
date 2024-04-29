@@ -31,13 +31,15 @@ services:
       - db_data:/var/lib/postgresql/data
 
   pgbouncer:
-    image: "pgbouncer/pgbouncer"
-    env_file:
-      - pgbouncer.ini
+    image: edoburu/pgbouncer:latest
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=123
+      - ADMIN_USERS=postgres,admin
     ports:
-      - "6432:6432"
-    volumes:
-      - ./pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
+      - "5432:5432"
 
   redis:
     image: "redis:alpine"
@@ -90,7 +92,6 @@ services:
 
 volumes:
   db_data:
-  pgbouncer:
   static_volume:
   media_volume:
   # certs:
