@@ -139,7 +139,9 @@ class HistoryListApiView(ListAPIView):
     serializer_class = HistoryListSerializer
     permission_classes = [permissions.IsAdminUser, ]
 
-
+    @method_decorator(cache_page(7))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 class HistoryByUserListApiView(ListAPIView):
     queryset = History.objects.all()

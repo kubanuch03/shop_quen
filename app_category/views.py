@@ -18,7 +18,9 @@ class CategoryAllListApiView(ListAPIView):
     filter_backends = [SearchFilter]
     permission_classes = [AllowAny]
 
-
+    @method_decorator(cache_page(10))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 
@@ -74,9 +76,9 @@ class SubCategoryAllListApiView(ListAPIView):  # было 3 SQL запроса �
     permission_classes = [AllowAny, ]
     filter_backends = [SearchFilter]
 
-    # @method_decorator(cache_page(10))
-    # def dispatch(self, *args, **kwargs):
-    #     return super().dispatch(*args, **kwargs)
+    @method_decorator(cache_page(10))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class ListOneSubCategoryApiView(APIView):  # было 2 SQL запроса стало 1
