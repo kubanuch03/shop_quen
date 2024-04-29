@@ -30,16 +30,16 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
-  pgbouncer:
-    image: edoburu/pgbouncer:latest
-    environment:
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=123
-      - ADMIN_USERS=postgres,admin
-    ports:
-      - "5432:5432"
+  # pgbouncer:
+  #   image: edoburu/pgbouncer:latest
+  #   environment:
+  #     - DB_HOST=postgres
+  #     - DB_PORT=5432
+  #     - DB_USER=postgres
+  #     - DB_PASSWORD=123
+  #     - ADMIN_USERS=postgres,admin
+  #   ports:
+  #     - "5432:5432"
 
   redis:
     image: "redis:alpine"
