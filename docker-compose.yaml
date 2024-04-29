@@ -37,7 +37,7 @@ services:
     ports:
       - "6432:6432"
     volumes:
-      - pgbouncer:/etc/pgbouncer/pgbouncer.ini
+      -./pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
 
   redis:
     image: "redis:alpine"
