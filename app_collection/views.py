@@ -32,6 +32,7 @@ class NewCollectionRUDApiView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class NewCollectionDeleteAllApiView(APIView):
+    serializer_class = None
     def delete(self, request, *args, **kwargs):
         try:
             NewCollection.objects.all().delete()

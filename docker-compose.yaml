@@ -30,6 +30,15 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
+  pgbouncer:
+    image: "pgbouncer/pgbouncer"
+    env_file:
+      - pgbouncer.ini
+    ports:
+      - "6432:6432"
+    volumes:
+      - pgbouncer:/etc/pgbouncer/pgbouncer.ini
+
   redis:
     image: "redis:alpine"
 
@@ -81,6 +90,7 @@ services:
 
 volumes:
   db_data:
+  pgbouncer:
   static_volume:
   media_volume:
   # certs:

@@ -43,6 +43,8 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
             models.Index(fields=['username']),  
             models.Index(fields=['id']),  
         ]
+        # ordering = ['-id']
+
     
     
     

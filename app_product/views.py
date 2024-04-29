@@ -98,17 +98,43 @@ class ProductBySubCategory(APIView):  #Было 7 SQL запроса стало 
             .prefetch_related('characteristics', 'color', 'size')
         serializer = ProductDetailSerializer(products, many=True)
         return Response(serializer.data)
-    
+
+
+class ProductAllDeleteAllApiView(APIView):
+    serializer_class = None
+    def delete(self, request, *args, **kwargs):
+        try:
+            Product.objects.all().delete()
+            return Response({'detail': 'All objects deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            return Response({'detail': 'Failed to delete all objects'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
-class SizeApiView(ListCreateAPIView):
+#=== Size ================================================================================================================================================
+
+
+
+class SizeListApiView(ListAPIView):
+    queryset = Size.objects.all()
+    serializer_class = SizeSerializer
+    permission_classes = [AllowAny, ]
+
+    @method_decorator(cache_page(10))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
+class SizeDetailApiView(RetrieveAPIView):
+    queryset = Size.objects.all()
+    serializer_class = SizeSerializer
+    permission_classes = [AllowAny, ]
+
+
+class SizeCreateApiView(CreateAPIView):
     queryset = Size.objects.all()
     serializer_class = SizeSerializer
     permission_classes = [IsAdminUser, ]
-
-    
-
 
 
 
@@ -119,11 +145,26 @@ class SizeRUDView(RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
 
 
-class ColorApiView(ListCreateAPIView):
+
+
+#=== Color ================================================================================================================================================
+
+
+class ColorListApiView(ListAPIView):
+    queryset = Color.objects.all()
+    serializer_class = ColorSerializer
+    permission_classes = [AllowAny, ]
+
+class ColorDeatilApiView(RetrieveAPIView):
+    queryset = Color.objects.all()
+    serializer_class = ColorSerializer
+    permission_classes = [AllowAny, ]
+
+
+class ColorCreateApiView(CreateAPIView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
     permission_classes = [IsAdminUser, ]
-
 
 class ColorRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Color.objects.all()

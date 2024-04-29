@@ -14,7 +14,13 @@ class PaymentMethod(models.Model):
     def __str__(self) -> str:
         return self.text
     
-
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['id']),  
+            
+        ]
+        ordering = ['-id']
 
 
 
@@ -45,6 +51,11 @@ class History(models.Model):
             instance.save()
 
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['id']),  
+            
+        ]
 
 
  

@@ -16,6 +16,7 @@ class Color(models.Model):
             
         ]
 
+
 class Size(models.Model):
     sizes = models.CharField(max_length=255, unique=True)
 
@@ -28,6 +29,7 @@ class Size(models.Model):
             models.Index(fields=['sizes']),  
             
         ]
+
 class IsFavorite(models.Model):
     isfavorite = models.BooleanField(default=True)
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE )
@@ -68,11 +70,12 @@ class CharacteristikTopik(models.Model):
     def __str__(self):
         return self.title
 
-    indexes = [
-            models.Index(fields=['id']),  
-            models.Index(fields=['title']),  
-            models.Index(fields=['value']),  
-            
-        ]
+    class Meta:
+        indexes = [
+                models.Index(fields=['id']),  
+                models.Index(fields=['title']),  
+                models.Index(fields=['value']),  
+                
+            ]
 
 

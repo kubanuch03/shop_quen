@@ -18,3 +18,8 @@ class Favorite(models.Model):
     class Meta:
         verbose_name = "Favorites"
         verbose_name_plural = "Favorite"
+
+        indexes = [
+            models.Index(fields=['id']),  
+            
+        ]

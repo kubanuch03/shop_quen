@@ -16,6 +16,7 @@ class Category(models.Model):
         ]
 
 
+
 class SubCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
@@ -30,6 +31,7 @@ class SubCategory(models.Model):
             models.Index(fields=['title']), 
             models.Index(fields=['id']),  
         ]
+
 
 
     

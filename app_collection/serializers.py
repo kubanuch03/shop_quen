@@ -36,7 +36,7 @@ class RecommendationListSerializer(serializers.ModelSerializer):
         model = Recommendations
         fields = ["products"]
         
-        def get_products(self, obj):
+        def get_products(self, obj) -> str:
             request = self.context.get('request')
             products_queryset = obj.product.all()
             products_data = ProductListSerializer(products_queryset, many=True, context={'request': request}).data
@@ -53,7 +53,7 @@ class NewCollectionListSerializer(serializers.ModelSerializer):
         fields = ["products"]
         
 
-    def get_products(self, obj):
+    def get_products(self, obj) -> str:
         request = self.context.get('request')
         products_queryset = obj.product.all()
         products_data = ProductListSerializer(products_queryset, many=True, context={'request': request}).data
