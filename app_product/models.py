@@ -49,7 +49,7 @@ class Product(models.Model):
     discount = models.CharField(blank=True, null=True)
     created_at = models.DateField(auto_now_add=True)
     is_favorite = models.ManyToManyField(IsFavorite,blank=True)
-    images1 = models.ImageField(upload_to="text/", blank=True, null=True)
+    images1 = models.ImageField(upload_to="text/", blank=False, null=False)
     images2 = models.ImageField(upload_to="text/", blank=True, null=True)
     images3 = models.ImageField(upload_to="text/", blank=True, null=True)
 

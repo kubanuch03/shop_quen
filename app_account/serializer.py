@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from app_user.models import CustomUser
 from app_account.models import PaymentMethod, History
-
+from typing import Any
 
 class ChangeUserInfoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -79,7 +79,7 @@ class HistoryListSerializer(serializers.ModelSerializer):
 
     
 
-    def get_products(self, obj):
+    def get_products(self, obj: Any) -> Any:
         products_queryset = obj.products.all()
         products_data = ProductSerializer(products_queryset, many=True).data
         return products_data

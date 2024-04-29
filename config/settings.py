@@ -72,8 +72,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -171,7 +172,8 @@ CORS_ALLOW_METHODS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://195.38.164.47",
+    # "*",
+    "http://localhost:3000",
 
     "https://back.queen-shops.com",
     "https://queen-shops.com",
@@ -185,15 +187,15 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_ORIGINS = [
-    "https://195.38.164.47",
-    
+    # "*",
     "https://queen-shops.com",
+    "http://localhost:3000",
     "https://www.queen-shops.com",
-    # "https://back.queen-shops.com",
+    "https://back.queen-shops.com",
 
     "http://queen-shops.com",
     "http://www.queen-shops.com",
-    # "http://back.queen-shops.com",
+    "http://back.queen-shops.com",
 
 
 
@@ -241,11 +243,13 @@ MEDIA_ROOT = "/usr/src/app/media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
+# REDIS_URL = config('REDIS_URL', default='redis://localhost:6379/1')
 
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://redis:6379/1',
+        # 'LOCATION': ['redis://redis:6379/1'],
+        'LOCATION': ['redis://localhost:6379/1'],
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         },
@@ -253,10 +257,11 @@ CACHES = {
     }
 }
 # from kombu import Exchange, Queue
-
 CELERY_BROKER_URL = 'redis://redis:6379' 
 CELERY_RESULT_BACKEND = 'redis://redis:6379'  
-
+# CELERY_BROKER_URL = 'redis://localhost:6379' 
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379'  
+    
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'

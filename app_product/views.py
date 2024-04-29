@@ -25,20 +25,20 @@ from django.views.decorators.cache import cache_page
 from django.http import Http404
 
 
-
+from .pagination import ListProductPagination
 
 
 class ListAllProductApiView(ListAPIView): # Было 5 стало 5
-    queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size')
+    queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
     serializer_class = ProductListSerializer
     filter_backends = [PriceRangeFilter, SearchFilter]
-    pagination_class = PageNumberPagination
+    pagination_class = ListProductPagination
 
-
-
-    @method_decorator(cache_page(30)) 
+    @method_decorator(cache_page(10))
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+
+
         
 
 
@@ -71,9 +71,9 @@ class ProductUpdateApiView(UpdateAPIView):
         instance.save()
 
 
-class ListOneProducApiView(APIView):   #Было 7 SQL запроса стало 4
+class ListOneProducApiView(APIView):   
+    serializer_class = ProductDetailSerializer
 
-    # @method_decorator(cache_page(60))  
     def get(self, request, id):
         product = get_object_or_404(
             Product.objects.select_related('subcategory')
@@ -84,6 +84,8 @@ class ListOneProducApiView(APIView):   #Было 7 SQL запроса стало
     
 
 class ProductBySubCategory(APIView):  #Было 7 SQL запроса стало 4
+    serializer_class = ProductDetailSerializer
+    
     def get(self, request, subcategory_id):
         products = Product.objects.filter(subcategory_id=subcategory_id)\
             .select_related('subcategory')\
@@ -100,9 +102,7 @@ class SizeApiView(ListCreateAPIView):
     permission_classes = [IsAdminUser, ]
 
     
-    @method_decorator(cache_page(30))  
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+
 
 
 
@@ -117,10 +117,6 @@ class ColorApiView(ListCreateAPIView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
     permission_classes = [IsAdminUser, ]
-
-    @method_decorator(cache_page(20))  
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
 
 class ColorRUDView(RetrieveUpdateDestroyAPIView):
@@ -153,19 +149,16 @@ class CharacteristikListView(ListAPIView):
     queryset = CharacteristikTopik.objects.all()
     serializer_class = CharacteristikSerializer
 
-    @method_decorator(cache_page(60))  
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+  
 
 class CharacteristikDetailView(RetrieveAPIView):
     queryset = CharacteristikTopik.objects.all()
     serializer_class = CharacteristikSerializer
 
-    @method_decorator(cache_page(60))  
-    def get(self, request, id):
-        products = get_object_or_404(Product, id=id)
-        serializer = ProductDetailSerializer(products)
-        return Response(serializer.data)
+    # def get(self, request, id):
+    #     products = get_object_or_404(Product, id=id)
+    #     serializer = CharacteristikSerializer(products)
+    #     return Response(serializer.data)
     
 
 
