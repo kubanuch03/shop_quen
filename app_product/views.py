@@ -170,20 +170,7 @@ class ColorCreateApiView(CreateAPIView):
     serializer_class = ColorSerializer
     permission_classes = [IsAdminUser, ]
     
-    # def create(self, request, *args, **kwargs):
-    #     colors = self.request.data['colors']
-    #     colors.upper()
-    #     try:
-    #         if Color.objects.filter(colors=colors).exists():
-    #             return response.Response({"error":"colors is already"}, status=status.HTTP_400_BAD_REQUEST)
-    #     except Color.DoesNotExist:
-    #         return response.Response({"error":"colors does not exist"})
-    
-    #     color = Color.objects.create(colors=colors)
-
-    #     color.save()
-    #     serializer = self.get_serializer(color)
-    #     return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+  
     
 
 class ColorRUDView(RetrieveUpdateDestroyAPIView):
@@ -200,16 +187,7 @@ class CharacteristikViewSet(ModelViewSet):
     serializer_class = CharacteristikSerializer
     permission_classes = [IsAdminUser]
 
-    # def create(self,request,*args,**kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-
-    #     if CharacteristikTopik.objects.filter(title=serializer.validated_data['title']).exists():
-    #         return Response({"error":"CharacteristikTopik with this name already exists."}, status=status.HTTP_400_BAD_REQUEST)
-
-    #     self.perform_create(serializer)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+   
     
 
 class CharacteristikListView(ListAPIView):
