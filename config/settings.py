@@ -186,21 +186,33 @@ CORS_ALLOWED_ORIGINS = [
 
 ]
 
-# CORS_ALLOW_ORIGINS = [
-#     "*",
-#     "https://queen-shops.com",
-#     "http://localhost:3000",
-#     "https://www.queen-shops.com",
-#     "https://back.queen-shops.com",
+CORS_ALLOW_ORIGINS = [
+    "*",
+    "https://queen-shops.com",
+    "http://localhost:3000",
+    "https://www.queen-shops.com",
+    "https://back.queen-shops.com",
 
-#     "http://queen-shops.com",
-#     "http://www.queen-shops.com",
-#     "http://back.queen-shops.com",
-
-
+    "http://queen-shops.com",
+    "http://www.queen-shops.com",
+    "http://back.queen-shops.com",
 
 
-# ]
+
+
+]
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
 
 
 
