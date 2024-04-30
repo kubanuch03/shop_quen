@@ -16,7 +16,6 @@ class CategoryAllListApiView(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryListRUDSerializer
     filter_backends = [SearchFilter]
-    permission_classes = [AllowAny]
 
     @method_decorator(cache_page(10))
     def dispatch(self, *args, **kwargs):

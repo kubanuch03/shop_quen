@@ -118,7 +118,7 @@ class ProductAllDeleteAllApiView(APIView):
 class SizeListApiView(ListAPIView):
     queryset = Size.objects.all()
     serializer_class = SizeSerializer
-    permission_classes = [AllowAny, ]
+    permission_classes = [AllowAny]
 
     @method_decorator(cache_page(13))
     def dispatch(self, *args, **kwargs):
@@ -128,7 +128,7 @@ class SizeListApiView(ListAPIView):
 class SizeDetailApiView(RetrieveAPIView):
     queryset = Size.objects.all()
     serializer_class = SizeSerializer
-    permission_classes = [AllowAny, ]
+    permission_classes = [AllowAny]
 
 
 class SizeCreateApiView(CreateAPIView):

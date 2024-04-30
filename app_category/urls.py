@@ -6,8 +6,8 @@ SubCategoryRUDApiView, CategoryBySubCategory, ListOneCategoryApiView, ListOneSub
 
 
 urlpatterns = [
-    path('list/all/category/', CategoryAllListApiView.as_view(), name="список всех категории"),
-    path('list/one/category/<int:id>/', ListOneCategoryApiView.as_view(), name="список определено категории по id"),
+    path('list/all/category/', CategoryAllListApiView.as_view(), name="list-all-category"),
+    path('list/one/category/<int:id>/', ListOneCategoryApiView.as_view(), name="list-one-category-id"),
     path('create/category/', CategoryCreateApiView.as_view(), name="создание категории"),
     path('rud/category/<int:id>/', CategoryRUDApiView.as_view(), name="удаление, изменение, детали"),
 
