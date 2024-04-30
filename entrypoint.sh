@@ -1,8 +1,9 @@
+
 # Запуск Redis
 apt update
 apt install redis-server
 redis-server --port 6379 &
-
+chmod 777 celerybeat-schedule.dir
 # Ожидание запуска Redis (дополнительная команда, если необходимо)
 sleep 5
 
@@ -18,5 +19,4 @@ celery -A config beat --loglevel=info --detach
 
 # Ожидаем завершения Gunicorn (или любого другого процесса, запущенного перед)
 wait -n
-
-# service pgbouncer start   
+pgbouncer-u pgbouncer /etc/pgbouncer/pgbouncer.ini
