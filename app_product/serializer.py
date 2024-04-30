@@ -18,6 +18,8 @@ class SizeSerializer(serializers.ModelSerializer):
             )
 
         attrs['sizes'] = sizes.upper()
+        if Size.objects.filter(sizes=attrs['sizes']).exists():
+            raise serializers.ValidationError('sizes is already.')
 
         return attrs
 
