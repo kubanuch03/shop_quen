@@ -57,7 +57,7 @@ class NewCollectionListSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         products_queryset = obj.product.all()
         products_data = ProductListSerializer(products_queryset, many=True, context={'request': request}).data
-        for product in products_data:
-            product['images1'] = request.build_absolute_uri(settings.MEDIA_URL + product['images1'])
+        # for product in products_data:
+        #     product['images1'] = request.build_absolute_uri(settings.MEDIA_URL + product['images1'])
         return products_data
     
