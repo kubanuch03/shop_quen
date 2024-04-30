@@ -169,6 +169,22 @@ class ColorCreateApiView(CreateAPIView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
     permission_classes = [IsAdminUser, ]
+    
+    # def create(self, request, *args, **kwargs):
+    #     colors = self.request.data['colors']
+    #     colors.upper()
+    #     try:
+    #         if Color.objects.filter(colors=colors).exists():
+    #             return response.Response({"error":"colors is already"}, status=status.HTTP_400_BAD_REQUEST)
+    #     except Color.DoesNotExist:
+    #         return response.Response({"error":"colors does not exist"})
+    
+    #     color = Color.objects.create(colors=colors)
+
+    #     color.save()
+    #     serializer = self.get_serializer(color)
+    #     return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+    
 
 class ColorRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Color.objects.all()

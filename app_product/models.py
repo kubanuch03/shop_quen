@@ -16,6 +16,8 @@ class Color(models.Model):
             
         ]
 
+    
+
 
 class Size(models.Model):
     sizes = models.CharField(max_length=255, unique=True)

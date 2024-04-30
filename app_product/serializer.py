@@ -38,6 +38,8 @@ class ColorSerializer(serializers.ModelSerializer):
             )
 
         attrs['colors'] = colors.upper()
+        if Color.objects.filter(colors=attrs['colors']).exists():
+            raise serializers.ValidationError('color is already.')
 
         return attrs
 
