@@ -17,7 +17,7 @@ services:
       - redis
       - celery-worker
       - celery-beat
-      - pgbouncer
+      # - pgbouncer
 
   db:
     image: postgres:14-alpine
