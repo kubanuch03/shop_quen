@@ -129,3 +129,4 @@ class UserDetailFavoriteView(generics.RetrieveAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserFavoriteSerializer
     permission_classes = [permissions.IsAdminUser]
+    
