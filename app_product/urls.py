@@ -28,7 +28,7 @@ urlpatterns = [
     path('list/characteristik/', CharacteristikListView.as_view(),name='list-characteristik'),
     path('detail/characteristik/<int:pk>/', CharacteristikDetailView.as_view(),name='detail-characteristik-id'),
 
-    path('delete/isfavorite/<int:id>/', IsFavoriteApiView.as_view(),name='delete-is_favorite'),
+    path('delete/isfavorite/<int:product>/', IsFavoriteApiView.as_view(),name='delete-is_favorite'),
 
 
 ]+ router.urls
