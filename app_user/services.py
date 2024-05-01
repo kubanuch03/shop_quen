@@ -6,37 +6,36 @@ from rest_framework import status
 from django.utils.translation import gettext as _
 from django.core.mail import send_mail
 from django.contrib.auth.hashers import check_password
-from .tasks import send_verification_email
+# from .tasks import send_verification_email
 from .models import CustomUser
 import random
 import string
 import requests
 
 
-from .tasks import send_verification_email
 
 def generate_verification_code(length=6):
     """Generate a random verification code."""
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
 
-# def send_verification_code(email):
+def send_verification_code(email):
 
-#     verification_code = generate_verification_code()
+    verification_code = generate_verification_code()
 
-#     subject = 'Verification Code'
-#     message = f'Your verification code is: {verification_code}'
-#     sender_email = 'kubanuch03@gmail.com'
-#     recipient_email = email
+    subject = 'Verification Code'
+    message = f'Your verification code is: {verification_code}'
+    sender_email = 'kubanuch03@gmail.com'
+    recipient_email = email
 
-#     try:
-#         user_obj = CustomUser.objects.get(email=email)
-#     except CustomUser.DoesNotExist:
-#         user_obj = CustomUser.objects.create(email=email)
-#     user_obj.code = verification_code
-#     user_obj.save()
+    try:
+        user_obj = CustomUser.objects.get(email=email)
+    except CustomUser.DoesNotExist:
+        user_obj = CustomUser.objects.create(email=email)
+    user_obj.code = verification_code
+    user_obj.save()
 
-#     send_mail(subject, message, sender_email, [recipient_email], fail_silently=False)
+    send_mail(subject, message, sender_email, [recipient_email], fail_silently=False)
 
 
 
@@ -91,7 +90,7 @@ class CreateUserApiView(mixins.CreateModelMixin, generics.GenericAPIView):
         serializer.save()
 
         if "@" in email:
-            send_verification_email(email, verification_code)  # Вызов задачи для отправки сообщения
+            send_verification_code(email, verification_code)  # Вызов задачи для отправки сообщения
 
         return Response({"success": "Код был отправлен на указанный реквизит"}, status=status.HTTP_201_CREATED)
 
@@ -176,7 +175,7 @@ class ChangePassword:
         try:
             CustomUser.objects.get(email_or_phone=email_or_phone)
             if "@" in email_or_phone:
-                send_verification_email(email_or_phone=email_or_phone)
+                send_verification_code(email_or_phone=email_or_phone)
                 return Response({"success":"Код был отправлен на ваш email"})
             elif "996" in email_or_phone:
                 send_code_to_number(email_or_phone=int(email_or_phone))

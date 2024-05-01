@@ -13,7 +13,7 @@ from datetime import timedelta
 from .models import CustomUser
 from .serializers import UserSerializer, LoginUserSerializer, VerifyUserCodeSerializer,SendCodeSerializer,ForgetPasswordSerializer
 from .services import *
-from .tasks import send_verification_email
+
 import time
 
 
@@ -92,12 +92,12 @@ class ForgetPasswordSendCodeView(generics.UpdateAPIView):
         try:
             user = CustomUser.objects.get(email=email)
             # Если пользователь уже существует, просто обновите его код подтверждения и отправьте его
-            send_verification_email(email=email)
+            send_verification_code(email=email)
             return Response({"success":"Код был отправлен на почту"}, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
             # Если пользователь не существует, создайте нового пользователя и отправьте ему код подтверждения
             user = CustomUser.objects.create(email=email)
-            send_verification_email(email=email)
+            send_verification_code(email=email)
             return Response({"success":"Код был отправлен на почту"}, status=status.HTTP_201_CREATED)
         
 
