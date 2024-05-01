@@ -35,9 +35,9 @@ class ListAllProductApiView(ListAPIView): # Было 5 стало 5
     filter_backends = [PriceRangeFilter, SearchFilter]
     pagination_class = ListProductPagination
 
-    @method_decorator(cache_page(15))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(15))
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
 
         
@@ -120,9 +120,9 @@ class SizeListApiView(ListAPIView):
     serializer_class = SizeSerializer
     permission_classes = [AllowAny]
 
-    @method_decorator(cache_page(13))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(13))
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
 
 class SizeDetailApiView(RetrieveAPIView):
@@ -194,9 +194,9 @@ class CharacteristikListView(ListAPIView):
     queryset = CharacteristikTopik.objects.all()
     serializer_class = CharacteristikSerializer
 
-    @method_decorator(cache_page(10))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(10))
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
   
 
 class CharacteristikDetailView(RetrieveAPIView):
