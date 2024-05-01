@@ -17,9 +17,9 @@ class CategoryAllListApiView(ListAPIView):
     serializer_class = CategoryListRUDSerializer
     filter_backends = [SearchFilter]
 
-    @method_decorator(cache_page(10))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(10))
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
 
 
