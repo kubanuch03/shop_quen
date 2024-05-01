@@ -19,10 +19,29 @@ RUN pip install  gunicorn --no-cache-dir && pip install --no-cache-dir -r requir
 RUN apt-get update && apt-get install -y redis-server
 
 
-COPY . /app/
-# USER root
-# COPY pgbouncer.ini /etc/pgbouncer/pgbouncer.ini
-# RUN chmod 644 /etc/pgbouncer/pgbouncer.ini
+# COPY . /app/
+# RUN         set -x \
+#             && apt-get -qq update \
+#             && apt-get install -yq --no-install-recommends pgbouncer \
+#             && apt-get purge -y --auto-remove \
+#             && rm -rf /var/lib/apt/lists/*
+
+
+
+# COPY pgbouncer.ini /etc/pgbouncer/
+# COPY userlist.txt /etc/pgbouncer/
+
+# RUN touch /app/pgbouncer.pid && chmod 644 /app/pgbouncer.pid && chown 1000:1000 /app/pgbouncer.pid
+
+
+# Создание файла PID для PgBouncer
+# RUN touch /app/pgbouncer.pid && \
+#     chmod 644 /app/pgbouncer.pid && \
+#     chown 1000:1000 /app/pgbouncer.pid
+
+# Указание пользователя для запуска PgBouncer
+# USER postgres
+
 
 # Run the entrypoint script when the container starts
 CMD ["bash", "entrypoint.sh"]

@@ -10,11 +10,6 @@ services:
       - .:/app
       - static_volume:/usr/src/app/static
       - media_volume:/usr/src/app/media
-    
-    # environment:
-    #   - VIRTUAL_HOST=back.queen-shops.com
-    #   - LETSENCRYPT_HOST=back.queen-shops.com
-
     # ports:
     #   - 8000:8000
     depends_on:
@@ -22,6 +17,7 @@ services:
       - redis
       - celery-worker
       - celery-beat
+      - pgbouncer
 
   db:
     image: postgres:14-alpine
@@ -29,18 +25,26 @@ services:
       - .env
     volumes:
       - db_data:/var/lib/postgresql/data
+    
+
 
   # pgbouncer:
   #   image: edoburu/pgbouncer:latest
+  #   build: .
+  #     # dockerfile: pgbouncer/Dockerfile
+  #   volumes:
+  #     - ./etc/pgbouncer:/etc/pgbouncer:ro
   #   environment:
-  #     - DB_HOST=postgres
-  #     - DB_PORT=5432
-  #     - DB_USER=postgres
-  #     - DB_PASSWORD=123
-  #     - ADMIN_USERS=postgres,admin
+  #     - PGBOUNCER_INI=pgbouncer.ini
+  #     - DATABASES_HOST=db
+  #     - DATABASES_PORT=5432
+  #     - DATABASES_USER=postgres
+  #     - DATABASES_PASSWORD=123
+  #     - ADMIN_USERS=postgres
   #   ports:
-  #     - "5432:5432"
-
+  #     - "6432:6432"
+  #   restart: always
+    
   redis:
     image: "redis:alpine"
 
@@ -66,35 +70,10 @@ services:
       - redis
       - db
 
-  # nginx:
-  #   image: jwilder/nginx-proxy:1.2
-  #   ports:
-  #   - "81:81"
-  #   - "443:443"
-  #   volumes:
-  #   - ./nginx/default.conf:/etc/nginx/vhost.d/nginx.conf
-  #   - static_volume:/usr/src/app/static
-  #   - media_volume:/usr/src/app/media
-  #   - /var/run/docker.sock:/tmp/docker.sock:ro
-  #   - html:/usr/share/nginx/html
-  #   - vhost:/etc/nginx/vhost.d
-  #   - certs:/etc/nginx/certs
-
-  # acme_companion:
-  #   image: nginxproxy/acme-companion:2.2.10
-  #   container_name: acme_companion
-  #   volumes_from:
-  #   - nginx
-  #   volumes:
-  #   - /var/run/docker.sock:/var/run/docker.sock
-  #   - acme:/etc/acme.sh
+  
 
 
 volumes:
   db_data:
   static_volume:
   media_volume:
-  # certs:
-  # acme:
-  # vhost:
-  # html:
