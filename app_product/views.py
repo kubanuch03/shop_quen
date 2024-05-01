@@ -1,4 +1,4 @@
-from app_product.serializer import ProductDetailSerializer, ProductcreateSerializer, SizeSerializer, ColorSerializer, CharacteristikSerializer, ProductListSerializer,IsFavoriteDeleteSerializer
+from app_product.serializer import ProductDetailSerializer, ProductcreateSerializer, SizeSerializer, ColorSerializer, CharacteristikSerializer, ProductListSerializer,IsFavoriteDeleteSerializer,IsFavoriteSerializer
 from app_product.models import Product, Size, Color, CharacteristikTopik, IsFavorite
 from app_product.filters import PriceRangeFilter, SearchFilter
 from app_favorite.models import Favorite
@@ -213,7 +213,7 @@ class CharacteristikDetailView(RetrieveAPIView):
 
 class IsFavoriteApiView(DestroyAPIView):
     queryset = IsFavorite.objects.all()
-    serializer_class = IsFavoriteDeleteSerializer
+    serializer_class = IsFavoriteSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
