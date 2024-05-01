@@ -152,20 +152,15 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 
 class ProductcreateSerializer(serializers.ModelSerializer):
-    discount = serializers.CharField(required=False)
+    discount = serializers.IntegerField(required=False)
 
     def apply_discount_to_price(self, price, discount):
-        if '%' in discount: 
-            discount_percentage = int(discount.replace('%', ''))
-            if discount_percentage > 0 and discount_percentage <= 100:
-                discounted_price = price - (price * discount_percentage) // 100
-                return discounted_price
-        else:
-            discount_value = int(discount)
-            if discount_value > 0:
-                discounted_price = price - discount_value
-                return discounted_price
-        return price
+        
+        discount_value = int(discount)
+        discounted_price = price - discount_value
+        return discounted_price
+        
+        # return price
 
     def create(self, validated_data):
         discount = validated_data.get('discount')
@@ -173,6 +168,9 @@ class ProductcreateSerializer(serializers.ModelSerializer):
         title = validated_data['title']
         brand = validated_data['brand']
         description = validated_data['description']
+        
+        if discount <= 0:
+            raise serializers.ValidationError({"discount": "discount must be a positive integer."})
         
         if discount is not None:
             discounted_price = self.apply_discount_to_price(price, discount)

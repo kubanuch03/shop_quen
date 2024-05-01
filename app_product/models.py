@@ -50,7 +50,7 @@ class Product(models.Model):
     is_any = models.BooleanField(default=False)
     color = models.ManyToManyField(Color)
     size = models.ManyToManyField(Size)
-    discount = models.CharField(blank=True, null=True)
+    discount = models.PositiveIntegerField(blank=True, null=True)
     created_at = models.DateField(auto_now_add=True)
     is_favorite = models.ManyToManyField(IsFavorite,blank=True)
     images1 = models.ImageField(upload_to="text/", blank=False, null=False)
