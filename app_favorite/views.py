@@ -15,7 +15,7 @@ from app_product.models import Product, IsFavorite
 from app_user.models import CustomUser
 
 class FavoriteListApiView(generics.ListAPIView):
-    queryset = Favorite.objects.all().select_related('product').prefetch_related('user',)
+    queryset = Favorite.objects.all()
     serializer_class = FavoriteListSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -65,13 +65,6 @@ class FavoriteCreateApiView(generics.CreateAPIView):
 
 
 
-
-
-        
-
-    
-
-
 class FavoriteDetailApiView(generics.RetrieveAPIView):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteListSerializer
@@ -88,10 +81,14 @@ class FavoriteDetailApiView(generics.RetrieveAPIView):
             raise Http404("Product does not exist")
         return obj
 
+
+
+
 class FavoriteDeleteApiView(generics.DestroyAPIView):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteListSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 
     def get_object(self):
@@ -129,4 +126,3 @@ class UserDetailFavoriteView(generics.RetrieveAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserFavoriteSerializer
     permission_classes = [permissions.IsAdminUser]
-    
