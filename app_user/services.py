@@ -90,7 +90,7 @@ class CreateUserApiView(mixins.CreateModelMixin, generics.GenericAPIView):
         serializer.save()
 
         if "@" in email:
-            send_verification_code(email, verification_code)  # Вызов задачи для отправки сообщения
+            send_verification_code(email)  # Вызов задачи для отправки сообщения
 
         return Response({"success": "Код был отправлен на указанный реквизит"}, status=status.HTTP_201_CREATED)
 
