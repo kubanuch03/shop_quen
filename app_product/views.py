@@ -2,7 +2,7 @@ from app_product.serializer import ProductDetailSerializer, ProductcreateSeriali
 from app_product.models import Product, Size, Color, CharacteristikTopik, IsFavorite
 from app_product.filters import PriceRangeFilter, SearchFilter
 from app_favorite.models import Favorite
-
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import (
@@ -219,7 +219,7 @@ class IsFavoriteApiView(DestroyAPIView):
     def get_object(self):
         try:
             # Ищем объект IsFavorite по полю product
-            obj = IsFavorite.objects.get(product=self.kwargs['product'])
+            obj = get_object_or_404(IsFavorite,product=self.kwargs['product'])
             # Проверяем, принадлежит ли объект текущему пользователю
             if obj.user != self.request.user:
                 raise Http404("You cannot delete this favorite object.")
