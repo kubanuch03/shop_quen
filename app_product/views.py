@@ -22,9 +22,9 @@ from django.shortcuts import get_object_or_404
 from django.core.cache import cache
 from django.http import Http404
 from django.core.paginator import Paginator, EmptyPage
-from celery import shared_task
 
 from .pagination import ListProductPagination
+from .tasks import update_product_cache
 from django.db.models import Max
 from django.db.models.functions import Coalesce
 from celery.utils.log import get_task_logger
@@ -33,18 +33,7 @@ logger = get_task_logger(__name__)
 
 
 
-@shared_task
-def update_product_cache():
-    try:
-        queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
-        serializer = ProductListSerializer(queryset, many=True)
-        serialized_data = serializer.data
 
-        # Кешируем результаты на 10 секунд
-        cache.set('cached_products', serialized_data, timeout=10)
-        logger.info("Товары успешно закешированы")
-    except Exception as e:
-        logger.error(f"Ошибка кеширования товаров: {str(e)}")
 
 
 class ListAllProductApiView(ListAPIView): # Было 5 стало 5
