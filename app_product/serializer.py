@@ -159,8 +159,19 @@ class ProductcreateSerializer(serializers.ModelSerializer):
         discount_value = int(discount)
         discounted_price = price - discount_value
         return discounted_price
-        
-        # return price
+    
+
+    def to_internal_value(self, data):
+        # Переводим поля, связанные с pk, из int в str
+        if 'subcategory' in data:
+            data['subcategory'] = str(data['subcategory'])
+            print(type(data['subcategory']))
+        if 'color' in data:
+            data['color'] = str(data['color'])
+        if 'size' in data:
+            data['size'] = str(data['size'])
+
+        return super().to_internal_value(data)
 
     def create(self, validated_data):
         discount = validated_data.get('discount')

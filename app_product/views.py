@@ -27,14 +27,24 @@ from celery import shared_task
 from .pagination import ListProductPagination
 from django.db.models import Max
 from django.db.models.functions import Coalesce
+from celery.utils.log import get_task_logger
+
+logger = get_task_logger(__name__)
 
 
 
 @shared_task
 def update_product_cache():
-    queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
-    serialized_data = [product.pk for product in queryset]
-    cache.set('product_cache', serialized_data, timeout=5)
+    try:
+        queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
+        serializer = ProductListSerializer(queryset, many=True)
+        serialized_data = serializer.data
+
+        # Кешируем результаты на 10 секунд
+        cache.set('cached_products', serialized_data, timeout=10)
+        logger.info("Товары успешно закешированы")
+    except Exception as e:
+        logger.error(f"Ошибка кеширования товаров: {str(e)}")
 
 
 class ListAllProductApiView(ListAPIView): # Было 5 стало 5
@@ -45,20 +55,16 @@ class ListAllProductApiView(ListAPIView): # Было 5 стало 5
 
 
     def get_queryset(self):
-        self.update_product_cache_async()
-
-        cached_data = cache.get('product_cache')
+        cached_data = cache.get('cached_products')
         if cached_data:
-            queryset = Product.objects.filter(pk__in=cached_data).order_by('-id')
-            return queryset
+            logger.info("Using cached data")
+            # Просто возвращаем queryset, если данные закешированы
+            return super().get_queryset()  
         else:
-            return self.get_initial_queryset_from_db().order_by('-id')
-
-    def update_product_cache_async(self):
-        update_product_cache.apply_async()
-
-    def get_initial_queryset_from_db(self):
-        return Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
+            update_product_cache.delay()
+            logger.info("Started task to cache data")
+            # Возвращаем queryset, если данные не закешированы
+            return super().get_queryset()
 
 #============================================================================================================
 
