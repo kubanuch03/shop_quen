@@ -11,7 +11,6 @@ DestroyAPIView, ListCreateAPIView,
 RetrieveUpdateDestroyAPIView, RetrieveAPIView
 )
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.pagination import PageNumberPagination
 from rest_framework import status, response
 
 from app_product.permissions import IsCreatorOrAdmin
@@ -21,12 +20,21 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 from django.core.cache import cache
-from django.views.decorators.cache import cache_page
 from django.http import Http404
-
+from django.core.paginator import Paginator, EmptyPage
+from celery import shared_task
 
 from .pagination import ListProductPagination
+from django.db.models import Max
+from django.db.models.functions import Coalesce
 
+
+
+@shared_task
+def update_product_cache():
+    queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
+    serialized_data = [product.pk for product in queryset]
+    cache.set('product_cache', serialized_data, timeout=5)
 
 
 class ListAllProductApiView(ListAPIView): # Было 5 стало 5
@@ -35,12 +43,24 @@ class ListAllProductApiView(ListAPIView): # Было 5 стало 5
     filter_backends = [PriceRangeFilter, SearchFilter]
     pagination_class = ListProductPagination
 
-    # @method_decorator(cache_page(15))
-    # def dispatch(self, *args, **kwargs):
-    #     return super().dispatch(*args, **kwargs)
 
+    def get_queryset(self):
+        self.update_product_cache_async()
 
-        
+        cached_data = cache.get('product_cache')
+        if cached_data:
+            queryset = Product.objects.filter(pk__in=cached_data).order_by('-id')
+            return queryset
+        else:
+            return self.get_initial_queryset_from_db().order_by('-id')
+
+    def update_product_cache_async(self):
+        update_product_cache.apply_async()
+
+    def get_initial_queryset_from_db(self):
+        return Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
+
+#============================================================================================================
 
 
 

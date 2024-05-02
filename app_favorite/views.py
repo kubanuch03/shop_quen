@@ -49,7 +49,7 @@ class FavoriteCreateApiView(generics.CreateAPIView):
             product = Product.objects.get(pk=product_id)
             if Favorite.objects.filter(user=request.user, product=product).exists():
                 return response.Response({"error":"Product is already in favorites"}, status=status.HTTP_400_BAD_REQUEST)
-        except Favorite.DoesNotExist:
+        except Product.DoesNotExist:
             return response.Response({"error":"Product does not exist"})
 
         

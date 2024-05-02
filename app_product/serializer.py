@@ -169,8 +169,8 @@ class ProductcreateSerializer(serializers.ModelSerializer):
         brand = validated_data['brand']
         description = validated_data['description']
         
-        if discount <= 0:
-            raise serializers.ValidationError({"discount": "discount must be a positive integer."})
+        if discount is not None and discount <= 0:
+            raise serializers.ValidationError({"discount": "Скидка должна быть положительным целым числом."})
         
         if discount is not None:
             discounted_price = self.apply_discount_to_price(price, discount)

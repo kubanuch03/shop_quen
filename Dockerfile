@@ -20,6 +20,10 @@ RUN apt-get update && apt-get install -y redis-server
 
 
 COPY . /app/
+
+
+
+#================= Pgbouncer ================================================================================
 # RUN         set -x \
 #             && apt-get -qq update \
 #             && apt-get install -yq --no-install-recommends pgbouncer \
@@ -41,6 +45,7 @@ COPY . /app/
 
 # Указание пользователя для запуска PgBouncer
 # USER postgres
+#=================  ================================================================================
 
 
 # Run the entrypoint script when the container starts
