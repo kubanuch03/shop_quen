@@ -3,7 +3,7 @@
 apt update
 apt install redis-server
 redis-server --port 6379 &
-chmod 777 celerybeat-schedule.dir
+
 # Ожидание запуска Redis (дополнительная команда, если необходимо)
 sleep 5
 
