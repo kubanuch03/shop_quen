@@ -19,7 +19,7 @@ RUN pip install  gunicorn --no-cache-dir && pip install --no-cache-dir -r requir
 RUN apt-get update && apt-get install -y redis-server
 
 
-# COPY . /app/
+COPY . /app/
 # RUN         set -x \
 #             && apt-get -qq update \
 #             && apt-get install -yq --no-install-recommends pgbouncer \
