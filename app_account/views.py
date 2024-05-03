@@ -50,6 +50,7 @@ class PaymentMethodApiView(generics.ListCreateAPIView):
 
 class UserInfoApiView(APIView):
     serializer_class = UserInfoSerializer
+    permission_classes = [permissions.IsAuthenticated]
     def get(self, request, *args, **kwargs):
         user = self.request.user
         queryset = CustomUser.objects.filter(id=user.id).first()
@@ -62,6 +63,8 @@ class UserUpdateApiView(RetrieveUpdateAPIView):
     queryset = CustomUser.objects.all() 
     serializer_class = ChangeUserInfoSerializer
     permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
+
 
     def get_object(self):
         return self.request.user
@@ -72,6 +75,7 @@ class UserUpdateApiView(RetrieveUpdateAPIView):
 class ChangeUserInfoApiView(generics.RetrieveAPIView):
     serializer_class = UserInfoSerializer
     permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
@@ -80,6 +84,8 @@ class ChangeUserInfoApiView(generics.RetrieveAPIView):
 
 
 class LogoutView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     serializer_class = None
     def post(self, request):
         try:
@@ -139,13 +145,12 @@ class HistoryListApiView(ListAPIView):
     serializer_class = HistoryListSerializer
     permission_classes = [permissions.IsAdminUser, ]
 
-    @method_decorator(cache_page(7))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+
 
 class HistoryByUserListApiView(ListAPIView):
     queryset = History.objects.all()
     serializer_class = HistoryListSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
 
     def get_queryset(self):
         user = self.request.user
@@ -159,7 +164,8 @@ class HistoryByUserListApiView(ListAPIView):
 class HistoryCreateApiView(CreateAPIView):
     queryset = History.objects.all()
     serializer_class = HistoryCreateSerializer
-    permission_classes = [permissions.IsAdminUser, ]
+    permission_classes = [permissions.IsAuthenticated]
+    
 
 
 
@@ -168,7 +174,7 @@ class HistoryCreateApiView(CreateAPIView):
 class HistoryDetailView(generics.RetrieveUpdateAPIView):
     queryset = History.objects.all()
     serializer_class = HistoryListSerializer
-    permission_classes = [permissions.IsAdminUser, ]
+    permission_classes = [permissions.IsAuthenticated, ]
     lookup_field = "id"
 
 
