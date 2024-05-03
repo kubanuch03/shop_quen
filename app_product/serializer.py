@@ -79,6 +79,9 @@ class IsFavoriteDeleteSerializer(serializers.ModelSerializer):
 
 class ProductListSerializer(serializers.ModelSerializer):
     is_favorite =IsFavoriteSerializer(many=True)
+    color =ColorSerializer(many=True)
+    size = SizeSerializer(many=True)
+    characteristics =CharacteristikSerializer(many=True)
     class Meta:
         model = Product
         fields = [
@@ -103,6 +106,9 @@ class ProductListSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data_product = super().to_representation(instance)        
         data_product['is_favorite'] = IsFavoriteSerializer(instance.is_favorite.all(),many=True).data
+        data_product['size'] = SizeSerializer(instance.size.only('sizes'), many=True).data
+        data_product['color'] = ColorSerializer(instance.color.only('colors'),many=True).data
+        data_product['characteristics'] = CharacteristikSerializer(instance.characteristics.only('title'),many=True).data
         
         return data_product   
 
