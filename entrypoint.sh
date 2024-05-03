@@ -20,4 +20,3 @@ celery -A config beat --loglevel=info --detach
 # Ожидаем завершения Gunicorn (или любого другого процесса, запущенного перед)
 wait -n
 
-# pgbouncer-u pgbouncer /etc/pgbouncer/pgbouncer.ini
