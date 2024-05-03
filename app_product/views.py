@@ -24,7 +24,7 @@ from django.http import Http404
 from django.core.paginator import Paginator, EmptyPage
 
 from .pagination import ListProductPagination
-from .tasks import update_product_cache
+from .tasks import update_product_cache, add_product_to_cache
 from django.db.models import Max
 from django.db.models.functions import Coalesce
 from celery.utils.log import get_task_logger
@@ -36,24 +36,25 @@ logger = get_task_logger(__name__)
 
 
 
-class ListAllProductApiView(ListAPIView): # Было 5 стало 5
-    queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
+class ListAllProductApiView(ListAPIView):
     serializer_class = ProductListSerializer
     filter_backends = [PriceRangeFilter, SearchFilter]
     pagination_class = ListProductPagination
 
-
     def get_queryset(self):
-        cached_data = cache.get('cached_products')
+        queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
+        page_number = self.request.query_params.get("page", 1)
+        page_size = self.request.query_params.get("page_size", 50)
+        query_params = self.request.query_params.dict()
+        cached_data = cache.get(f'cached_products_page_{page_number}')
         if cached_data:
             logger.info("Using cached data")
-            # Просто возвращаем queryset, если данные закешированы
-            return super().get_queryset()  
+            return cached_data
         else:
-            update_product_cache.delay()
+            update_product_cache.delay(page_number, page_size, query_params)
             logger.info("Started task to cache data")
-            # Возвращаем queryset, если данные не закешированы
-            return super().get_queryset()
+            return queryset
+    
 
 #============================================================================================================
 
@@ -63,6 +64,12 @@ class CreateProductApiView(CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductcreateSerializer
     permission_classes = [IsAdminUser, ]
+
+    # def perform_create(self, serializer):
+    #     instance = serializer.save()
+    #     add_product_to_cache(instance.id)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 
         

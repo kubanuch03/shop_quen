@@ -32,3 +32,26 @@
 #             return super().get_queryset()
 
 #============================================================================================================
+
+
+
+
+
+
+# class ListAllProductApiView(ListAPIView): # Было 5 стало 5
+#     serializer_class = ProductListSerializer
+#     filter_backends = [PriceRangeFilter, SearchFilter]
+#     pagination_class = ListProductPagination
+
+#     def get_queryset(self):
+#         queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
+#         cached_data = cache.get('cached_products')
+#         if cached_data:
+#             logger.info("Using cached data")
+#             # Преобразуем сериализованные данные обратно в queryset
+#             queryset = Product.objects.filter(id__in=[item['id'] for item in cached_data])
+#             return queryset
+#         else:
+#             update_product_cache.delay()
+#             logger.info("Started task to cache data")
+#             return queryset
