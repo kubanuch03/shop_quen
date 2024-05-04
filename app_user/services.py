@@ -85,7 +85,6 @@ class CreateUserApiView(mixins.CreateModelMixin, generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
 
         email = serializer.validated_data['email']
-        verification_code = generate_verification_code()  # Функция генерации кода верификации
 
         serializer.save()
 
@@ -102,6 +101,7 @@ class CheckCode():
                 user.is_active = True
                 user.save()
                 refresh = RefreshToken.for_user(user=user)
+                # serializer = UserSerializer(user)
                 return Response({
                     'detail': 'Successfully confirmed your code',
                     'user_id': user.id,
