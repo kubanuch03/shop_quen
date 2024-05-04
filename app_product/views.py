@@ -37,6 +37,7 @@ logger = get_task_logger(__name__)
 
 
 class ListAllProductApiView(ListAPIView):
+    # queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
     serializer_class = ProductListSerializer
     filter_backends = [PriceRangeFilter, SearchFilter]
     pagination_class = ListProductPagination
