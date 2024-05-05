@@ -167,18 +167,18 @@ class ProductcreateSerializer(serializers.ModelSerializer):
         return discounted_price
     
 
-    def to_internal_value(self, data):
-        # Создаем копию QueryDict
-        mutable_data = data.copy()
-        # Переводим поля, связанные с pk, из int в str
-        if 'subcategory' in mutable_data:
-            mutable_data['subcategory'] = str(mutable_data['subcategory'])
-        if 'color' in mutable_data:
-            mutable_data['color'] = str(mutable_data['color'])
+    # def to_internal_value(self, data):
+    #     # Создаем копию QueryDict
+    #     mutable_data = data.copy()
+    #     # Переводим поля, связанные с pk, из int в str
+    #     if 'subcategory' in mutable_data:
+    #         mutable_data['subcategory'] = str(mutable_data['subcategory'])
+    #     if 'color' in mutable_data:
+    #         mutable_data['color'] = str(mutable_data['color'])
         # if 'size' in mutable_data:
         #     mutable_data['size'] = str(mutable_data['size'])
 
-        return super().to_internal_value(mutable_data)
+        # return super().to_internal_value(mutable_data)
 
     def create(self, validated_data):
         discount = validated_data.get('discount')
