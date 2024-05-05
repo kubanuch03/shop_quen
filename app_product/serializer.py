@@ -175,8 +175,8 @@ class ProductcreateSerializer(serializers.ModelSerializer):
             mutable_data['subcategory'] = str(mutable_data['subcategory'])
         if 'color' in mutable_data:
             mutable_data['color'] = str(mutable_data['color'])
-        if 'size' in mutable_data:
-            mutable_data['size'] = str(mutable_data['size'])
+        # if 'size' in mutable_data:
+        #     mutable_data['size'] = str(mutable_data['size'])
 
         return super().to_internal_value(mutable_data)
 
