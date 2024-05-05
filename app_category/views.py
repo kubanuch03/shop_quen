@@ -43,21 +43,17 @@ class CategoryCreateApiView(CreateAPIView):
     permission_classes = [IsAdminUser, ]
 
     def create(self, request, *args, **kwargs):
-        title = self.request.data['title']
-
-        try:
-            
-            if Category.objects.filter(title=title):
-                return Response({"error":"Category is already"}, status=status.HTTP_400_BAD_REQUEST)
-        except Category.DoesNotExist:
-            return Response({"success":"Category is created"})
-
-        category = Category.objects.create(title=title)
-
-        category.save()
+        # Проверяем, что изображение передано в запросе
+        if 'image' not in request.data:
+            return Response({"error": "Image is required"}, status=status.HTTP_400_BAD_REQUEST)
         
-        serializer = self.get_serializer(category)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # Создаем экземпляр категории с использованием данных изображения
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CategoryRUDApiView(RetrieveUpdateDestroyAPIView):
@@ -75,9 +71,7 @@ class SubCategoryAllListApiView(ListAPIView):  # было 3 SQL запроса �
     permission_classes = [AllowAny, ]
     filter_backends = [SearchFilter]
 
-    @method_decorator(cache_page(10))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+   
 
 
 class ListOneSubCategoryApiView(APIView):  # было 2 SQL запроса стало 1

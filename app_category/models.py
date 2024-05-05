@@ -4,7 +4,7 @@ from django.db import models
 class Category(models.Model):
     title = models.CharField(max_length=255)
     created_at = models.DateField(auto_now_add=True)
-    image = models.ImageField(upload_to="text/")
+    image = models.ImageField(upload_to="app_category/")
 
     def __str__(self) -> str:
         return self.title
