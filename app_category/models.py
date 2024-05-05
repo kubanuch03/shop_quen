@@ -18,7 +18,7 @@ class Category(models.Model):
 
 
 class SubCategory(models.Model):
-    category = models.ForeignKey(Category, blank=True,null=True,on_delete=models.CASCADE)
+    # category = models.ForeignKey(Category, blank=True,null=True,on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     image = models.ImageField(upload_to="text/")
     creted_at = models.DateField(auto_now_add=True)
