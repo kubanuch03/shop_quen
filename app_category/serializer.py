@@ -15,6 +15,12 @@ class CategoryCreateSerializer(serializers.ModelSerializer):
         model = Category
         fields = ["id", "title", "image"]
 
+    def validate(self, attrs):
+        title = attrs['title']
+        if Category.objects.filter(title=title).exists():
+            raise serializers.ValidationError({"error":"Такое название уже существует"})
+        return attrs
+
 
 
 
@@ -38,3 +44,10 @@ class SubCategoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategory
         fields = ["id", "title", "image", "category"]
+
+    
+    def validate(self, attrs):
+        title = attrs['title']
+        if SubCategory.objects.filter(title=title).exists():
+            raise serializers.ValidationError({"error":"Такое название уже существует"})
+        return attrs
