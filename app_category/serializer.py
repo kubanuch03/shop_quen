@@ -36,14 +36,14 @@ class SubCategoryListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubCategory
-        fields = ["id", "title", "image", "category", "category_title"]
+        fields = ["id", "title", "image", "category_title"]
 
 
 
 class SubCategoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategory
-        fields = ["id", "title", "image", "category"]
+        fields = ["id", "title", "image"]
 
     
     def validate(self, attrs):
