@@ -75,6 +75,7 @@ class UserVerifyRegisterCode(generics.UpdateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         code = serializer.validated_data.get('code')
+        
         return CheckCode.check_code(code=code)
 
 

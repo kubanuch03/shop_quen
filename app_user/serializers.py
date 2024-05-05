@@ -64,11 +64,10 @@ class VerifyUserCodeSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['code']
 
-    def validate(self, attrs):
-        code = attrs['code']
-        if code == '':
-            raise serializers.ValidationError({"error":"Введите код!"},)
-        return code
+    def validate_code(self, value):
+        if not value:
+            raise serializers.ValidationError("Введите код")
+        return value
 
     
 
