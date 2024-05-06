@@ -20,9 +20,9 @@ class NewCollectionCreateApiView(generics.CreateAPIView):
 
 
 class NewCollectionListApiView(generics.ListAPIView): #Было 4 SQL запроса стало 3
-    queryset = NewCollection.objects.all()#.prefetch_related('product')
+    queryset = NewCollection.objects.all().prefetch_related('product')
     serializer_class = NewCollectionListSerializer
-    
+
 
 
 class NewCollectionRUDApiView(generics.RetrieveUpdateDestroyAPIView):
