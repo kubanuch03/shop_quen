@@ -25,18 +25,18 @@ from django.views.decorators.cache import cache_page
 from django.http import Http404
 
 
-from .pagination import ListProductPagination
+from .pagination import CustomPageNumberPagination
 
 
 class ListAllProductApiView(ListAPIView): # Было 5 стало 5
     queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
     serializer_class = ProductListSerializer
     filter_backends = [PriceRangeFilter, SearchFilter]
-    pagination_class = ListProductPagination
+    pagination_class = CustomPageNumberPagination
 
-    @method_decorator(cache_page(10))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(10))
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
 
         
@@ -99,7 +99,7 @@ class ProductBySubCategory(APIView):  #Было 7 SQL запроса стало 
 class SizeApiView(ListCreateAPIView):
     queryset = Size.objects.all()
     serializer_class = SizeSerializer
-    permission_classes = [IsAdminUser, ]
+    # permission_classes = [IsAdminUser, ]
 
     
 
