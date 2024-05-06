@@ -33,7 +33,25 @@ logger = get_task_logger(__name__)
 
 from .pagination import CustomPageNumberPagination
 
+class ListAllAdminProductApiView(ListAPIView):
+    # queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
+    serializer_class = ProductListSerializer
+    filter_backends = [PriceRangeFilter, SearchFilter]
+    pagination_class = CustomPageNumberPagination
 
+    def get_queryset(self):
+        queryset = Product.objects.all().select_related('subcategory').prefetch_related('characteristics', 'color', 'size').order_by('-id')
+        page_number = self.request.query_params.get("page", 1)
+        page_size = self.request.query_params.get("page_size", 50)
+        query_params = self.request.query_params.dict()
+        cached_data = cache.get(f'cached_products_page_{page_number}')
+        if cached_data:
+            logger.info("Using cached data")
+            return cached_data
+        else:
+            update_product_cache.delay(page_number, page_size, query_params)
+            logger.info("Started task to cache data")
+            return queryset
 
 
 

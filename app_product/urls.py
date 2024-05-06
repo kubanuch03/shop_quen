@@ -7,6 +7,7 @@ router.register(r"characteristik",CharacteristikViewSet, basename='characteristi
 
 urlpatterns = [
     path('list/all/product/', ListAllProductApiView.as_view(), name='list-all-product'),
+    path('list/all/product/', ListAllAdminProductApiView.as_view(), name='list-all-admin-product'),
     path('list/one/product/<int:id>/', ListOneProducApiView.as_view(), name='list-one-product'),
     path('create/product/', CreateProductApiView.as_view(),name='create-product',),
     path('update/product/<int:id>/', ProductUpdateApiView.as_view(),name='update-product'),
