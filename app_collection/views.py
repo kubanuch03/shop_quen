@@ -23,14 +23,26 @@ class NewCollectionListApiView(generics.ListAPIView): #Было 4 SQL запро
     queryset = NewCollection.objects.all()#.prefetch_related('product')
     serializer_class = NewCollectionListSerializer
 
-    # @method_decorator(cache_page(15))
-    # def dispatch(self, *args, **kwargs):
-    #     return super().dispatch(*args, **kwargs)
+
 
 class NewCollectionRUDApiView(generics.RetrieveUpdateDestroyAPIView):
     queryset = NewCollection.objects.all()
     serializer_class = NewCollectionCreateSerializer
     lookup_field = "id"
+
+
+    def put(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        # Если в запросе передан пустой массив для поля 'product', очистить поле
+        if 'product' in request.data and not request.data['product']:
+            instance.product.clear()
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.put(request, *args, **kwargs)
+
 
 
 

@@ -4,7 +4,7 @@ from app_product.models import Product
 
 
 class NewCollection(models.Model):
-    product = models.ManyToManyField(Product)
+    product = models.ManyToManyField(Product,blank=True,null=True)
  
     class Meta:
         indexes = [
@@ -22,3 +22,4 @@ class Recommendations(models.Model):
             models.Index(fields=['id']),  
             
         ]
+

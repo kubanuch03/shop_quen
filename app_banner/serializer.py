@@ -6,3 +6,4 @@ class BannerCRUDserializer(serializers.ModelSerializer):
     class Meta:
         model = Banner
         fields = ["id", "name", "images"]
+        

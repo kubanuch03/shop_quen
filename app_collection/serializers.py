@@ -14,6 +14,10 @@ class NewCollectionCreateSerializer(serializers.ModelSerializer):
         fields = ["product"]
 
 
+    def update(self, instance, validated_data):
+        if 'product' in validated_data and not validated_data['product']:
+            instance.product.clear()
+        return super().update(instance, validated_data)
 
 
 
