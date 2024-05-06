@@ -12,14 +12,22 @@ class SizeSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         sizes = attrs['sizes']
 
-        if not re.match("^[a-zA-Z]+$", sizes):
+        if not (re.match("^[a-zA-Z]+$", sizes) or re.match("^\d{1,2}$", sizes)):
             raise serializers.ValidationError(
-                'размер должен содержать только английские буквы'
+                'размер должен содержать только английские буквы или цифры до двух значений (максимум 99)'
             )
+        
+        if re.match("^\d{1,2}$", sizes):
+            sizes = int(sizes)
+            if sizes > 99:
+                raise serializers.ValidationError(
+                    'максимальное значение для числового размера - 99'
+                )
 
         attrs['sizes'] = sizes.upper()
         if Size.objects.filter(sizes=attrs['sizes']).exists():
             raise serializers.ValidationError('sizes is already.')
+        attrs['sizes'] = str(sizes).upper() if isinstance(sizes, str) else str(sizes)
 
         return attrs
 
@@ -75,6 +83,8 @@ class IsFavoriteDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = IsFavorite
         fields = ['id','user','product',]
+
+        
 #=====  Product   ===================================================================================================================================================================
 
 class ProductListSerializer(serializers.ModelSerializer):

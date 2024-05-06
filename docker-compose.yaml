@@ -10,14 +10,13 @@ services:
       - .:/app
       - static_volume:/usr/src/app/static
       - media_volume:/usr/src/app/media
-    ports:
-      - 8000:8000
+    # ports:
+    #   - 8000:8000
     depends_on:
       - db
       - redis
       - celery-worker
       - celery-beat
-      # - pgbouncer
 
   db:
     image: postgres:14-alpine
@@ -28,22 +27,6 @@ services:
     
 
 
-  # pgbouncer:
-  #   image: edoburu/pgbouncer:latest
-  #   build: .
-  #     # dockerfile: pgbouncer/Dockerfile
-  #   volumes:
-  #     - ./etc/pgbouncer:/etc/pgbouncer:ro
-  #   environment:
-  #     - PGBOUNCER_INI=pgbouncer.ini
-  #     - DATABASES_HOST=db
-  #     - DATABASES_PORT=5432
-  #     - DATABASES_USER=postgres
-  #     - DATABASES_PASSWORD=123
-  #     - ADMIN_USERS=postgres
-  #   ports:
-  #     - "6432:6432"
-  #   restart: always
     
   redis:
     image: "redis:alpine"

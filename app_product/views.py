@@ -31,6 +31,7 @@ from celery.utils.log import get_task_logger
 
 logger = get_task_logger(__name__)
 
+from .pagination import CustomPageNumberPagination
 
 
 
@@ -55,10 +56,11 @@ class ListAllProductApiView(ListAPIView):
             update_product_cache.delay(page_number, page_size, query_params)
             logger.info("Started task to cache data")
             return queryset
-    
+    # @method_decorator(cache_page(10))
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
 #============================================================================================================
-
 
 
 class CreateProductApiView(CreateAPIView):
@@ -73,11 +75,7 @@ class CreateProductApiView(CreateAPIView):
 
 
 
-        
 
-        
-
- 
 
 class ProductDeleteApiView(DestroyAPIView):
     queryset = Product.objects.all()
@@ -157,7 +155,7 @@ class SizeDetailApiView(RetrieveAPIView):
 class SizeCreateApiView(CreateAPIView):
     queryset = Size.objects.all()
     serializer_class = SizeSerializer
-    permission_classes = [IsAdminUser, ]
+    # permission_classes = [IsAdminUser, ]
 
 
 
