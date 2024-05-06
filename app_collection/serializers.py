@@ -51,7 +51,7 @@ class NewCollectionListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NewCollection
-        fields = ["products"]
+        fields = ["id","products"]
         
 
     def get_products(self, obj) -> str:
