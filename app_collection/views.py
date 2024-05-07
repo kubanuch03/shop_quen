@@ -70,6 +70,19 @@ class RecommendationCreateApiView(generics.CreateAPIView):
     queryset = Recommendations.objects.all()
     serializer_class = RecommendationCreateSerializer
 
+    def put(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        # Если в запросе передан пустой массив для поля 'product', очистить поле
+        if 'product' in request.data and not request.data['product']:
+            instance.product.clear()
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.put(request, *args, **kwargs)
+
+
 
 
 class RecommendationRUDApiView(generics.RetrieveUpdateDestroyAPIView):
