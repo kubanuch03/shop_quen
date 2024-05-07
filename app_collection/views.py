@@ -61,9 +61,10 @@ class RecommendationListApiView(generics.ListAPIView):
     queryset = Recommendations.objects.all()#.prefetch_related('product')  #Было 4 SQL запроса стало 3
     serializer_class = RecommendationListSerializer
 
-    # @method_decorator(cache_page(15))
-    # def dispatch(self, *args, **kwargs):
-    #     return super().dispatch(*args, **kwargs)
+class RecommendationDetailApiView(generics.RetrieveAPIView):
+    queryset = Recommendations.objects.all()#.prefetch_related('product')  #Было 4 SQL запроса стало 3
+    serializer_class = RecommendationListSerializer
+
 
 class RecommendationCreateApiView(generics.CreateAPIView):
     queryset = Recommendations.objects.all()

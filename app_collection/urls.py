@@ -9,6 +9,7 @@ urlpatterns = [
 
 
     path('list/recommendation/', RecommendationListApiView.as_view()),
+    path('detail/recommendation/<pk>/', RecommendationDetailApiView.as_view()),
     path('create/recommendation/', RecommendationCreateApiView.as_view()),
     path('rud/recommendation/<int:id>/', RecommendationRUDApiView.as_view()),
 
