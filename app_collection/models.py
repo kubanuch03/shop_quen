@@ -15,7 +15,7 @@ class NewCollection(models.Model):
 
 
 class Recommendations(models.Model):
-    product = models.ManyToManyField(Product)
+    product = models.ManyToManyField(Product,blank=True,null=True)
 
     class Meta:
         indexes = [
