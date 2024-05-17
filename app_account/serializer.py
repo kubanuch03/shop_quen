@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from app_user.models import CustomUser
 from app_account.models import PaymentMethod, History
+from app_product.serializer import ProductDetailSerializer
 from typing import Any
 
 class ChangeUserInfoSerializer(serializers.ModelSerializer):
@@ -62,10 +63,10 @@ class ChangePasswordSerializer(serializers.Serializer):
 from app_product.models import Product
 
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ["id", "discount", "price",  "images1", "images2", "images3"]
+# class ProductSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Product
+#         fields = ["id", "discount", "price",  "images1", "images2", "images3"]
 
 
 
@@ -77,11 +78,16 @@ class HistoryListSerializer(serializers.ModelSerializer):
         model = History
         fields = ['id', 'products', 'user', 'price', 'lastname', 'firstname', 'types', 'location', 'payment_type', 'status', 'delivery_date']
 
+    def to_representation(self, instance):
+        data_product = super().to_representation(instance)        
+        data_product['products'] = ProductDetailSerializer(instance.products.all(),many=True).data
+        
+        return data_product  
     
 
     def get_products(self, obj: Any) -> Any:
         products_queryset = obj.products.all()
-        products_data = ProductSerializer(products_queryset, many=True).data
+        products_data = ProductDetailSerializer(products_queryset, many=True).data
         return products_data
 
 
