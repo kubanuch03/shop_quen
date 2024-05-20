@@ -10,8 +10,8 @@ class Banner(models.Model):
         ]
 
 class TopikBaner(models.Model):
-    name = models.CharField(max_length=250)
-    images = models.ImageField(upload_to='banner/')
+    name = models.CharField(max_length=250,blank=True,null=True)
+    images = models.ImageField(upload_to='banner/',blank=True,null=True)
     class Meta:
         indexes = [
             models.Index(fields=['id']),  
