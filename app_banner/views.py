@@ -24,6 +24,8 @@ class BannerDetail(generics.RetrieveAPIView):
     serializer_class = BannerCRUDserializer
     permission_classes = [AllowAny]
 
+
+
 class BannerDeleteandREtvew(generics.RetrieveUpdateDestroyAPIView):
     queryset = Banner.objects.all()
     serializer_class = BannerCRUDserializer

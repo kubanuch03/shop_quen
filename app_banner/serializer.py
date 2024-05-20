@@ -13,7 +13,24 @@ class BannerCRUDserializer(serializers.ModelSerializer):
         
         return data_product  
 
+    # def update(self, instance, validated_data):
+    #     # Extract nested topik_baner data
+    #     topik_baner_data = validated_data.pop('topik_baner', None)
 
+    #     # Update Banner instance
+    #     instance = super().update(instance, validated_data)
+
+    #     if topik_baner_data:
+    #         # Clear existing many-to-many relations
+    #         instance.topik_baner.clear()
+
+    #         # Add new many-to-many relations
+    #         for topik_data in topik_baner_data:
+    #             topik_baner_instance, created = TopikBaner.objects.get_or_create(**topik_data)
+    #             instance.topik_baner.add(topik_baner_instance)
+
+    #     return instance
+    
 class TopikBannerCRUDserializer(serializers.ModelSerializer):
     class Meta:
         model = TopikBaner
