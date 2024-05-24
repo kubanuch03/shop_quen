@@ -178,3 +178,4 @@ class HistoryDetailView(generics.RetrieveUpdateAPIView):
     lookup_field = "id"
 
 
+#

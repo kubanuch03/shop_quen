@@ -8,6 +8,7 @@ class Banner(models.Model):
             models.Index(fields=['id']),  
             
         ]
+        ordering = ['id'] 
 
 class TopikBaner(models.Model):
     name = models.CharField(max_length=250,blank=True,null=True)
