@@ -33,7 +33,7 @@ class History(models.Model):
 
     )
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product)
+    products = models.ManyToManyField('ProductInstance',related_name='histories')
     price = models.PositiveIntegerField()
     lastname = models.CharField(max_length=255)
     firstname = models.CharField(max_length=255)
@@ -58,4 +58,9 @@ class History(models.Model):
         ]
 
 
- 
+class ProductInstance(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    history = models.ForeignKey(History, on_delete=models.CASCADE,related_name='product_instances')
+    color = models.ForeignKey(Color, on_delete=models.CASCADE)
+    size = models.ForeignKey(Size, on_delete=models.CASCADE)
+

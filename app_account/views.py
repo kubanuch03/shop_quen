@@ -1,13 +1,8 @@
 from rest_framework.generics import ListAPIView, CreateAPIView,RetrieveUpdateAPIView
 from app_user.models import CustomUser
-from app_account.serializer import (
-    UserInfoSerializer,
-    PaymentMethodSerializer,
-    SendResetCodeSerializer,
-    ChangePasswordSerializer,
-    HistoryCreateSerializer,
-    HistoryListSerializer,
-    ChangeUserInfoSerializer,)
+from app_product.models import Product
+from .models import ProductInstance
+from .serializer import *
 from rest_framework import permissions, generics
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -31,7 +26,7 @@ from rest_framework import status
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
+import json
 
 
 class PaymentMethodApiView(generics.ListCreateAPIView):
@@ -147,6 +142,9 @@ class HistoryListApiView(ListAPIView):
 
 
 
+
+
+
 class HistoryByUserListApiView(ListAPIView):
     queryset = History.objects.all()
     serializer_class = HistoryListSerializer
@@ -168,9 +166,6 @@ class HistoryCreateApiView(CreateAPIView):
     
 
 
-
-
-
 class HistoryDetailView(generics.RetrieveUpdateAPIView):
     queryset = History.objects.all()
     serializer_class = HistoryListSerializer
@@ -178,4 +173,7 @@ class HistoryDetailView(generics.RetrieveUpdateAPIView):
     lookup_field = "id"
 
 
-#
+class ProductInstanceApiView(ListAPIView):
+    queryset = ProductInstance.objects.all()
+    serializer_class = ProductInstanceSerializer
+    permission_classes = [permissions.IsAdminUser, ]
