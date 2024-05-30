@@ -97,7 +97,7 @@ class HistoryListSerializer(serializers.ModelSerializer):
 
 
 class ProductInstanceSerializer(serializers.ModelSerializer):
-
+    product = ProductDetailSerializer()
 
     class Meta:
         model = ProductInstance
@@ -106,6 +106,7 @@ class ProductInstanceSerializer(serializers.ModelSerializer):
     
     def to_representation(self, instance):
         data_product = super().to_representation(instance)        
+        data_product['product'] = ProductDetailSerializer(instance.product).data
         data_product['color'] = ColorSerializer(instance.color).data
         data_product['size'] = SizeSerializer(instance.size).data
         

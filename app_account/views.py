@@ -176,4 +176,4 @@ class HistoryDetailView(generics.RetrieveUpdateAPIView):
 class ProductInstanceApiView(ListAPIView):
     queryset = ProductInstance.objects.all()
     serializer_class = ProductInstanceSerializer
-    permission_classes = [permissions.IsAdminUser, ]
+    permission_classes = [permissions.IsAuthenticated, ]
