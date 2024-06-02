@@ -43,10 +43,15 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Пароли не совпадают")
         return attrs
 
+        
+
  
     
     def create(self, validated_data):
+        email = validated_data['email']
         validated_data.pop('password2')
+        if CustomUser.objects.filter(email=email):
+            raise serializers.ValidationError({"dublicate":"user is exists!"})
         user = CustomUser.objects.create_user(**validated_data)
         return user
 

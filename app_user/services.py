@@ -116,7 +116,7 @@ class CheckCode():
                     'message': 'Код успешно обновлен'
                 })
             except CustomUser.DoesNotExist:
-                return Response({"error":"Пользователь не найден"})
+                return Response({"error":"Пользователь не найден"},status=status.HTTP_400_BAD_REQUEST)
 
 
 
