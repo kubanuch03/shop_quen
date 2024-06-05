@@ -127,6 +127,19 @@ class HistoryCreateSerializer(serializers.ModelSerializer):
             history.products.add(product_instance)
         return history
 
+class HistoryCreate2Serializer(serializers.ModelSerializer):
+ 
+    class Meta:
+        model = History
+        fields = ['id','products','user', 'price', 'lastname', 'firstname', 'types', 'location', 'payment_type', 'status', 'delivery_date']
+    
+    def create(self, validated_data):
+        products_data = validated_data.pop('products')
+        history = History.objects.create(**validated_data)
+        for product_data in products_data:
+            product_instance = ProductInstance.objects.create(history=history, **product_data)
+            history.products.add(product_instance)
+        return history
 
     # def create(self, validated_data):
     #     instance = History.objects.create(**validated_data)
