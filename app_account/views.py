@@ -161,7 +161,7 @@ class HistoryByUserListApiView(ListAPIView):
 
 class HistoryCreateApiView(CreateAPIView):
     queryset = History.objects.all()
-    serializer_class = HistoryCreate2Serializer
+    serializer_class = HistoryCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
     
 

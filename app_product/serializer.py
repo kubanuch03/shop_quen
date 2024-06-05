@@ -123,6 +123,31 @@ class ProductListSerializer(serializers.ModelSerializer):
         return data_product   
 
 
+class ProductOneSerializer(serializers.ModelSerializer):
+   
+    
+    class Meta:
+        model = Product
+        fields = ["id",
+                "subcategory",
+                "title", 
+                "price", 
+                "description", 
+                "brand", 
+                "characteristics", 
+                "is_any", 
+                "is_favorite",
+                "images1", 
+                "images2", 
+                "images3", 
+                "color",
+                "size",
+                "discount",
+                
+                ]
+
+    
+
 class ProductDetailSerializer(serializers.ModelSerializer):
     color =ColorSerializer(many=True)
     size = SizeSerializer(many=True)

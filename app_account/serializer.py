@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from app_user.models import CustomUser
 from app_account.models import PaymentMethod, History, ProductInstance, Color, Size
-from app_product.serializer import ProductDetailSerializer, SizeSerializer, ColorSerializer
+from app_product.serializer import *
 from typing import Any
 
 class ChangeUserInfoSerializer(serializers.ModelSerializer):
@@ -97,7 +97,10 @@ class HistoryListSerializer(serializers.ModelSerializer):
 
 
 class ProductInstanceSerializer(serializers.ModelSerializer):
-    product = ProductDetailSerializer()
+    # product = ProductOneSerializer()
+    product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
+    color = serializers.PrimaryKeyRelatedField(queryset=Color.objects.all())
+    size = serializers.PrimaryKeyRelatedField(queryset=Size.objects.all())
 
     class Meta:
         model = ProductInstance
